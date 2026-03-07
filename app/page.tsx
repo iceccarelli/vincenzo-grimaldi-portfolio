@@ -18,7 +18,7 @@ export default function Home() {
             Building Intelligent Energy Systems
           </h1>
           <p className="text-xl md:text-2xl text-zinc-400 max-w-4xl mx-auto leading-relaxed">
-            AI-Driven Digital Twins • Agentic Middleware • Smart Grid Resilience • RWTH Aachen University
+           
           </p>
         </div>
 

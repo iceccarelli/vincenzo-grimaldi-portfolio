@@ -126,7 +126,7 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
 
-            {/* TIME APPLICATION – Blue theme, professional framed icon */}
+            {/* TIM APPLICATION – Blue theme */}
             <div>
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
@@ -134,12 +134,11 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="group block text-center transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)]"
               >
-                <h2 className="text-2xl font-bold text-white mb-3">TIME Application Job-ID:V000010837</h2>
+                <h2 className="text-2xl font-bold text-white mb-3">TIME Application Job-ID: V000010767</h2>
                 <p className="text-blue-400 text-sm mb-10">
                   Lehrstuhl für Betriebswirtschaftslehre, insbesondere<br />
                   Technologie- und Innovationsmanagement (TIME Research Area)
                 </p>
-
                 {/* Professional framed perimeter */}
                 <div className="mx-auto mb-8 relative w-[172px] h-[172px]">
                   <div className="absolute inset-0 rounded-3xl border-8 border-zinc-900 group-hover:border-blue-950 transition-colors" />
@@ -147,22 +146,12 @@ export default function Home() {
                     <i className="fas fa-file-contract text-[138px] text-blue-400" />
                   </div>
                 </div>
-
                 <i className="fas fa-arrow-down text-7xl text-blue-500/70 group-hover:text-blue-400 transition-colors" />
               </a>
 
               <div className="space-y-6 mt-12">
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all flex items-center justify-between group">
-                  <div className="flex items-center gap-6">
-                    <i className="fas fa-file-pdf text-5xl text-red-500" />
-                    <div>
-                      <div className="font-semibold text-lg">Curriculum Vitae</div>
-                      <div className="text-sm text-zinc-500">4 pages • March 2026</div>
-                    </div>
-                  </div>
-                  <i className="fas fa-download text-3xl text-blue-400 group-hover:-translate-y-1 transition-transform" />
-                </a>
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all flex items-center justify-between group">
+                {/* MOTIVATION LETTER FIRST */}
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>
@@ -172,36 +161,8 @@ export default function Home() {
                   </div>
                   <i className="fas fa-download text-3xl text-blue-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
-              </div>
-            </div>
-
-            {/* ACS APPLICATION – Red theme, professional framed icon */}
-            <div>
-              <a
-                href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block text-center transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)]"
-              >
-                <h2 className="text-2xl font-bold text-white mb-3">ACS Application Job-ID:V000010837</h2>
-                <p className="text-red-400 text-sm mb-10">
-                  Institute for Automation of Complex Power Systems (ACS)<br />
-                  E.ON Energy Research Center
-                </p>
-
-                {/* Professional framed perimeter */}
-                <div className="mx-auto mb-8 relative w-[172px] h-[172px]">
-                  <div className="absolute inset-0 rounded-3xl border-8 border-zinc-900 group-hover:border-red-950 transition-colors" />
-                  <div className="absolute inset-[10px] bg-zinc-950 rounded-3xl flex items-center justify-center border border-red-500/40 group-hover:border-red-400 transition-all shadow-inner">
-                    <i className="fas fa-file-contract text-[138px] text-red-400" />
-                  </div>
-                </div>
-
-                <i className="fas fa-arrow-down text-7xl text-red-500/70 group-hover:text-red-400 transition-colors" />
-              </a>
-
-              <div className="space-y-6 mt-12">
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all flex items-center justify-between group">
+                {/* CV SECOND */}
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-pdf text-5xl text-red-500" />
                     <div>
@@ -209,14 +170,53 @@ export default function Home() {
                       <div className="text-sm text-zinc-500">4 pages • March 2026</div>
                     </div>
                   </div>
-                  <i className="fas fa-download text-3xl text-red-400 group-hover:-translate-y-1 transition-transform" />
+                  <i className="fas fa-download text-3xl text-blue-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all flex items-center justify-between group">
+              </div>
+            </div>
+
+            {/* ACS APPLICATION – Red theme */}
+            <div>
+              <a
+                href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block text-center transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)]"
+              >
+                <h2 className="text-2xl font-bold text-white mb-3">ACS Application Job-ID: V000010837</h2>
+                <p className="text-red-400 text-sm mb-10">
+                  Institute for Automation of Complex Power Systems (ACS)<br />
+                  E.ON Energy Research Center
+                </p>
+                {/* Professional framed perimeter */}
+                <div className="mx-auto mb-8 relative w-[172px] h-[172px]">
+                  <div className="absolute inset-0 rounded-3xl border-8 border-zinc-900 group-hover:border-red-950 transition-colors" />
+                  <div className="absolute inset-[10px] bg-zinc-950 rounded-3xl flex items-center justify-center border border-red-500/40 group-hover:border-red-400 transition-all shadow-inner">
+                    <i className="fas fa-file-contract text-[138px] text-red-400" />
+                  </div>
+                </div>
+                <i className="fas fa-arrow-down text-7xl text-red-500/70 group-hover:text-red-400 transition-colors" />
+              </a>
+
+              <div className="space-y-6 mt-12">
+                {/* MOTIVATION LETTER FIRST */}
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>
                       <div className="font-semibold text-lg">Motivation Letter</div>
                       <div className="text-sm text-zinc-500">2 pages • 22 March 2026</div>
+                    </div>
+                  </div>
+                  <i className="fas fa-download text-3xl text-red-400 group-hover:-translate-y-1 transition-transform" />
+                </a>
+                {/* CV SECOND */}
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between">
+                  <div className="flex items-center gap-6">
+                    <i className="fas fa-file-pdf text-5xl text-red-500" />
+                    <div>
+                      <div className="font-semibold text-lg">Curriculum Vitae</div>
+                      <div className="text-sm text-zinc-500">4 pages • March 2026</div>
                     </div>
                   </div>
                   <i className="fas fa-download text-3xl text-red-400 group-hover:-translate-y-1 transition-transform" />

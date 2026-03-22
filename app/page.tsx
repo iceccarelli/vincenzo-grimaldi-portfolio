@@ -148,7 +148,9 @@ export default function Home() {
                 </div>
                 <i className="fas fa-arrow-down text-7xl text-blue-500/70 group-hover:text-blue-400 transition-colors" />
               </a>
-                <div></div>
+                <div>
+                  
+                </div>
               {/* Unified Blue Outer Border around BOTH buttons */}
               
                 {/* MOTIVATION LETTER FIRST */}
@@ -198,7 +200,9 @@ export default function Home() {
                 </div>
                 <i className="fas fa-arrow-down text-7xl text-red-500/70 group-hover:text-red-400 transition-colors" />
               </a>
-              <div></div>
+              <div>
+                
+              </div>
               {/* Unified Red Outer Border around BOTH buttons */}
               
                 {/* MOTIVATION LETTER FIRST */}

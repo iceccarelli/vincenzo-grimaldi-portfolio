@@ -126,7 +126,7 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
 
-            {/* TIM APPLICATION – Blue theme, professional framed icon */}
+            {/* TIME APPLICATION – Blue theme, professional framed icon */}
             <div>
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
@@ -134,7 +134,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="group block text-center transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)]"
               >
-                <h2 className="text-2xl font-bold text-white mb-3">TIM Application</h2>
+                <h2 className="text-2xl font-bold text-white mb-3">TIME Application Job-ID:V000010837</h2>
                 <p className="text-blue-400 text-sm mb-10">
                   Lehrstuhl für Betriebswirtschaftslehre, insbesondere<br />
                   Technologie- und Innovationsmanagement (TIME Research Area)
@@ -183,7 +183,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="group block text-center transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)]"
               >
-                <h2 className="text-2xl font-bold text-white mb-3">ACS Application</h2>
+                <h2 className="text-2xl font-bold text-white mb-3">ACS Application Job-ID:V000010837</h2>
                 <p className="text-red-400 text-sm mb-10">
                   Institute for Automation of Complex Power Systems (ACS)<br />
                   E.ON Energy Research Center

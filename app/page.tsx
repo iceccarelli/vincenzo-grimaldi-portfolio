@@ -213,32 +213,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* UPLOAD ZONE */}
-          <div className="mt-20 border-t border-zinc-800 pt-12">
-            <div className="text-center mb-8">
-              <p className="text-zinc-400">Upload additional supporting documents for either application</p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div
-                className={`upload-zone border-2 border-dashed rounded-3xl p-12 text-center transition-all ${
-                  isDragging ? 'border-cyan-400 bg-zinc-900/80 scale-105' : 'border-zinc-700 hover:border-cyan-400'
-                }`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-              >
-                <i className="fas fa-cloud-upload-alt text-6xl text-cyan-400 mb-6 transition-transform" style={{ transform: isDragging ? 'scale(1.15)' : 'scale(1)' }} />
-                <p className="text-lg mb-2">Drop PDF files here or</p>
-                <label className="inline-block bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-semibold px-8 py-4 rounded-2xl cursor-pointer transition-all active:scale-95">
-                  BROWSE FILES
-                  <input type="file" multiple accept=".pdf" className="hidden" onChange={handleFileSelect} />
-                </label>
-              </div>
-              <div className="text-center flex flex-col justify-center text-sm text-zinc-500">
-                Files are private and will be emailed securely to vincenzo@grimaldi.engineering
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* INSPIRATION SECTION */}

@@ -114,20 +114,20 @@ export default function Home() {
           </div>
         </section>
 
-        {/* === MOST PROFESSIONAL PHD SECTION – Framed Document Icons + Harry Potter Hover === */}
+        {/* === ULTIMATE PROFESSIONAL PHD SECTION – Perfect Framed Icons + Unified Colored Borders === */}
         <section id="phd" className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">PhD Applications – ERC Synergy Grant SAFEr Grid</h2>
             <p className="text-xl text-zinc-400 max-w-3xl mx-auto">
               Transparent &amp; Open Application Process at RWTH Aachen University
             </p>
-            <p className="text-sm text-cyan-400 mt-3 tracking-widest">TWO INTERDISCIPLINARY APPLICATIONS</p>
+            <p className="text-sm text-cyan-400 mt-3 tracking-widest">TWO INTERDISCIPLINARY APPLICATIONS • SAME VISION • FULL TRANSPARENCY</p>
           </div>
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
 
-            {/* TIM APPLICATION – Blue theme */}
-            <div>
+            {/* TIM APPLICATION – Blue theme (outer unified border) */}
+            <div className="group">
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
                 target="_blank"
@@ -139,7 +139,6 @@ export default function Home() {
                   Lehrstuhl für Betriebswirtschaftslehre, insbesondere<br />
                   Technologie- und Innovationsmanagement (TIME Research Area)
                 </p>
-                {/* Professional framed perimeter */}
                 <div className="mx-auto mb-8 relative w-[172px] h-[172px]">
                   <div className="absolute inset-0 rounded-3xl border-8 border-zinc-900 group-hover:border-blue-950 transition-colors" />
                   <div className="absolute inset-[10px] bg-zinc-950 rounded-3xl flex items-center justify-center border border-blue-500/40 group-hover:border-blue-400 transition-all shadow-inner">
@@ -149,9 +148,10 @@ export default function Home() {
                 <i className="fas fa-arrow-down text-7xl text-blue-500/70 group-hover:text-blue-400 transition-colors" />
               </a>
 
-              <div className="space-y-6 mt-12">
+              {/* Unified Blue Outer Border around BOTH buttons */}
+              <div className="mt-12 border-4 border-blue-500/30 rounded-3xl p-6 group-hover:border-blue-400 transition-all duration-700">
                 {/* MOTIVATION LETTER FIRST */}
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between">
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between mb-6">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>
@@ -175,8 +175,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* ACS APPLICATION – Red theme */}
-            <div>
+            {/* ACS APPLICATION – Red theme (outer unified border) */}
+            <div className="group">
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
                 target="_blank"
@@ -188,7 +188,6 @@ export default function Home() {
                   Institute for Automation of Complex Power Systems (ACS)<br />
                   E.ON Energy Research Center
                 </p>
-                {/* Professional framed perimeter */}
                 <div className="mx-auto mb-8 relative w-[172px] h-[172px]">
                   <div className="absolute inset-0 rounded-3xl border-8 border-zinc-900 group-hover:border-red-950 transition-colors" />
                   <div className="absolute inset-[10px] bg-zinc-950 rounded-3xl flex items-center justify-center border border-red-500/40 group-hover:border-red-400 transition-all shadow-inner">
@@ -198,9 +197,10 @@ export default function Home() {
                 <i className="fas fa-arrow-down text-7xl text-red-500/70 group-hover:text-red-400 transition-colors" />
               </a>
 
-              <div className="space-y-6 mt-12">
+              {/* Unified Red Outer Border around BOTH buttons */}
+              <div className="mt-12 border-4 border-red-500/30 rounded-3xl p-6 group-hover:border-red-400 transition-all duration-700">
                 {/* MOTIVATION LETTER FIRST */}
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between">
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between mb-6">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>

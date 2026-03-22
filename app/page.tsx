@@ -114,7 +114,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* === FINAL PHD SECTION – Professional Thematic Icons (NO RWTH Logo) === */}
+        {/* === PROFESSIONAL PHD SECTION – Large PDF-Style Icons (4× bigger + clickable) === */}
         <section id="phd" className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">PhD Applications – ERC Synergy Grant SAFEr Grid</h2>
@@ -126,16 +126,16 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
 
-            {/* TIM APPLICATION – Professional Innovation Icon + Direct Link to Live Job Post */}
+            {/* TIM APPLICATION – Large PDF-style icon + full block clickable */}
             <div>
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-center hover:opacity-90 transition-opacity"
+                className="block text-center hover:opacity-90 transition-opacity group"
               >
-                <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-amber-500/30">
-                  <i className="fas fa-lightbulb text-6xl text-amber-400" />
+                <div className="mx-auto mb-6 w-32 h-32 bg-zinc-800 rounded-3xl flex items-center justify-center border border-amber-500/30 group-hover:border-amber-400 transition-colors">
+                  <i className="fas fa-file-contract text-[120px] text-amber-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">TIM Application</h3>
                 <p className="text-cyan-400 text-sm mb-8">
@@ -169,16 +169,16 @@ export default function Home() {
               </div>
             </div>
 
-            {/* ACS APPLICATION – Professional Power Systems Icon + Direct Link to Live Job Post */}
+            {/* ACS APPLICATION – Large PDF-style icon + full block clickable */}
             <div>
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-center hover:opacity-90 transition-opacity"
+                className="block text-center hover:opacity-90 transition-opacity group"
               >
-                <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-blue-500/30">
-                  <i className="fas fa-bolt text-6xl text-blue-400" />
+                <div className="mx-auto mb-6 w-32 h-32 bg-zinc-800 rounded-3xl flex items-center justify-center border border-blue-500/30 group-hover:border-blue-400 transition-colors">
+                  <i className="fas fa-file-contract text-[120px] text-blue-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">ACS Application</h3>
                 <p className="text-cyan-400 text-sm mb-8">
@@ -212,7 +212,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
         </section>
 
         {/* INSPIRATION SECTION */}

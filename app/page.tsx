@@ -128,7 +128,7 @@ export default function Home() {
 
             {/* TIM APPLICATION – Starts gray, brightens to blue on hover */}
             <div className="group">
-              <div className="mt-20 border-4 border-zinc-700/50 rounded-3xl p-12 group-hover:border-blue-400 transition-all duration-700">
+              <div className="mt-24 border-4 border-zinc-700/50 rounded-3xl p-16 group-hover:border-blue-400 transition-all duration-700">
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
                 target="_blank"
@@ -150,7 +150,7 @@ export default function Home() {
                 <i className="fas fa-arrow-down text-7xl text-blue-500/70 group-hover:text-blue-400 transition-colors" />
               </a>
 
-              {/* Wider Unified Gray Outer Border (brightens to blue on hover) – DOUBLE spacing */}
+              {/* Wider Gray Outer Border (brightens to blue) – DOUBLE spacing */}
               
                 {/* MOTIVATION LETTER FIRST */}
                 <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between mb-8">
@@ -179,7 +179,7 @@ export default function Home() {
 
             {/* ACS APPLICATION – Starts gray, brightens to red on hover */}
             <div className="group">
-              <div className="mt-20 border-4 border-zinc-700/50 rounded-3xl p-12 group-hover:border-red-400 transition-all duration-700">
+              <div className="mt-24 border-4 border-zinc-700/50 rounded-3xl p-16 group-hover:border-red-400 transition-all duration-700">
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
                 target="_blank"
@@ -200,7 +200,7 @@ export default function Home() {
                 <i className="fas fa-arrow-down text-7xl text-red-500/70 group-hover:text-red-400 transition-colors" />
               </a>
 
-              {/* Wider Unified Gray Outer Border (brightens to red on hover) – DOUBLE spacing */}
+              {/* Wider Gray Outer Border (brightens to red) – DOUBLE spacing */}
               
                 {/* MOTIVATION LETTER FIRST */}
                 <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between mb-8">

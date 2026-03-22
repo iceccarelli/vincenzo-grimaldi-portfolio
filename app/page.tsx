@@ -126,8 +126,9 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
 
-            {/* TIM APPLICATION – Blue theme (outer unified border) */}
+            {/* TIME APPLICATION – Blue theme (outer unified border) */}
             <div className="group">
+              <div className="mt-12 border-4 border-blue-500/30 rounded-3xl p-6 group-hover:border-blue-400 transition-all duration-700">
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
                 target="_blank"
@@ -149,7 +150,7 @@ export default function Home() {
               </a>
 
               {/* Unified Blue Outer Border around BOTH buttons */}
-              <div className="mt-12 border-4 border-blue-500/30 rounded-3xl p-6 group-hover:border-blue-400 transition-all duration-700">
+              
                 {/* MOTIVATION LETTER FIRST */}
                 <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between mb-6">
                   <div className="flex items-center gap-6">
@@ -177,6 +178,7 @@ export default function Home() {
 
             {/* ACS APPLICATION – Red theme (outer unified border) */}
             <div className="group">
+              <div className="mt-12 border-4 border-red-500/30 rounded-3xl p-6 group-hover:border-red-400 transition-all duration-700">
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
                 target="_blank"
@@ -198,7 +200,7 @@ export default function Home() {
               </a>
 
               {/* Unified Red Outer Border around BOTH buttons */}
-              <div className="mt-12 border-4 border-red-500/30 rounded-3xl p-6 group-hover:border-red-400 transition-all duration-700">
+              
                 {/* MOTIVATION LETTER FIRST */}
                 <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between mb-6">
                   <div className="flex items-center gap-6">

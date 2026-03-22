@@ -22,7 +22,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-zinc-950 text-zinc-100 antialiased">
-        {/* === PROFESSIONAL STICKY NAVBAR (Amazon/Facebook quality) === */}
+        {/* === PROFESSIONAL STICKY NAVBAR (Amazon/Facebook quality — no CTA) === */}
         <nav className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="flex items-center justify-between h-20">
@@ -34,7 +34,7 @@ export default function RootLayout({
                 <span className="font-semibold text-2xl tracking-tighter">Vincenzo Grimaldi</span>
               </a>
 
-              {/* Desktop Navigation */}
+              {/* Desktop Navigation — smooth scroll links */}
               <div className="hidden md:flex items-center gap-10 text-sm font-medium">
                 <a href="#about" className="nav-link text-zinc-300 hover:text-white">About</a>
                 <a href="#strengths" className="nav-link text-zinc-300 hover:text-white">Core Strengths</a>
@@ -43,20 +43,15 @@ export default function RootLayout({
                 <a href="#inspiration" className="nav-link text-zinc-300 hover:text-white">Inspiration</a>
               </div>
 
-              {/* CTA */}
-              <a
-                href="mailto:vincenzo@grimaldi.engineering?subject=Strategy%20Call%20–%20AI-Native%20Energy%20Systems"
-                className="px-9 py-3.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 rounded-2xl font-semibold text-sm shadow-xl shadow-cyan-500/30 hover:shadow-2xl hover:shadow-cyan-500/50 active:scale-95 transition-all duration-300"
-              >
-                START A CONVERSATION
-              </a>
+              {/* Empty space — CTA button fully removed */}
+              <div className="w-40"></div>
             </div>
           </div>
         </nav>
 
         {children}
 
-        {/* === PROFESSIONAL FOOTER === */}
+        {/* === PROFESSIONAL FOOTER (unchanged) === */}
         <footer className="bg-zinc-950 border-t border-zinc-800 pt-20 pb-12 mt-32">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="grid md:grid-cols-3 gap-12">

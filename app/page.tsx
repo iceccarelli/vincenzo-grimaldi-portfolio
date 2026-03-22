@@ -114,9 +114,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* === PROFESSIONAL PHD SECTION – Large PDF-Style Icons (4× bigger + clickable) === */}
+        {/* === MOST PROFESSIONAL PHD SECTION – Framed Document Icons + Harry Potter Hover === */}
         <section id="phd" className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800">
-          <div className="text-center mb-12">
+          <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">PhD Applications – ERC Synergy Grant SAFEr Grid</h2>
             <p className="text-xl text-zinc-400 max-w-3xl mx-auto">
               Transparent &amp; Open Application Process at RWTH Aachen University
@@ -126,28 +126,33 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
 
-            {/* TIM APPLICATION – Large PDF-style icon + full block clickable */}
+            {/* TIM APPLICATION – Blue theme, professional framed icon */}
             <div>
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-center hover:opacity-90 transition-opacity group"
+                className="group block text-center transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)]"
               >
-                <h2 className="text-2xl font-bold text-white mb-2">TIM Application</h2>
-                <p className="text-cyan-400 text-sm mb-8">
+                <h2 className="text-2xl font-bold text-white mb-3">TIM Application</h2>
+                <p className="text-blue-400 text-sm mb-10">
                   Lehrstuhl für Betriebswirtschaftslehre, insbesondere<br />
                   Technologie- und Innovationsmanagement (TIME Research Area)
                 </p>
-                <div className="mx-auto mb-6 w-32 h-32 bg-zinc-800 rounded-3xl flex items-center justify-center border border-amber-500/30 group-hover:border-amber-400 transition-colors">
-                  <i className="fas fa-file-contract text-[120px] text-amber-400" />
+
+                {/* Professional framed perimeter */}
+                <div className="mx-auto mb-8 relative w-[172px] h-[172px]">
+                  <div className="absolute inset-0 rounded-3xl border-8 border-zinc-900 group-hover:border-blue-950 transition-colors" />
+                  <div className="absolute inset-[10px] bg-zinc-950 rounded-3xl flex items-center justify-center border border-blue-500/40 group-hover:border-blue-400 transition-all shadow-inner">
+                    <i className="fas fa-file-contract text-[138px] text-blue-400" />
+                  </div>
                 </div>
 
-                <i className="fas fa-arrow-down text-6xl text-cyan-500/70 mb-8" />
+                <i className="fas fa-arrow-down text-7xl text-blue-500/70 group-hover:text-blue-400 transition-colors" />
               </a>
 
-              <div className="space-y-6">
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
+              <div className="space-y-6 mt-12">
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all flex items-center justify-between group">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-pdf text-5xl text-red-500" />
                     <div>
@@ -155,9 +160,9 @@ export default function Home() {
                       <div className="text-sm text-zinc-500">4 pages • March 2026</div>
                     </div>
                   </div>
-                  <i className="fas fa-download text-3xl text-cyan-400 group-hover:-translate-y-1 transition-transform" />
+                  <i className="fas fa-download text-3xl text-blue-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all flex items-center justify-between group">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>
@@ -165,33 +170,38 @@ export default function Home() {
                       <div className="text-sm text-zinc-500">2 pages • 21 March 2026</div>
                     </div>
                   </div>
-                  <i className="fas fa-download text-3xl text-cyan-400 group-hover:-translate-y-1 transition-transform" />
+                  <i className="fas fa-download text-3xl text-blue-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
               </div>
             </div>
 
-            {/* ACS APPLICATION – Large PDF-style icon + full block clickable */}
+            {/* ACS APPLICATION – Red theme, professional framed icon */}
             <div>
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-center hover:opacity-90 transition-opacity group"
+                className="group block text-center transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)]"
               >
-                <h2 className="text-2xl font-bold text-white mb-2">ACS Application</h2>
-                <p className="text-cyan-400 text-sm mb-8">
+                <h2 className="text-2xl font-bold text-white mb-3">ACS Application</h2>
+                <p className="text-red-400 text-sm mb-10">
                   Institute for Automation of Complex Power Systems (ACS)<br />
                   E.ON Energy Research Center
                 </p>
-                <div className="mx-auto mb-6 w-32 h-32 bg-zinc-800 rounded-3xl flex items-center justify-center border border-blue-500/30 group-hover:border-blue-400 transition-colors">
-                  <i className="fas fa-file-contract text-[120px] text-blue-400" />
+
+                {/* Professional framed perimeter */}
+                <div className="mx-auto mb-8 relative w-[172px] h-[172px]">
+                  <div className="absolute inset-0 rounded-3xl border-8 border-zinc-900 group-hover:border-red-950 transition-colors" />
+                  <div className="absolute inset-[10px] bg-zinc-950 rounded-3xl flex items-center justify-center border border-red-500/40 group-hover:border-red-400 transition-all shadow-inner">
+                    <i className="fas fa-file-contract text-[138px] text-red-400" />
+                  </div>
                 </div>
 
-                <i className="fas fa-arrow-down text-6xl text-cyan-500/70 mb-8" />
+                <i className="fas fa-arrow-down text-7xl text-red-500/70 group-hover:text-red-400 transition-colors" />
               </a>
 
-              <div className="space-y-6">
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
+              <div className="space-y-6 mt-12">
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all flex items-center justify-between group">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-pdf text-5xl text-red-500" />
                     <div>
@@ -199,9 +209,9 @@ export default function Home() {
                       <div className="text-sm text-zinc-500">4 pages • March 2026</div>
                     </div>
                   </div>
-                  <i className="fas fa-download text-3xl text-cyan-400 group-hover:-translate-y-1 transition-transform" />
+                  <i className="fas fa-download text-3xl text-red-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all flex items-center justify-between group">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>
@@ -209,7 +219,7 @@ export default function Home() {
                       <div className="text-sm text-zinc-500">2 pages • 22 March 2026</div>
                     </div>
                   </div>
-                  <i className="fas fa-download text-3xl text-cyan-400 group-hover:-translate-y-1 transition-transform" />
+                  <i className="fas fa-download text-3xl text-red-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
               </div>
             </div>

@@ -46,31 +46,31 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FLAGSHIP INITIATIVES — NOW WITH GITHUB LINKS */}
+        {/* FLAGSHIP INITIATIVES — GITHUB LINKS */}
         <section id="initiatives" className="mb-32 scroll-mt-24">
           <h2 className="text-4xl font-bold mb-12">Flagship Initiatives</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { 
-                title: 'NeuralBridge', 
+              {
+                title: 'NeuralBridge',
                 desc: 'Secure, semantically-aware middleware for agentic AI across any enterprise protocol or legacy system.',
                 link: 'https://github.com/iceccarelli/neuralbridge'
               },
-              { 
-                title: 'GridOS', 
+              {
+                title: 'GridOS',
                 desc: 'Next-gen digital twin fusing physics simulation, RL agents, and real-time optimization for autonomous grids.',
                 link: 'https://github.com/iceccarelli/GridOS'
               },
-              { 
-                title: 'DERIM', 
+              {
+                title: 'DERIM',
                 desc: 'Blockchain-native decentralized energy resource platform for P2P trading and virtual power plants.',
                 link: 'https://github.com/iceccarelli/derim-middleware'
               }
             ].map((p, i) => (
-              <a 
-                key={i} 
-                href={p.link} 
-                target="_blank" 
+              <a
+                key={i}
+                href={p.link}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="card-hover block bg-zinc-900/70 backdrop-blur-sm p-8 rounded-3xl border border-zinc-800 hover:border-blue-500 group"
               >
@@ -84,16 +84,15 @@ export default function Home() {
           </div>
         </section>
 
-        {/* === NEW PHD RESOURCES SECTION WITH UPLOAD === */}
+        {/* PHD RESOURCES (EMAIL BUTTON KEPT — it is NOT "Start a Conversation") */}
         <section id="phd" className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">PhD Application Materials</h2>
             <p className="text-xl text-zinc-400 max-w-2xl mx-auto">Upload supporting documents for my PhD applications or download existing materials</p>
           </div>
-
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Upload Area */}
-            <div 
+            <div
               id="upload-zone"
               className="upload-zone border-2 border-dashed border-zinc-700 rounded-3xl p-12 text-center hover:border-cyan-400 transition-colors group"
               onDragOver={(e) => { e.preventDefault(); document.getElementById('upload-zone')?.classList.add('dragover'); }}
@@ -109,8 +108,7 @@ export default function Home() {
                 }} />
               </label>
             </div>
-
-            {/* Downloadable Materials Placeholder */}
+            {/* Downloadable Materials */}
             <div className="space-y-6">
               <a href="#" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
                 <div>
@@ -128,7 +126,6 @@ export default function Home() {
               </a>
             </div>
           </div>
-
           <div className="text-center mt-12">
             <button
               onClick={() => window.location.href = "mailto:vincenzo@grimaldi.engineering?subject=PhD%20Application%20Documents"}
@@ -139,7 +136,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* INSPIRATION SECTION (unchanged but now with id) */}
+        {/* INSPIRATION SECTION */}
         <section id="inspiration" className="bg-gradient-to-br from-blue-950 via-zinc-950 to-zinc-950 border border-blue-800/40 rounded-3xl p-16 text-center scroll-mt-24">
           <h2 className="text-5xl font-extrabold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-cyan-300">
             Building AI-Native Energy Infrastructure
@@ -147,7 +144,6 @@ export default function Home() {
           <p className="text-2xl text-zinc-300 mb-10 max-w-3xl mx-auto">
             Strategic consulting & implementation for utilities, operators, and innovators ready to dominate the next energy era.
           </p>
-
           <div className="max-w-5xl mx-auto">
             <p className="uppercase tracking-[3px] text-blue-400 text-sm mb-6">Sources of Inspiration & Intelligence</p>
             <div className="grid md:grid-cols-3 gap-6">

@@ -121,7 +121,7 @@ export default function Home() {
             <p className="text-xl text-zinc-400 max-w-3xl mx-auto">
               Transparent &amp; Open Application Process at RWTH Aachen University
             </p>
-            <p className="text-sm text-cyan-400 mt-3 tracking-widest">TWO INTERDISCIPLINARY APPLICATIONS • SAME VISION • FULL TRANSPARENCY</p>
+            <p className="text-sm text-cyan-400 mt-3 tracking-widest">TWO INTERDISCIPLINARY APPLICATIONS</p>
           </div>
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">

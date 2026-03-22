@@ -114,7 +114,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* === MOST PROFESSIONAL PHD SECTION – Gray borders that brighten on hover === */}
+        {/* === MOST PROFESSIONAL PHD SECTION – Wider Gray Borders + Double Spacing === */}
         <section id="phd" className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">PhD Applications – ERC Synergy Grant SAFEr Grid</h2>
@@ -128,7 +128,6 @@ export default function Home() {
 
             {/* TIM APPLICATION – Starts gray, brightens to blue on hover */}
             <div className="group">
-              <div className="mt-12 border-4 border-zinc-700/50 rounded-3xl p-6 group-hover:border-blue-400 transition-all duration-700">
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
                 target="_blank"
@@ -150,10 +149,10 @@ export default function Home() {
                 <i className="fas fa-arrow-down text-7xl text-blue-500/70 group-hover:text-blue-400 transition-colors" />
               </a>
 
-              {/* Unified Gray Outer Border (brightens to blue on hover) */}
-              
+              {/* Wider Unified Gray Outer Border (brightens to blue on hover) – DOUBLE spacing */}
+              <div className="mt-20 border-4 border-zinc-700/50 rounded-3xl p-12 group-hover:border-blue-400 transition-all duration-700">
                 {/* MOTIVATION LETTER FIRST */}
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between mb-6">
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between mb-8">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>
@@ -179,7 +178,6 @@ export default function Home() {
 
             {/* ACS APPLICATION – Starts gray, brightens to red on hover */}
             <div className="group">
-              <div className="mt-12 border-4 border-zinc-700/50 rounded-3xl p-6 group-hover:border-red-400 transition-all duration-700">
               <a
                 href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
                 target="_blank"
@@ -200,10 +198,10 @@ export default function Home() {
                 <i className="fas fa-arrow-down text-7xl text-red-500/70 group-hover:text-red-400 transition-colors" />
               </a>
 
-              {/* Unified Gray Outer Border (brightens to red on hover) */}
-              
+              {/* Wider Unified Gray Outer Border (brightens to red on hover) – DOUBLE spacing */}
+              <div className="mt-20 border-4 border-zinc-700/50 rounded-3xl p-12 group-hover:border-red-400 transition-all duration-700">
                 {/* MOTIVATION LETTER FIRST */}
-                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between mb-6">
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between mb-8">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>

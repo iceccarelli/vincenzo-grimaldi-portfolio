@@ -1,6 +1,36 @@
+'use client';
+
 import Image from 'next/image';
+import { useState } from 'react';
 
 export default function Home() {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      alert(`${files.length} file(s) received! Use the button below to email them.`);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      alert(`${e.target.files.length} file(s) selected. Use the button below to email them.`);
+    }
+  };
+
   return (
     <div className="pt-20">
       {/* HERO BANNER */}
@@ -46,7 +76,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FLAGSHIP INITIATIVES — GITHUB LINKS */}
+        {/* FLAGSHIP INITIATIVES */}
         <section id="initiatives" className="mb-32 scroll-mt-24">
           <h2 className="text-4xl font-bold mb-12">Flagship Initiatives</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -84,30 +114,40 @@ export default function Home() {
           </div>
         </section>
 
-        {/* PHD RESOURCES (EMAIL BUTTON KEPT — it is NOT "Start a Conversation") */}
+        {/* PHD RESOURCES — NOW FULLY INTERACTIVE */}
         <section id="phd" className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">PhD Application Materials</h2>
             <p className="text-xl text-zinc-400 max-w-2xl mx-auto">Upload supporting documents for my PhD applications or download existing materials</p>
           </div>
+
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Upload Area */}
+            {/* Professional Drag & Drop Zone */}
             <div
-              id="upload-zone"
-              className="upload-zone border-2 border-dashed border-zinc-700 rounded-3xl p-12 text-center hover:border-cyan-400 transition-colors group"
-              onDragOver={(e) => { e.preventDefault(); document.getElementById('upload-zone')?.classList.add('dragover'); }}
-              onDragLeave={() => document.getElementById('upload-zone')?.classList.remove('dragover')}
-              onDrop={(e) => { e.preventDefault(); document.getElementById('upload-zone')?.classList.remove('dragover'); alert('File received! You can now email it below.'); }}
+              className={`upload-zone border-2 border-dashed rounded-3xl p-12 text-center transition-all ${
+                isDragging ? 'border-cyan-400 bg-zinc-900/80 scale-105' : 'border-zinc-700 hover:border-cyan-400'
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
             >
-              <i className="fas fa-cloud-upload-alt text-6xl text-cyan-400 mb-6 group-hover:scale-110 transition-transform"></i>
+              <i 
+                className="fas fa-cloud-upload-alt text-6xl text-cyan-400 mb-6 transition-transform" 
+                style={{ transform: isDragging ? 'scale(1.15)' : 'scale(1)' }}
+              />
               <p className="text-lg mb-2">Drop PDF files here or</p>
               <label className="inline-block bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-semibold px-8 py-4 rounded-2xl cursor-pointer transition-all active:scale-95">
                 BROWSE FILES
-                <input type="file" multiple accept=".pdf" className="hidden" onChange={(e) => {
-                  if (e.target.files?.length) alert(`${e.target.files.length} file(s) selected. Use the button below to send them.`);
-                }} />
+                <input 
+                  type="file" 
+                  multiple 
+                  accept=".pdf" 
+                  className="hidden" 
+                  onChange={handleFileSelect} 
+                />
               </label>
             </div>
+
             {/* Downloadable Materials */}
             <div className="space-y-6">
               <a href="#" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
@@ -126,6 +166,7 @@ export default function Home() {
               </a>
             </div>
           </div>
+
           <div className="text-center mt-12">
             <button
               onClick={() => window.location.href = "mailto:vincenzo@grimaldi.engineering?subject=PhD%20Application%20Documents"}

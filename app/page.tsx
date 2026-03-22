@@ -134,14 +134,15 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="block text-center hover:opacity-90 transition-opacity group"
               >
-                <div className="mx-auto mb-6 w-32 h-32 bg-zinc-800 rounded-3xl flex items-center justify-center border border-amber-500/30 group-hover:border-amber-400 transition-colors">
-                  <i className="fas fa-file-contract text-[120px] text-amber-400" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">TIM Application</h3>
+                <h2 className="text-2xl font-bold text-white mb-2">TIM Application</h2>
                 <p className="text-cyan-400 text-sm mb-8">
                   Lehrstuhl für Betriebswirtschaftslehre, insbesondere<br />
                   Technologie- und Innovationsmanagement (TIME Research Area)
                 </p>
+                <div className="mx-auto mb-6 w-32 h-32 bg-zinc-800 rounded-3xl flex items-center justify-center border border-amber-500/30 group-hover:border-amber-400 transition-colors">
+                  <i className="fas fa-file-contract text-[120px] text-amber-400" />
+                </div>
+
                 <i className="fas fa-arrow-down text-6xl text-cyan-500/70 mb-8" />
               </a>
 
@@ -177,14 +178,15 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="block text-center hover:opacity-90 transition-opacity group"
               >
-                <div className="mx-auto mb-6 w-32 h-32 bg-zinc-800 rounded-3xl flex items-center justify-center border border-blue-500/30 group-hover:border-blue-400 transition-colors">
-                  <i className="fas fa-file-contract text-[120px] text-blue-400" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">ACS Application</h3>
+                <h2 className="text-2xl font-bold text-white mb-2">ACS Application</h2>
                 <p className="text-cyan-400 text-sm mb-8">
                   Institute for Automation of Complex Power Systems (ACS)<br />
                   E.ON Energy Research Center
                 </p>
+                <div className="mx-auto mb-6 w-32 h-32 bg-zinc-800 rounded-3xl flex items-center justify-center border border-blue-500/30 group-hover:border-blue-400 transition-colors">
+                  <i className="fas fa-file-contract text-[120px] text-blue-400" />
+                </div>
+
                 <i className="fas fa-arrow-down text-6xl text-cyan-500/70 mb-8" />
               </a>
 

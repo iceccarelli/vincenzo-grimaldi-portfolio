@@ -114,7 +114,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* === NEW PROFESSIONAL PHD APPLICATIONS SECTION (TIM + ACS) === */}
+        {/* === UPDATED PHD SECTION WITH DOWNWARD ARROWS ONLY (NO MIDDLE ARROW) === */}
         <section id="phd" className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">PhD Applications – ERC Synergy Grant SAFEr Grid</h2>
@@ -124,46 +124,37 @@ export default function Home() {
             <p className="text-sm text-cyan-400 mt-3 tracking-widest">TWO INTERDISCIPLINARY APPLICATIONS • SAME VISION • FULL TRANSPARENCY</p>
           </div>
 
-          <div className="max-w-5xl mx-auto grid md:grid-cols-[1fr,auto,1fr] gap-12 items-center">
-            {/* LEFT: TIM APPLICATION */}
-            <div className="text-center">
-              <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-zinc-700">
-                <img 
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/RWTH_Logo_3.svg/800px-RWTH_Logo_3.svg.png" 
-                  alt="RWTH Aachen University" 
-                  className="w-16 h-auto" 
-                />
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
+
+            {/* TIM APPLICATION – with downward arrow */}
+            <div>
+              <div className="text-center">
+                <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-zinc-700">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/RWTH_Logo_3.svg/800px-RWTH_Logo_3.svg.png" alt="RWTH Aachen University" className="w-16 h-auto" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">TIM Application</h3>
+                <p className="text-cyan-400 text-sm mb-8">
+                  Lehrstuhl für Betriebswirtschaftslehre, insbesondere<br />
+                  Technologie- und Innovationsmanagement (TIME Research Area)
+                </p>
+                <i className="fas fa-arrow-down text-6xl text-cyan-500/70 mb-8" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">TIM Application</h3>
-              <p className="text-cyan-400 text-sm mb-8">
-                Lehrstuhl für Betriebswirtschaftslehre, insbesondere<br />
-                Technologie- und Innovationsmanagement (TIME Research Area)
-              </p>
 
               <div className="space-y-6">
-                <a 
-                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" 
-                  target="_blank"
-                  className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group"
-                >
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-pdf text-5xl text-red-500" />
-                    <div className="text-left">
+                    <div>
                       <div className="font-semibold text-lg">Curriculum Vitae</div>
                       <div className="text-sm text-zinc-500">4 pages • March 2026</div>
                     </div>
                   </div>
                   <i className="fas fa-download text-3xl text-cyan-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
-
-                <a 
-                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" 
-                  target="_blank"
-                  className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group"
-                >
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
-                    <div className="text-left">
+                    <div>
                       <div className="font-semibold text-lg">Motivation Letter</div>
                       <div className="text-sm text-zinc-500">2 pages • 21 March 2026</div>
                     </div>
@@ -173,51 +164,35 @@ export default function Home() {
               </div>
             </div>
 
-            {/* MIDDLE ARROW */}
-            <div className="hidden md:flex flex-col items-center justify-center h-48">
-              <i className="fas fa-arrow-right text-6xl text-cyan-500/60" />
-              <div className="text-xs text-cyan-400 mt-4 tracking-[2px] rotate-90">SAME UNIVERSITY • TWO SCHOOLS</div>
-            </div>
-
-            {/* RIGHT: ACS APPLICATION */}
-            <div className="text-center">
-              <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-zinc-700">
-                <img 
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/RWTH_Logo_3.svg/800px-RWTH_Logo_3.svg.png" 
-                  alt="RWTH Aachen University" 
-                  className="w-16 h-auto" 
-                />
+            {/* ACS APPLICATION – with downward arrow */}
+            <div>
+              <div className="text-center">
+                <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-zinc-700">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/RWTH_Logo_3.svg/800px-RWTH_Logo_3.svg.png" alt="RWTH Aachen University" className="w-16 h-auto" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">ACS Application</h3>
+                <p className="text-cyan-400 text-sm mb-8">
+                  Institute for Automation of Complex Power Systems (ACS)<br />
+                  E.ON Energy Research Center
+                </p>
+                <i className="fas fa-arrow-down text-6xl text-cyan-500/70 mb-8" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">ACS Application</h3>
-              <p className="text-cyan-400 text-sm mb-8">
-                Institute for Automation of Complex Power Systems (ACS)<br />
-                E.ON Energy Research Center
-              </p>
 
               <div className="space-y-6">
-                <a 
-                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" 
-                  target="_blank"
-                  className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group"
-                >
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-pdf text-5xl text-red-500" />
-                    <div className="text-left">
+                    <div>
                       <div className="font-semibold text-lg">Curriculum Vitae</div>
                       <div className="text-sm text-zinc-500">4 pages • March 2026</div>
                     </div>
                   </div>
                   <i className="fas fa-download text-3xl text-cyan-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
-
-                <a 
-                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" 
-                  target="_blank"
-                  className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group"
-                >
+                <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
-                    <div className="text-left">
+                    <div>
                       <div className="font-semibold text-lg">Motivation Letter</div>
                       <div className="text-sm text-zinc-500">2 pages • 22 March 2026</div>
                     </div>
@@ -228,7 +203,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* UPLOAD ZONE (still fully functional) */}
+          {/* UPLOAD ZONE */}
           <div className="mt-20 border-t border-zinc-800 pt-12">
             <div className="text-center mb-8">
               <p className="text-zinc-400">Upload additional supporting documents for either application</p>
@@ -242,20 +217,11 @@ export default function Home() {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
-                <i
-                  className="fas fa-cloud-upload-alt text-6xl text-cyan-400 mb-6 transition-transform"
-                  style={{ transform: isDragging ? 'scale(1.15)' : 'scale(1)' }}
-                />
+                <i className="fas fa-cloud-upload-alt text-6xl text-cyan-400 mb-6 transition-transform" style={{ transform: isDragging ? 'scale(1.15)' : 'scale(1)' }} />
                 <p className="text-lg mb-2">Drop PDF files here or</p>
                 <label className="inline-block bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-semibold px-8 py-4 rounded-2xl cursor-pointer transition-all active:scale-95">
                   BROWSE FILES
-                  <input
-                    type="file"
-                    multiple
-                    accept=".pdf"
-                    className="hidden"
-                    onChange={handleFileSelect}
-                  />
+                  <input type="file" multiple accept=".pdf" className="hidden" onChange={handleFileSelect} />
                 </label>
               </div>
               <div className="text-center flex flex-col justify-center text-sm text-zinc-500">

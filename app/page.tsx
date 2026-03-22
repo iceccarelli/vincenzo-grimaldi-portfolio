@@ -114,7 +114,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* === UPDATED PHD SECTION WITH DOWNWARD ARROWS ONLY (NO MIDDLE ARROW) === */}
+        {/* === FINAL PHD SECTION – Professional Thematic Icons (NO RWTH Logo) === */}
         <section id="phd" className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">PhD Applications – ERC Synergy Grant SAFEr Grid</h2>
@@ -126,11 +126,16 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
 
-            {/* TIM APPLICATION – with downward arrow */}
+            {/* TIM APPLICATION – Professional Innovation Icon + Direct Link to Live Job Post */}
             <div>
-              <div className="text-center">
-                <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-zinc-700">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/RWTH_Logo_3.svg/800px-RWTH_Logo_3.svg.png" alt="RWTH Aachen University" className="w-16 h-auto" />
+              <a
+                href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-center hover:opacity-90 transition-opacity"
+              >
+                <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-amber-500/30">
+                  <i className="fas fa-lightbulb text-6xl text-amber-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">TIM Application</h3>
                 <p className="text-cyan-400 text-sm mb-8">
@@ -138,7 +143,7 @@ export default function Home() {
                   Technologie- und Innovationsmanagement (TIME Research Area)
                 </p>
                 <i className="fas fa-arrow-down text-6xl text-cyan-500/70 mb-8" />
-              </div>
+              </a>
 
               <div className="space-y-6">
                 <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">
@@ -164,11 +169,16 @@ export default function Home() {
               </div>
             </div>
 
-            {/* ACS APPLICATION – with downward arrow */}
+            {/* ACS APPLICATION – Professional Power Systems Icon + Direct Link to Live Job Post */}
             <div>
-              <div className="text-center">
-                <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-zinc-700">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/RWTH_Logo_3.svg/800px-RWTH_Logo_3.svg.png" alt="RWTH Aachen University" className="w-16 h-auto" />
+              <a
+                href="https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-center hover:opacity-90 transition-opacity"
+              >
+                <div className="mx-auto mb-6 w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-blue-500/30">
+                  <i className="fas fa-bolt text-6xl text-blue-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">ACS Application</h3>
                 <p className="text-cyan-400 text-sm mb-8">
@@ -176,7 +186,7 @@ export default function Home() {
                   E.ON Energy Research Center
                 </p>
                 <i className="fas fa-arrow-down text-6xl text-cyan-500/70 mb-8" />
-              </div>
+              </a>
 
               <div className="space-y-6">
                 <a href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" target="_blank" className="block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-cyan-400 transition-all flex items-center justify-between group">

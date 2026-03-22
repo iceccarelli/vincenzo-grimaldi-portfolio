@@ -52,35 +52,62 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mb-32">
-          <h2 className="text-4xl font-bold mb-12">Flagship Initiatives</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { title: 'NeuralBridge', desc: 'Secure, semantically-aware middleware for agentic AI across any enterprise protocol or legacy system.' },
-              { title: 'GridOS', desc: 'Next-gen digital twin fusing physics simulation, RL agents, and real-time optimization for autonomous grids.' },
-              { title: 'DERIM', desc: 'Blockchain-native decentralized energy resource platform for P2P trading and virtual power plants.' }
-            ].map((p, i) => (
-              <div key={i} className="bg-zinc-900/70 backdrop-blur-sm p-8 rounded-2xl border border-zinc-800 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1">
-                <h3 className="text-3xl font-bold text-blue-400 mb-5">{p.title}</h3>
-                <p className="text-zinc-300 leading-relaxed">{p.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section className="bg-gradient-to-br from-blue-950 via-zinc-950 to-zinc-950 border border-blue-800/40 rounded-3xl p-16 text-center">
           <h2 className="text-5xl font-extrabold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-cyan-300">
-            Building AI Infrastructure
+            Building AI-Native Energy Infrastructure
           </h2>
-          <p className="text-2xl text-zinc-300 mb-12 max-w-3xl mx-auto">
+          <p className="text-2xl text-zinc-300 mb-10 max-w-3xl mx-auto">
             Strategic consulting & implementation for utilities, operators, and innovators ready to dominate the next energy era.
           </p>
-          <a
-            href="mailto:vincenzo@grimaldi.engineering?subject=Strategy%20Call%20–%20Intelligent%20Energy%20Systems"
-            className="inline-flex items-center gap-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-16 py-8 rounded-2xl font-bold text-2xl hover:from-blue-500 hover:to-cyan-500 transition-all duration-300 shadow-2xl shadow-blue-900/50 hover:shadow-blue-700/70"
-          >
-            CONTACT ME <i className="fas fa-arrow-right text-xl"></i>
-          </a>
+
+          <div className="max-w-5xl mx-auto">
+            <p className="uppercase tracking-[3px] text-blue-400 text-sm mb-6">Sources of Inspiration & Intelligence</p>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <a 
+                href="https://about.bnef.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group bg-zinc-900/80 p-8 rounded-2xl border border-zinc-700 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1"
+              >
+                <h4 className="font-bold text-2xl mb-3 text-white">BloombergNEF</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-6">The world’s leading source for energy market intelligence, AI load forecasts, and infrastructure investment trends.</p>
+                <span className="text-cyan-400 text-sm group-hover:underline">bnef.com →</span>
+              </a>
+              
+              <a 
+                href="https://www.iea.org/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group bg-zinc-900/80 p-8 rounded-2xl border border-zinc-700 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1"
+              >
+                <h4 className="font-bold text-2xl mb-3 text-white">International Energy Agency</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-6">Authoritative global analysis on AI for energy optimisation, grid modernization, and the clean energy transition.</p>
+                <span className="text-cyan-400 text-sm group-hover:underline">iea.org →</span>
+              </a>
+              
+              <a 
+                href="https://energy.mit.edu/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group bg-zinc-900/80 p-8 rounded-2xl border border-zinc-700 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1"
+              >
+                <h4 className="font-bold text-2xl mb-3 text-white">MIT Energy Initiative</h4>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-6">Pioneering research in digital twins, physics-informed AI, and autonomous energy systems — core to GridOS thinking.</p>
+                <span className="text-cyan-400 text-sm group-hover:underline">energy.mit.edu →</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-16">
+            <a
+              href="mailto:vincenzo@grimaldi.engineering?subject=Strategy%20Call%20–%20AI-Native%20Energy%20Systems"
+              className="inline-flex items-center gap-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-16 py-8 rounded-2xl font-bold text-2xl hover:from-blue-500 hover:to-cyan-500 transition-all duration-300 shadow-2xl shadow-blue-900/50 hover:shadow-blue-700/70"
+            >
+              START A CONVERSATION <i className="fas fa-arrow-right text-xl"></i>
+            </a>
+          </div>
+        </section>
         </section>
       </main>
     </div>

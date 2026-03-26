@@ -39,7 +39,7 @@ export default function RootLayout({
                 <a href="#about" className="nav-link text-zinc-300 hover:text-white">About</a>
                 <a href="#strengths" className="nav-link text-zinc-300 hover:text-white">Core Strengths</a>
                 <a href="#initiatives" className="nav-link text-zinc-300 hover:text-white">Flagship Initiatives</a>
-                <a href="#phd" className="nav-link text-zinc-300 hover:text-white">PhD Resources</a>
+                <a href="#phd" className="nav-link text-zinc-300 hover:text-white">PhD</a>
                 <a href="#inspiration" className="nav-link text-zinc-300 hover:text-white">Inspiration</a>
               </div>
 

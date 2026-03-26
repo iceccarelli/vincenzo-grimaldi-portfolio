@@ -152,7 +152,7 @@ export default function Home() {
               {/* Wider Unified Gray Outer Border (brightens to blue on hover) */}
               <div className="mt-28 border-4 border-zinc-700/50 rounded-3xl p-20 group-hover:border-blue-400 transition-all duration-700">
                 {/* MOTIVATION LETTER FIRST */}
-                <a href="/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between mb-10">
+                <a href="public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between mb-10">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>
@@ -163,7 +163,7 @@ export default function Home() {
                   <i className="fas fa-download text-3xl text-blue-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
                 {/* CV SECOND */}
-                <a href="/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between">
+                <a href="public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-pdf text-5xl text-red-500" />
                     <div>
@@ -201,7 +201,7 @@ export default function Home() {
               {/* Wider Unified Gray Outer Border (brightens to red on hover) */}
               <div className="mt-28 border-4 border-zinc-700/50 rounded-3xl p-20 group-hover:border-red-400 transition-all duration-700">
                 {/* MOTIVATION LETTER FIRST */}
-                <a href="/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between mb-10">
+                <a href="public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between mb-10">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-lines text-5xl text-amber-400" />
                     <div>
@@ -212,7 +212,7 @@ export default function Home() {
                   <i className="fas fa-download text-3xl text-red-400 group-hover:-translate-y-1 transition-transform" />
                 </a>
                 {/* CV SECOND */}
-                <a href="/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between">
+                <a href="public/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf" target="_blank" className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between">
                   <div className="flex items-center gap-6">
                     <i className="fas fa-file-pdf text-5xl text-red-500" />
                     <div>

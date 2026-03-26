@@ -24,6 +24,7 @@ export default function Home() {
             RWTH Aachen trained (Business Administration &amp; Engineering — Electrical Power Engineering), I bridge theory and production-grade impact through <strong>NeuralBridge</strong>, <strong>GridOS</strong>, and <strong>DERIM</strong>.
           </p>
         </section>
+
         {/* CORE STRENGTHS */}
         <section id="strengths" className="mb-32 scroll-mt-24">
           <h2 className="text-4xl font-bold mb-12">Core Strengths</h2>
@@ -63,6 +64,7 @@ export default function Home() {
             ))}
           </div>
         </section>
+
         {/* FLAGSHIP INITIATIVES */}
         <section id="initiatives" className="mb-32 scroll-mt-24">
           <h2 className="text-4xl font-bold mb-12">Flagship Initiatives</h2>
@@ -102,6 +104,7 @@ export default function Home() {
             ))}
           </div>
         </section>
+
         {/* PHD APPLICATIONS SECTION */}
         <section
           id="phd"
@@ -142,7 +145,7 @@ export default function Home() {
               <div className="mt-28 border-4 border-zinc-700/50 rounded-3xl p-20 group-hover:border-blue-400 transition-all duration-700">
                 {/* Motivation Letter */}
                 <a
-                  href="/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf"
+                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf"
                   target="_blank"
                   className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between mb-10"
                 >
@@ -157,7 +160,7 @@ export default function Home() {
                 </a>
                 {/* CV */}
                 <a
-                  href="/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf"
+                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf"
                   target="_blank"
                   className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-blue-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(59,130,246)] flex items-center justify-between"
                 >
@@ -172,6 +175,7 @@ export default function Home() {
                 </a>
               </div>
             </div>
+
             {/* ACS APPLICATION */}
             <div className="group">
               <a
@@ -197,7 +201,7 @@ export default function Home() {
               <div className="mt-28 border-4 border-zinc-700/50 rounded-3xl p-20 group-hover:border-red-400 transition-all duration-700">
                 {/* Motivation Letter */}
                 <a
-                  href="/phd-applications/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf"
+                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf"
                   target="_blank"
                   className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between mb-10"
                 >
@@ -212,7 +216,7 @@ export default function Home() {
                 </a>
                 {/* CV */}
                 <a
-                  href="/phd-applications/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf"
+                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf"
                   target="_blank"
                   className="group block p-8 bg-zinc-900 rounded-3xl border border-zinc-700 hover:border-red-400 transition-all duration-700 hover:scale-[1.04] hover:-translate-y-6 hover:shadow-[0_40px_80px_-20px_rgb(248,113,113)] flex items-center justify-between"
                 >
@@ -229,6 +233,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
         {/* INSPIRATION SECTION */}
         <section
           id="inspiration"

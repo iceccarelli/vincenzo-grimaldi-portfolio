@@ -25,7 +25,7 @@ export default function Home() {
             {/* RIGHT: Your new professional headshot (fixed) */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <Image
-                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/vincenzo_grimaldi_headshot_best_for_profile.jpg"
+                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Grimaldi_footer_picture_website.jpg"
                 alt="Vincenzo Ceccarelli Grimaldi"
                 width={520}
                 height={520}
@@ -332,7 +332,7 @@ export default function Home() {
             {/* RIGHT: Your new professional headshot (fixed) */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <Image
-                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Grimaldi_footer_picture_website.jpg"
+                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/vincenzo_grimaldi_headshot_best_for_profile.jpg"
                 alt="Vincenzo Ceccarelli Grimaldi"
                 width={520}
                 height={520}

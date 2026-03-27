@@ -18,33 +18,8 @@ export default function Home() {
                 Power Systems • AI • Energy Transition
               </p>
               <p className="max-w-lg text-xl text-zinc-200">
-                RWTH Aachen-trained engineer building the next generation of resilient, intelligent energy infrastructure.
+                Personal aim is to build the next generation of resilient, end-to-end intelligent energy infrastructure.
               </p>
-
-              {/* Big, clear action buttons (Amazon-style) */}
-              <div className="mt-10 flex flex-wrap gap-4">
-                <a
-                  href="#phd"
-                  className="bg-blue-600 hover:bg-blue-700 transition-colors px-10 py-5 rounded-3xl font-semibold text-lg flex items-center gap-3 shadow-2xl"
-                >
-                  <i className="fas fa-graduation-cap text-2xl" />
-                  View PhD Applications
-                </a>
-                <a
-                  href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf"
-                  target="_blank"
-                  className="bg-white text-zinc-900 hover:bg-zinc-100 transition-colors px-10 py-5 rounded-3xl font-semibold text-lg flex items-center gap-3 shadow-2xl"
-                >
-                  <i className="fas fa-download text-2xl" />
-                  Download Full CV
-                </a>
-                <a
-                  href="#initiatives"
-                  className="border-2 border-white/80 hover:border-white transition-colors px-10 py-5 rounded-3xl font-semibold text-lg flex items-center gap-3"
-                >
-                  Explore My Projects
-                </a>
-              </div>
             </div>
 
             {/* RIGHT: Your new professional headshot (fixed) */}

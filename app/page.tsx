@@ -315,34 +315,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      {/* === PROFESSIONAL FOOTER (unchanged) === */}
-      <footer className="bg-zinc-950 border-t border-zinc-800 py-16">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-sm">
-            <div className="text-zinc-400">
-              © 2026 Vincenzo Ceccarelli Grimaldi • All Rights Reserved
-            </div>
-            <div className="flex flex-wrap gap-x-8 gap-y-3 justify-center">
-              <a href="#phd" className="hover:text-blue-400 transition-colors">PhD Applications</a>
-              <a href="#initiatives" className="hover:text-blue-400 transition-colors">Flagship Projects</a>
-              <a href="#strengths" className="hover:text-blue-400 transition-colors">Core Expertise</a>
-              <a href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">GitHub</a>
-            </div>
-            {/* RIGHT: Your new professional headshot (fixed) */}
-            <div className="lg:col-span-5 flex justify-center lg:justify-end">
-              <Image
-                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/vincenzo_grimaldi_headshot_best_for_profile.jpg"
-                alt="Vincenzo Ceccarelli Grimaldi"
-                width={520}
-                height={520}
-                className="rounded-3xl shadow-2xl w-full max-w-[420px] lg:max-w-none object-cover border-8 border-zinc-800"
-                priority
-              />
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

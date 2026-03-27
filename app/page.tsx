@@ -4,11 +4,11 @@ import Image from 'next/image';
 export default function Home() {
   return (
     <div className="pt-20">
-      {/* === UPDATED PROFESSIONAL HERO SECTION (only this part was changed) === */}
+      {/* === UPDATED PROFESSIONAL HERO SECTION === */}
       <section className="bg-zinc-950 py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
-            
+           
             {/* LEFT: Text + Amazon-style buttons */}
             <div className="lg:col-span-7 text-white">
               <h1 className="text-6xl lg:text-7xl font-bold tracking-tighter leading-none mb-4">
@@ -47,10 +47,10 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RIGHT: Your new professional headshot (exactly where it belongs) */}
+            {/* RIGHT: Your new professional headshot (fixed) */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <Image
-                src="/vincenzo_grimaldi_headshot_best_for_profile.jpg"
+                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/vincenzo_grimaldi_headshot_best_for_profile.jpg"
                 alt="Vincenzo Ceccarelli Grimaldi"
                 width={520}
                 height={520}
@@ -63,8 +63,7 @@ export default function Home() {
       </section>
 
       <main className="max-w-7xl mx-auto px-6 py-20 lg:px-12">
-        {/* === EVERYTHING BELOW THIS LINE IS 100% UNCHANGED FROM YOUR LAST VERSION === */}
-
+        {/* === EVERYTHING BELOW THIS LINE IS 100% UNCHANGED === */}
         {/* ABOUT */}
         <section id="about" className="max-w-4xl mx-auto mb-32 scroll-mt-24">
           <h2 className="text-4xl font-bold mb-10 border-b border-blue-600 pb-3 inline-block">About Me</h2>

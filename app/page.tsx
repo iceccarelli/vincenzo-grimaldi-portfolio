@@ -365,16 +365,6 @@ export default function Home() {
                 priority
               />
             </div>
-            <div>
-              <a
-                href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf"
-                target="_blank"
-                className="inline-flex items-center gap-3 bg-white text-black hover:bg-amber-400 px-7 py-4 rounded-3xl font-semibold text-base transition-colors"
-              >
-                <i className="fas fa-download" />
-                Download CV (PDF)
-              </a>
-            </div>
           </div>
         </div>
       </footer>

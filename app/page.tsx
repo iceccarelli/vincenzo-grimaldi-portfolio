@@ -354,6 +354,17 @@ export default function Home() {
               <a href="#strengths" className="hover:text-blue-400 transition-colors">Core Expertise</a>
               <a href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">GitHub</a>
             </div>
+            {/* RIGHT: Your new professional headshot (fixed) */}
+            <div className="lg:col-span-5 flex justify-center lg:justify-end">
+              <Image
+                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Grimaldi_footer_picture_website.jpg"
+                alt="Vincenzo Ceccarelli Grimaldi"
+                width={520}
+                height={520}
+                className="rounded-3xl shadow-2xl w-full max-w-[420px] lg:max-w-none object-cover border-8 border-zinc-800"
+                priority
+              />
+            </div>
             <div>
               <a
                 href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf"

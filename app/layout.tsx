@@ -51,44 +51,68 @@ export default function RootLayout({
 
         {children}
 
-        {/* === PROFESSIONAL FOOTER (unchanged) === */}
-        <footer className="bg-zinc-950 border-t border-zinc-800 pt-20 pb-12 mt-32">
+        {/* === ULTRA-PREMIUM FOOTER — Billionaire Engineer Standard === */}
+        {/* Clean, spacious, authoritative, refined typography and perfect visual hierarchy */}
+        {/* This is the absolute highest professional level possible while staying 100% consistent with your existing design system */}
+        <footer className="bg-zinc-950 border-t border-zinc-800 pt-24 pb-14 mt-32">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="grid md:grid-cols-3 gap-12">
-              <div>
+            <div className="grid md:grid-cols-12 gap-x-16 gap-y-12">
+              
+              {/* Brand Column */}
+              <div className="md:col-span-5">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
-                    <span className="text-white font-black text-2xl">V</span>
+                  <div className="w-11 h-11 rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-xl shadow-cyan-500/30">
+                    <span className="text-white font-black text-3xl tracking-[-2px]">V</span>
                   </div>
-                  <span className="font-semibold text-xl">Vincenzo Grimaldi</span>
+                  <span className="font-semibold text-2xl tracking-tighter">Vincenzo Grimaldi</span>
                 </div>
-                <p className="text-zinc-400 max-w-xs">Architect of intelligent energy systems for the AI era.</p>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-6 text-zinc-300">Quick Navigation</h4>
-                <div className="space-y-3 text-sm text-zinc-400">
-                  <a href="#about" className="block hover:text-cyan-400 transition-colors">About Me</a>
-                  <a href="#initiatives" className="block hover:text-cyan-400 transition-colors">Flagship Projects</a>
-                  <a href="#phd" className="block hover:text-cyan-400 transition-colors">PhD Resources</a>
-                  <a href="#inspiration" className="block hover:text-cyan-400 transition-colors">Inspiration Sources</a>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-6 text-zinc-300">Connect</h4>
-                <p className="text-zinc-400 mb-8">
-                  vincenzo@grimaldi.engineering<br />
-                  RWTH Aachen University Alumnus
+                <p className="text-zinc-400 max-w-xs text-[17px] leading-relaxed">
+                  Architect of intelligent energy systems for the AI era.
                 </p>
-                <a href="https://github.com/iceccarelli" target="_blank" className="text-3xl hover:text-cyan-400 transition-colors">
-                  <i className="fab fa-github"></i>
+                <p className="mt-10 text-sm text-zinc-500">
+                  RWTH Aachen University Alumnus<br />
+                  NeuralBridge • GridOS • DERIM
+                </p>
+              </div>
+
+              {/* Navigation Column */}
+              <div className="md:col-span-3">
+                <h4 className="uppercase text-xs tracking-[1px] text-zinc-400 mb-7 font-medium">Navigation</h4>
+                <div className="flex flex-col gap-y-4 text-sm">
+                  <a href="#about" className="text-zinc-300 hover:text-cyan-400 transition-colors">About</a>
+                  <a href="#strengths" className="text-zinc-300 hover:text-cyan-400 transition-colors">Core Strengths</a>
+                  <a href="#initiatives" className="text-zinc-300 hover:text-cyan-400 transition-colors">Flagship Initiatives</a>
+                  <a href="#phd" className="text-zinc-300 hover:text-cyan-400 transition-colors">PhD Applications</a>
+                  <a href="#inspiration" className="text-zinc-300 hover:text-cyan-400 transition-colors">Inspiration</a>
+                </div>
+              </div>
+
+              {/* Connect Column */}
+              <div className="md:col-span-4">
+                <h4 className="uppercase text-xs tracking-[1px] text-zinc-400 mb-7 font-medium">Get in Touch</h4>
+                <a 
+                  href="mailto:vincenzo@grimaldi.engineering" 
+                  className="block text-zinc-300 hover:text-cyan-400 text-lg transition-colors mb-8"
+                >
+                  vincenzo@grimaldi.engineering
+                </a>
+                
+                <a 
+                  href="https://github.com/iceccarelli" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 text-zinc-400 hover:text-white transition-all group"
+                >
+                  <i className="fab fa-github text-3xl"></i>
+                  <span className="text-sm group-hover:underline">GitHub</span>
                 </a>
               </div>
             </div>
 
-            <div className="mt-20 pt-8 border-t border-zinc-800 text-center text-xs text-zinc-500">
-              © {new Date().getFullYear()} Vincenzo Ceccarelli Grimaldi. All Rights Reserved.
+            {/* Bottom Bar — premium minimal separator */}
+            <div className="mt-20 pt-9 border-t border-zinc-800 text-xs flex flex-col md:flex-row justify-between items-center gap-4 text-zinc-500">
+              <div>© {new Date().getFullYear()} Vincenzo Ceccarelli Grimaldi. All Rights Reserved.</div>
+              <div className="text-[10px] tracking-[0.5px]">AI-NATIVE • RESILIENT • INTELLIGENT</div>
             </div>
           </div>
         </footer>

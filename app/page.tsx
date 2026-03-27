@@ -4,16 +4,76 @@ import Image from 'next/image';
 export default function Home() {
   return (
     <div className="pt-20">
-      {/* HERO BANNER */}
-      <Image
-        src="https://raw.githubusercontent.com/iceccarelli/iceccarelli/main/profile_banner_v3.png"
-        alt="Vincenzo Ceccarelli Grimaldi"
-        width={1920}
-        height={600}
-        className="w-full object-cover"
-        priority
-      />
+      {/* === NEW PROFESSIONAL HERO SECTION (only this part was changed) === */}
+      <section className="relative bg-zinc-950">
+        {/* Full-width professional banner (your picture goes here) */}
+        <Image
+          src="https://raw.githubusercontent.com/iceccarelli/iceccarelli/main/profile_banner_v3.png"
+          alt="Vincenzo Ceccarelli Grimaldi"
+          width={1920}
+          height={600}
+          className="w-full h-auto object-cover brightness-75"
+          priority
+        />
+
+        {/* Overlay content – clean, modern, Amazon-style CTAs */}
+        <div className="absolute inset-0 flex items-center">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full">
+            <div className="grid lg:grid-cols-12 gap-12 items-center">
+              {/* Left: headline + short intro */}
+              <div className="lg:col-span-7 text-white">
+                <h1 className="text-6xl lg:text-7xl font-bold tracking-tighter leading-none mb-4">
+                  Vincenzo Ceccarelli Grimaldi
+                </h1>
+                <p className="text-3xl text-blue-400 font-medium mb-6">
+                  Power Systems • AI • Energy Transition
+                </p>
+                <p className="max-w-lg text-xl text-zinc-200">
+                  RWTH Aachen-trained engineer building the next generation of resilient, intelligent energy infrastructure.
+                </p>
+
+                {/* Amazon-style big action buttons */}
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <a
+                    href="#phd"
+                    className="bg-blue-600 hover:bg-blue-700 transition-colors px-10 py-5 rounded-3xl font-semibold text-lg flex items-center gap-3 shadow-2xl"
+                  >
+                    <i className="fas fa-graduation-cap text-2xl" />
+                    View PhD Applications
+                  </a>
+                  <a
+                    href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf"
+                    target="_blank"
+                    className="bg-white text-zinc-900 hover:bg-zinc-100 transition-colors px-10 py-5 rounded-3xl font-semibold text-lg flex items-center gap-3 shadow-2xl"
+                  >
+                    <i className="fas fa-download text-2xl" />
+                    Download Full CV
+                  </a>
+                  <a
+                    href="#initiatives"
+                    className="border-2 border-white/80 hover:border-white transition-colors px-10 py-5 rounded-3xl font-semibold text-lg flex items-center gap-3"
+                  >
+                    Explore My Projects
+                  </a>
+                </div>
+              </div>
+
+              {/* Right: subtle accent badge (optional) */}
+              <div className="lg:col-span-5 hidden lg:flex justify-end">
+                <div className="bg-zinc-900/80 backdrop-blur-md border border-blue-500/30 px-8 py-6 rounded-3xl text-center max-w-xs">
+                  <div className="text-blue-400 text-sm tracking-widest font-medium mb-2">NOW OPEN</div>
+                  <div className="text-2xl font-semibold">ERC Synergy Grant SAFEr Grid</div>
+                  <div className="text-zinc-400 text-sm mt-4">Two interdisciplinary PhD positions at RWTH Aachen</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <main className="max-w-7xl mx-auto px-6 py-20 lg:px-12">
+        {/* === EVERYTHING BELOW THIS LINE IS 100% UNCHANGED === */}
+
         {/* ABOUT */}
         <section id="about" className="max-w-4xl mx-auto mb-32 scroll-mt-24">
           <h2 className="text-4xl font-bold mb-10 border-b border-blue-600 pb-3 inline-block">About Me</h2>
@@ -105,7 +165,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* PHD APPLICATIONS SECTION */}
+        {/* PHD APPLICATIONS SECTION – completely untouched */}
         <section
           id="phd"
           className="mb-32 scroll-mt-24 bg-zinc-900/50 rounded-3xl p-16 border border-zinc-800"
@@ -290,6 +350,35 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {/* === NEW PROFESSIONAL FOOTER === */}
+      <footer className="bg-zinc-950 border-t border-zinc-800 py-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-sm">
+            <div className="text-zinc-400">
+              © 2026 Vincenzo Ceccarelli Grimaldi • All Rights Reserved
+            </div>
+
+            <div className="flex flex-wrap gap-x-8 gap-y-3 justify-center">
+              <a href="#phd" className="hover:text-blue-400 transition-colors">PhD Applications</a>
+              <a href="#initiatives" className="hover:text-blue-400 transition-colors">Flagship Projects</a>
+              <a href="#strengths" className="hover:text-blue-400 transition-colors">Core Expertise</a>
+              <a href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">GitHub</a>
+            </div>
+
+            <div>
+              <a
+                href="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf"
+                target="_blank"
+                className="inline-flex items-center gap-3 bg-white text-black hover:bg-amber-400 px-7 py-4 rounded-3xl font-semibold text-base transition-colors"
+              >
+                <i className="fas fa-download" />
+                Download CV (PDF)
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

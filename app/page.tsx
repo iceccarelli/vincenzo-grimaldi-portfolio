@@ -176,7 +176,7 @@ export default function Home() {
               Transparent &amp; Open Application Process at RWTH Aachen University
             </p>
             <p className="text-sm text-cyan-400 mt-3 tracking-widest">
-              TWO INTERDISCIPLINARY APPLICATIONS • SAME VISION • FULL TRANSPARENCY
+              TWO INTERDISCIPLINARY APPLICATIONS
             </p>
           </div>
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">

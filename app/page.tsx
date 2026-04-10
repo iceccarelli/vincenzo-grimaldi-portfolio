@@ -46,7 +46,7 @@ export default function Home() {
             At the intersection of electrical power engineering, quantitative intelligence, and knowledge engineering, I design resilient, adaptive cyber-physical systems that power the energy transition.
           </p>
           <p className="text-lg leading-relaxed">
-            RWTH Aachen trained (Business Administration &amp; Engineering — Electrical Power Engineering), I bridge theory and production-grade impact through <strong>NeuralBridge</strong>, <strong>GridOS</strong>, and <strong>DERIM</strong>.
+            RWTH Aachen trained (Business Administration &amp; Engineering — Electrical Power Engineering), I bridge theory and an intended production-grade impact through <strong>NeuralBridge</strong>, <strong>GridOS</strong>, and <strong>DERIM</strong>.
           </p>
         </section>
 

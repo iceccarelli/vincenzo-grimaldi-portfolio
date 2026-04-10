@@ -97,17 +97,17 @@ export default function Home() {
             {[
               {
                 title: 'NeuralBridge',
-                desc: 'Secure, semantically-aware middleware for agentic AI across any enterprise protocol or legacy system.',
+                desc: 'Single goal is to be a Secure, semantically-aware middleware for agentic AI across any enterprise protocol or legacy system.',
                 link: 'https://github.com/iceccarelli/neuralbridge',
               },
               {
                 title: 'GridOS',
-                desc: 'Next-gen digital twin fusing physics simulation, RL agents, and real-time optimization for autonomous grids.',
+                desc: 'Next-gen digital twin fusing physics simulation as a foundation, RL agents, and real-time optimization for autonomous grids.',
                 link: 'https://github.com/iceccarelli/GridOS',
               },
               {
                 title: 'DERIM',
-                desc: 'Blockchain-native decentralized energy resource platform for P2P trading and virtual power plants.',
+                desc: 'Blockchain-native decentralized energy resource platform as basic structured repo for P2P trading and virtual power plants.',
                 link: 'https://github.com/iceccarelli/derim-middleware',
               },
             ].map((p, i) => (

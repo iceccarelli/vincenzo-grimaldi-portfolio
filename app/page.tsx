@@ -581,7 +581,7 @@ export default function Home() {
             </div>
             <div className="panel-topline">
               <span className="live-dot" />
-              <span>In Brief</span>
+              <span>VINCENZO IN BRIEF</span>
             </div>
             <h2>Engineering and Personal Branding around systems that are cyber-physical in nature that which connects intelligence, infrastructure, and execution.</h2>
             <div className="metric-pills">
@@ -659,8 +659,10 @@ export default function Home() {
 
       <section className="section-shell content-section" id="architecture">
         <div className="glass-panel cta-panel spotlight-border">
+          </div>
           <span className="section-kicker">Architecture of value creation</span>
           <h2>The projects are strongest when understood as layers of one larger systems thesis.</h2>
+          </div>
         </div>
         <div className="card-grid four-up">
           {architectureLayers.map((layer) => (

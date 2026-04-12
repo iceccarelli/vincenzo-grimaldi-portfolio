@@ -570,11 +570,11 @@ export default function Home() {
           </div>
 
           <aside className="glass-panel spotlight-border hero-panel">
-            <div className="mb-6 overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-950/80 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+            <div className="hero-portrait-shell">
               <img
                 src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Grimaldi_footer_picture_website.jpg"
                 alt="Vincenzo Ceccarelli Grimaldi"
-                className="block h-auto w-full object-cover"
+                className="hero-portrait"
               />
             </div>
             <div className="panel-topline">
@@ -604,24 +604,26 @@ export default function Home() {
 
       <section className="section-shell">
         <div className="glass-panel signal-ribbon">
-          <div>
+          <div className="signal-ribbon-header section-header centered-header compact-section-header">
             <span className="section-kicker">Global orientation</span>
             <h2 className="compact-heading">Working across markets, research horizons, and operational contexts.</h2>
           </div>
-          <div className="clock-grid">
-            {clocks.map((clock) => (
-              <article className="signal-chip" key={clock.city}>
-                <span className="chip-city">{clock.city}</span>
-                <strong>{clock.time}</strong>
-                <small>{clock.label}</small>
-              </article>
-            ))}
+          <div className="clock-marquee" aria-label="Global clocks">
+            <div className="clock-marquee-track">
+              {clocks.concat(clocks).map((clock, index) => (
+                <article className="signal-chip" key={`${clock.city}-${index}`}>
+                  <span className="chip-city">{clock.city}</span>
+                  <strong>{clock.time}</strong>
+                  <small>{clock.label}</small>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       <section className="section-shell content-section" id="about">
-        <div className="section-header">
+        <div className="section-header centered-header">
           <span className="section-kicker">About the work</span>
           <h2>A portfolio engineered to translate technical depth into trust, clarity, and strategic curiosity.</h2>
         </div>
@@ -652,7 +654,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="architecture">
-        <div className="section-header">
+        <div className="section-header centered-header">
           <span className="section-kicker">Architecture of value creation</span>
           <h2>The projects are strongest when understood as layers of one larger systems thesis.</h2>
         </div>
@@ -668,7 +670,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="flagship-systems">
-        <div className="section-header">
+        <div className="section-header centered-header">
           <span className="section-kicker">Flagship systems</span>
           <h2>Selected initiatives that communicate the direction, seriousness, and range of the engineering work.</h2>
         </div>
@@ -690,7 +692,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="live-intelligence">
-        <div className="section-header">
+        <div className="section-header centered-header">
           <span className="section-kicker">Live intelligence hub</span>
           <h2>A more Bloomberg-like surface for understanding what I build, what I watch, and where the momentum is moving.</h2>
           <p className="section-intro">{lastSync}</p>
@@ -757,7 +759,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="ecosystem">
-        <div className="section-header">
+        <div className="section-header centered-header">
           <span className="section-kicker">Trusted ecosystem</span>
           <h2>Institutions, publications, and platforms that anchor the markets and technical domains I care about most.</h2>
         </div>
@@ -773,7 +775,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="phd">
-        <div className="section-header">
+        <div className="section-header centered-header">
           <span className="section-kicker">Selected academic applications</span>
           <h2>Original application links and supporting documents presented as part of the broader research narrative.</h2>
           <p className="section-intro">

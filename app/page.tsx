@@ -603,7 +603,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell">
-        <div className="glass-panel signal-ribbon">
+        <div className="glass-panel cta-panel spotlight-border">
           <div className="signal-ribbon-header section-header centered-header compact-section-header">
             <span className="section-kicker">Global orientation</span>
             <h2 className="compact-heading">Working across markets, research horizons, and operational contexts.</h2>
@@ -623,7 +623,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="about">
-        <div className="section-header centered-header">
+        <div className="glass-panel cta-panel spotlight-border">
           <span className="section-kicker">About the work</span>
           <h2>A portfolio engineered to translate technical depth into trust, clarity, and strategic curiosity.</h2>
         </div>
@@ -654,7 +654,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="architecture">
-        <div className="section-header centered-header">
+        <div className="glass-panel cta-panel spotlight-border">
           <span className="section-kicker">Architecture of value creation</span>
           <h2>The projects are strongest when understood as layers of one larger systems thesis.</h2>
         </div>
@@ -670,7 +670,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="flagship-systems">
-        <div className="section-header centered-header">
+        <div className="glass-panel cta-panel spotlight-border">
           <span className="section-kicker">Flagship systems</span>
           <h2>Selected initiatives that communicate the direction, seriousness, and range of the engineering work.</h2>
         </div>
@@ -692,7 +692,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="live-intelligence">
-        <div className="section-header centered-header">
+        <div className="glass-panel cta-panel spotlight-border">
           <span className="section-kicker">Live intelligence hub</span>
           <h2>A more Bloomberg-like surface for understanding what I build, what I watch, and where the momentum is moving.</h2>
           <p className="section-intro">{lastSync}</p>
@@ -759,7 +759,7 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="ecosystem">
-        <div className="section-header centered-header">
+        <div className="glass-panel cta-panel spotlight-border">
           <span className="section-kicker">Trusted ecosystem</span>
           <h2>Institutions, publications, and platforms that anchor the markets and technical domains I care about most.</h2>
         </div>
@@ -811,7 +811,7 @@ export default function Home() {
             <p>
               Whether the interest is AI-native middleware, smart-grid operating systems, digital infrastructure,
               robotics, research collaboration, or a larger systems conversation, this website is now structured to make
-              that value visible. The next layer is direct engagement.
+              that value visible.
             </p>
           </div>
           <div className="hero-actions">

@@ -3,8 +3,8 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
-  // === WORLD CLOCK LOGIC (live updating every 60 seconds) ===
-  const [times, setTimes] = useState({});
+  // === WORLD CLOCK (live, professional, TypeScript-safe) ===
+  const [times, setTimes] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const cities = [
@@ -13,10 +13,10 @@ export default function Home() {
       { name: 'FRANKFURT', tz: 'Europe/Berlin' },
       { name: 'BEIJING', tz: 'Asia/Shanghai' },
       { name: 'SEOUL', tz: 'Asia/Seoul' },
-    ];
+    ] as const;
 
     const updateTimes = () => {
-      const newTimes = {};
+      const newTimes: Record<string, string> = {};
       cities.forEach(({ name, tz }) => {
         const formatter = new Intl.DateTimeFormat('en-GB', {
           timeZone: tz,
@@ -30,17 +30,16 @@ export default function Home() {
     };
 
     updateTimes();
-    const interval = setInterval(updateTimes, 60000); // update every minute
+    const interval = setInterval(updateTimes, 60000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="pt-20">
-      {/* === UPDATED PROFESSIONAL HERO SECTION === */}
+      {/* === HERO SECTION === */}
       <section className="bg-zinc-950 py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
-            {/* LEFT: Text + Amazon-style buttons */}
             <div className="lg:col-span-7 text-white">
               <h1 className="text-6xl lg:text-7xl font-bold tracking-tighter leading-none mb-4">
                 Vincenzo Ceccarelli Grimaldi
@@ -52,7 +51,6 @@ export default function Home() {
                 Personal aim is to build the next generation of resilient, end-to-end intelligent energy infrastructure.
               </p>
             </div>
-            {/* RIGHT: Your new professional headshot (fixed) */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <Image
                 src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Grimaldi_footer_picture_website.jpg"
@@ -68,7 +66,6 @@ export default function Home() {
       </section>
 
       {/* === PROFESSIONAL WORLD CLOCK BAR === */}
-      {/* Placed exactly where top-tier websites (Stripe, Vercel, Linear, Notion) put global time — right after hero, clean, minimal, always visible */}
       <section className="bg-zinc-900 border-b border-zinc-800 py-4">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex flex-wrap justify-center lg:justify-start items-center gap-x-8 gap-y-2 text-xs uppercase tracking-[1px] text-zinc-400">

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
-  // === WORLD CLOCK (live, professional, TypeScript-safe) ===
+  // === PROFESSIONAL WORLD CLOCK ===
   const [times, setTimes] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -22,6 +22,7 @@ export default function Home() {
           timeZone: tz,
           hour: '2-digit',
           minute: '2-digit',
+          second: '2-digit',
           hour12: false,
         });
         newTimes[name] = formatter.format(new Date());
@@ -30,7 +31,7 @@ export default function Home() {
     };
 
     updateTimes();
-    const interval = setInterval(updateTimes, 60000);
+    const interval = setInterval(updateTimes, 1000); // update every second
     return () => clearInterval(interval);
   }, []);
 
@@ -66,9 +67,10 @@ export default function Home() {
       </section>
 
       {/* === PROFESSIONAL WORLD CLOCK BAR === */}
+      {/* Always perfectly centered, elegant pulse, seconds included */}
       <section className="bg-zinc-900 border-b border-zinc-800 py-4">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex flex-wrap justify-center lg:justify-start items-center gap-x-8 gap-y-2 text-xs uppercase tracking-[1px] text-zinc-400">
+          <div className="flex justify-center items-center gap-x-8 gap-y-3 flex-wrap">
             {[
               { city: 'LIMA', time: times.LIMA },
               { city: 'TORONTO', time: times.TORONTO },
@@ -77,9 +79,14 @@ export default function Home() {
               { city: 'SEOUL', time: times.SEOUL },
             ].map(({ city, time }) => (
               <div key={city} className="flex items-baseline gap-2 whitespace-nowrap">
-                <span className="font-medium text-zinc-300">{city}</span>
-                <span className="font-mono text-blue-400 text-base font-semibold tabular-nums">
-                  {time || '––:––'}
+                <span className="font-medium text-zinc-300 text-sm uppercase tracking-widest">
+                  {city}
+                </span>
+                <span 
+                  className="font-mono text-blue-400 text-lg font-semibold tabular-nums 
+                             animate-[pulse_2s_ease-in-out_infinite] transition-all"
+                >
+                  {time || '––:––:––'}
                 </span>
               </div>
             ))}

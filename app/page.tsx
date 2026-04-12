@@ -102,9 +102,9 @@ export default function Home() {
           <p className="text-lg leading-relaxed mb-6">
             At the intersection of electrical power engineering, quantitative intelligence, and knowledge engineering, I design resilient, adaptive cyber-physical systems that power the energy transition.
           </p>
-          <p className="text-lg leading-relaxed">
-            RWTH Aachen trained (Business Administration &amp; Engineering — Electrical Power Engineering), I bridge theory and an intended production-grade impact through <strong>NeuralBridge</strong>, <strong>GridOS</strong>, and <strong>DERIM</strong>.
-          </p>
+<p className="text-lg leading-relaxed">
+  RWTH Aachen trained (Business Administration &amp; Engineering — Electrical Power Engineering), I bridge theory and practice through foundational open-source projects — <strong>NeuralBridge</strong>, <strong>GridOS</strong>, <strong>DERIM</strong>, and <strong>Robot LiDAR Fusion</strong> — each serving as a structured, solid first-stage blueprint and a practical foundation for future production-grade intelligent systems.
+</p>
         </section>
         {/* CORE STRENGTHS */}
         <section id="strengths" className="mb-32 scroll-mt-24">

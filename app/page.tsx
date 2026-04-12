@@ -1,14 +1,45 @@
 'use client';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  // === WORLD CLOCK LOGIC (live updating every 60 seconds) ===
+  const [times, setTimes] = useState({});
+
+  useEffect(() => {
+    const cities = [
+      { name: 'LIMA', tz: 'America/Lima' },
+      { name: 'TORONTO', tz: 'America/Toronto' },
+      { name: 'FRANKFURT', tz: 'Europe/Berlin' },
+      { name: 'BEIJING', tz: 'Asia/Shanghai' },
+      { name: 'SEOUL', tz: 'Asia/Seoul' },
+    ];
+
+    const updateTimes = () => {
+      const newTimes = {};
+      cities.forEach(({ name, tz }) => {
+        const formatter = new Intl.DateTimeFormat('en-GB', {
+          timeZone: tz,
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+        newTimes[name] = formatter.format(new Date());
+      });
+      setTimes(newTimes);
+    };
+
+    updateTimes();
+    const interval = setInterval(updateTimes, 60000); // update every minute
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="pt-20">
       {/* === UPDATED PROFESSIONAL HERO SECTION === */}
       <section className="bg-zinc-950 py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
-           
             {/* LEFT: Text + Amazon-style buttons */}
             <div className="lg:col-span-7 text-white">
               <h1 className="text-6xl lg:text-7xl font-bold tracking-tighter leading-none mb-4">
@@ -21,7 +52,6 @@ export default function Home() {
                 Personal aim is to build the next generation of resilient, end-to-end intelligent energy infrastructure.
               </p>
             </div>
-
             {/* RIGHT: Your new professional headshot (fixed) */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <Image
@@ -33,6 +63,29 @@ export default function Home() {
                 priority
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* === PROFESSIONAL WORLD CLOCK BAR === */}
+      {/* Placed exactly where top-tier websites (Stripe, Vercel, Linear, Notion) put global time — right after hero, clean, minimal, always visible */}
+      <section className="bg-zinc-900 border-b border-zinc-800 py-4">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="flex flex-wrap justify-center lg:justify-start items-center gap-x-8 gap-y-2 text-xs uppercase tracking-[1px] text-zinc-400">
+            {[
+              { city: 'LIMA', time: times.LIMA },
+              { city: 'TORONTO', time: times.TORONTO },
+              { city: 'FRANKFURT', time: times.FRANKFURT },
+              { city: 'BEIJING', time: times.BEIJING },
+              { city: 'SEOUL', time: times.SEOUL },
+            ].map(({ city, time }) => (
+              <div key={city} className="flex items-baseline gap-2 whitespace-nowrap">
+                <span className="font-medium text-zinc-300">{city}</span>
+                <span className="font-mono text-blue-400 text-base font-semibold tabular-nums">
+                  {time || '––:––'}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -49,7 +102,6 @@ export default function Home() {
             RWTH Aachen trained (Business Administration &amp; Engineering — Electrical Power Engineering), I bridge theory and an intended production-grade impact through <strong>NeuralBridge</strong>, <strong>GridOS</strong>, and <strong>DERIM</strong>.
           </p>
         </section>
-
         {/* CORE STRENGTHS */}
         <section id="strengths" className="mb-32 scroll-mt-24">
           <h2 className="text-4xl font-bold mb-12">Core Strengths</h2>
@@ -89,7 +141,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
         {/* FLAGSHIP INITIATIVES */}
         <section id="initiatives" className="mb-32 scroll-mt-24">
           <h2 className="text-4xl font-bold mb-12">Flagship Initiatives</h2>
@@ -134,7 +185,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
         {/* PHD APPLICATIONS SECTION – completely untouched */}
         <section
           id="phd"
@@ -205,7 +255,6 @@ export default function Home() {
                 </a>
               </div>
             </div>
-
             {/* ACS APPLICATION */}
             <div className="group">
               <a
@@ -263,7 +312,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* INSPIRATION SECTION */}
         <section
           id="inspiration"

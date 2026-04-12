@@ -99,13 +99,13 @@ const flagshipInitiatives = [
   },
   {
     title: 'DERIM',
-    href: 'https://github.com/iceccarelli',
+    href: 'https://github.com/iceccarelli/derim-middleware',
     summary:
       'A distributed energy orientation that reflects an interest in coordinating assets, signals, and grid-aware software for real-world utility.',
   },
   {
-    title: 'Autonomy, Vision, and Sensing',
-    href: 'https://github.com/iceccarelli',
+    title: 'Robot LiDAR Fusion',
+    href: 'https://github.com/iceccarelli/robot-lidar-fusion',
     summary:
       'Robotics and perception work that extends my engineering profile beyond software interfaces and into the intelligence of physical systems.',
   },
@@ -547,15 +547,14 @@ export default function Home() {
             </h1>
             <p className="hero-lead">
               My work sits at the convergence of intelligent software, energy systems, digital operations, and
-              interface design. I am interested in how complex infrastructure can be made more understandable,
-              more actionable, and more valuable through software that does not merely display information, but
-              organizes thought, movement, and decision-making.
+              interface design. I focus on translating technical complexity into systems that are understandable,
+              actionable, and operationally useful for people working close to infrastructure, research, and deployment.
             </p>
             <p>
-              This portfolio is designed to show more than isolated projects. It is meant to reveal the architecture
-              behind the way I think: a progression from sensing and orchestration, to control surfaces, to market and
-              infrastructure awareness, to research-driven execution. The result is a more integrated view of what I can
-              build, where I am going, and why the work matters.
+              This portfolio brings together live market context, flagship repositories, research documents, and
+              implementation signals so that visitors can understand both the technical depth of the work and the
+              direction in which it is evolving. The intention is not only to present projects, but to show a coherent
+              engineering trajectory grounded in execution.
             </p>
             <div className="hero-actions">
               <a className="primary-button" href="#live-intelligence">
@@ -571,6 +570,13 @@ export default function Home() {
           </div>
 
           <aside className="glass-panel spotlight-border hero-panel">
+            <div className="mb-6 overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-950/80 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+              <img
+                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Grimaldi_footer_picture_website.jpg"
+                alt="Vincenzo Ceccarelli Grimaldi"
+                className="block h-auto w-full object-cover"
+              />
+            </div>
             <div className="panel-topline">
               <span className="live-dot" />
               <span>Positioning summary</span>
@@ -584,12 +590,12 @@ export default function Home() {
             </div>
             <div className="mini-note-grid">
               <div className="mini-note">
-                <strong>What visitors should feel</strong>
-                <p>That the work is coherent, serious, forward-moving, and deeply technical without becoming inaccessible.</p>
+                <strong>What this portfolio communicates</strong>
+                <p>That the work is technically rigorous, strategically focused, and continuously moving from concept toward deployable systems.</p>
               </div>
               <div className="mini-note">
-                <strong>What this site now does</strong>
-                <p>Combines live signals, flagship architecture, trusted sources, and active GitHub proof into one integrated surface.</p>
+                <strong>How the site is structured</strong>
+                <p>It connects live intelligence, selected repositories, trusted external context, and supporting documents into a single professional narrative.</p>
               </div>
             </div>
           </aside>

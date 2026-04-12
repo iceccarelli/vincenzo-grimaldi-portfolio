@@ -540,11 +540,13 @@ export default function Home() {
       <section className="section-shell hero-section" id="top">
         <div className="hero-grid">
           <div className="hero-copy">
+            <div>
             <span className="section-kicker">AI systems • energy intelligence • digital infrastructure</span>
             <h1>
               I build engineering experiences that make <span className="gradient-text">complex systems feel
               operational, legible, and alive</span>.
             </h1>
+              </div>
             <p className="hero-lead">
               My work sits at the convergence of intelligent software, energy systems, digital operations, and
               interface design. I focus on translating technical complexity into systems that are understandable,
@@ -604,8 +606,10 @@ export default function Home() {
 
       <section className="section-shell">
         <div className="glass-panel cta-panel spotlight-border">
+          <div>
             <span className="section-kicker">Global orientation</span>
             <h2 className="compact-heading">Working across markets, research horizons, and operational contexts.</h2>
+        </div>
           <div className="clock-marquee" aria-label="Global clocks">
             <div className="clock-marquee-track">
               {clocks.concat(clocks).map((clock, index) => (
@@ -622,8 +626,10 @@ export default function Home() {
 
       <section className="section-shell content-section" id="about">
         <div className="glass-panel cta-panel spotlight-border">
+          <div>
           <span className="section-kicker">About the work</span>
           <h2>A portfolio engineered to translate technical depth into trust, clarity, and strategic curiosity.</h2>
+        </div>
         </div>
         <div className="two-column-layout">
           <div className="glass-panel immersive-card">
@@ -669,8 +675,10 @@ export default function Home() {
 
       <section className="section-shell content-section" id="flagship-systems">
         <div className="glass-panel cta-panel spotlight-border">
+          <div>
           <span className="section-kicker">Flagship systems</span>
           <h2>Selected initiatives that communicate the direction, seriousness, and range of the engineering work.</h2>
+          </div>
         </div>
         <div className="card-grid two-up">
           {flagshipInitiatives.map((initiative) => (
@@ -691,9 +699,11 @@ export default function Home() {
 
       <section className="section-shell content-section" id="live-intelligence">
         <div className="glass-panel cta-panel spotlight-border">
+          <div>
           <span className="section-kicker">Live intelligence hub</span>
           <h2>A more Bloomberg-like surface for understanding what I build, what I watch, and where the momentum is moving.</h2>
           <p className="section-intro">{lastSync}</p>
+            </div>
         </div>
 
         <div className="tradingview-widget-shell glass-panel">
@@ -758,8 +768,10 @@ export default function Home() {
 
       <section className="section-shell content-section" id="ecosystem">
         <div className="glass-panel cta-panel spotlight-border">
+          <div>
           <span className="section-kicker">Trusted ecosystem</span>
           <h2>Institutions, publications, and platforms that anchor the markets and technical domains I care about most.</h2>
+          </div>
         </div>
         <div className="card-grid three-up">
           {trustedSources.map((source) => (

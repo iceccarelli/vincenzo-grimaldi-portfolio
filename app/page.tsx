@@ -110,6 +110,11 @@ export default function Home() {
                 desc: 'Blockchain-native decentralized energy resource platform as basic structured repo for P2P trading and virtual power plants.',
                 link: 'https://github.com/iceccarelli/derim-middleware',
               },
+              {
+                title: 'Robot LiDAR Fusion',
+                desc: 'Clean, modular ROS 2 foundation for real-time LiDAR + camera sensor fusion — a solid blueprint and stepping stone for trustworthy autonomous robotics.',
+                link: 'https://github.com/iceccarelli/robot-lidar-fusion',
+              },
             ].map((p, i) => (
               <a
                 key={i}

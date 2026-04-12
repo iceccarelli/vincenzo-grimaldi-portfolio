@@ -164,24 +164,42 @@ const marketThemes = [
 
 const phdApplications = [
   {
-    title: 'PhD Application | University of Bristol',
-    href: 'https://www.bristol.ac.uk/study/postgraduate/2026/eng-phd/advanced-composites-manufacturing/',
-    area: 'Advanced Composites Manufacturing',
+    title: 'TIME Application Job-ID: V000010767',
+    href: 'https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302',
+    area: 'Technology and Innovation Management (RWTH Aachen University)',
+    description:
+      'Application pathway connected to technology and innovation management within the broader SAFEr Grid context.',
+    docs: [
+      {
+        label: 'Motivation Letter',
+        meta: '2 pages • 21 March 2026',
+        href: 'https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf',
+      },
+      {
+        label: 'Curriculum Vitae',
+        meta: '4 pages • March 2026',
+        href: 'https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf',
+      },
+    ],
   },
   {
-    title: 'PhD Application | University of Bristol',
-    href: 'https://www.bristol.ac.uk/study/postgraduate/2026/eng-phd/artificial-intelligence/',
-    area: 'Artificial Intelligence',
-  },
-  {
-    title: 'PhD Application | University of Bath',
-    href: 'https://www.bath.ac.uk/courses/postgraduate-2025/research-degrees/phd-in-electronic-electrical-engineering/',
-    area: 'Electronic and Electrical Engineering',
-  },
-  {
-    title: 'PhD Application | University of Leeds',
-    href: 'https://www.leeds.ac.uk/research-degrees-engineering/doc/electronic-electrical-engineering-phd',
-    area: 'Electronic and Electrical Engineering',
+    title: 'ACS Application Job-ID: V000010837',
+    href: 'https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2',
+    area: 'Institute for Automation of Complex Power Systems (E.ON Energy Research Center)',
+    description:
+      'Application pathway aligned with automation, power systems, and interdisciplinary grid research.',
+    docs: [
+      {
+        label: 'Motivation Letter',
+        meta: '2 pages • 22 March 2026',
+        href: 'https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf',
+      },
+      {
+        label: 'Curriculum Vitae',
+        meta: '4 pages • March 2026',
+        href: 'https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf',
+      },
+    ],
   },
 ];
 
@@ -750,16 +768,33 @@ export default function Home() {
 
       <section className="section-shell content-section" id="phd">
         <div className="section-header">
-          <span className="section-kicker">Research trajectory</span>
-          <h2>Doctoral pathways that align with the long-term direction of the work.</h2>
+          <span className="section-kicker">Selected academic applications</span>
+          <h2>Original application links and supporting documents presented as part of the broader research narrative.</h2>
+          <p className="section-intro">
+            This section preserves the original application pathways and document references from the earlier portfolio version,
+            while presenting them in a cleaner and more integrated format.
+          </p>
         </div>
         <div className="card-grid two-up">
           {phdApplications.map((application) => (
-            <a className="glass-panel immersive-card" href={application.href} key={application.title} target="_blank" rel="noreferrer">
-              <span className="card-label">Academic direction</span>
+            <article className="glass-panel immersive-card" key={application.title}>
+              <span className="card-label">Research application</span>
               <h3>{application.title}</h3>
               <p>{application.area}</p>
-            </a>
+              <p>{application.description}</p>
+              <a className="text-link" href={application.href} target="_blank" rel="noreferrer">
+                Open application listing
+              </a>
+              <div className="data-list" style={{ marginTop: '1rem' }}>
+                {application.docs.map((doc) => (
+                  <a className="data-list-item" href={doc.href} key={doc.href} target="_blank" rel="noreferrer">
+                    <span className="item-meta">Supporting document</span>
+                    <strong>{doc.label}</strong>
+                    <small>{doc.meta}</small>
+                  </a>
+                ))}
+              </div>
+            </article>
           ))}
         </div>
       </section>

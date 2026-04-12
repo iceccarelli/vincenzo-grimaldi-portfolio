@@ -775,13 +775,9 @@ export default function Home() {
       </section>
 
       <section className="section-shell content-section" id="phd">
-        <div className="section-header centered-header">
+        <div className="glass-panel cta-panel spotlight-border">
           <span className="section-kicker">Selected academic applications</span>
           <h2>Original application links and supporting documents presented as part of the broader research narrative.</h2>
-          <p className="section-intro">
-            This section preserves the original application pathways and document references from the earlier portfolio version,
-            while presenting them in a cleaner and more integrated format.
-          </p>
         </div>
         <div className="card-grid two-up">
           {phdApplications.map((application) => (

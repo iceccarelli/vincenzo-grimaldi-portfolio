@@ -604,10 +604,8 @@ export default function Home() {
 
       <section className="section-shell">
         <div className="glass-panel cta-panel spotlight-border">
-          <div className="signal-ribbon-header section-header centered-header compact-section-header">
             <span className="section-kicker">Global orientation</span>
             <h2 className="compact-heading">Working across markets, research horizons, and operational contexts.</h2>
-          </div>
           <div className="clock-marquee" aria-label="Global clocks">
             <div className="clock-marquee-track">
               {clocks.concat(clocks).map((clock, index) => (

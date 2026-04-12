@@ -579,9 +579,9 @@ export default function Home() {
             </div>
             <div className="panel-topline">
               <span className="live-dot" />
-              <span>Positioning summary</span>
+              <span>In Brief</span>
             </div>
-            <h2>Engineering a personal brand around systems that connect intelligence, infrastructure, and execution.</h2>
+            <h2>Engineering and Personal Branding around systems that are cyber-physical in nature that which connects intelligence, infrastructure, and execution.</h2>
             <div className="metric-pills">
               <span className="metric-pill">AI-native middleware</span>
               <span className="metric-pill">Grid and DER intelligence</span>
@@ -590,12 +590,12 @@ export default function Home() {
             </div>
             <div className="mini-note-grid">
               <div className="mini-note">
-                <strong>What this portfolio communicates</strong>
-                <p>That the work is technically rigorous, strategically focused, and continuously moving from concept toward deployable systems.</p>
+                <strong>To my Portfolio</strong>
+                <p>Keeping up with the state-of-the-art technology which entagles work that is technically rigorous, strategically focused, and continuously moving from concept toward deployable and value creation systems.</p>
               </div>
               <div className="mini-note">
-                <strong>How the site is structured</strong>
-                <p>It connects live intelligence, selected repositories, trusted external context, and supporting documents into a single professional narrative.</p>
+                <strong>How the following is structured</strong>
+                <p>It connects live intelligence, selected repositories, trusted external context, and supporting documents.</p>
               </div>
             </div>
           </aside>
@@ -632,7 +632,7 @@ export default function Home() {
             <p>
               The value I aim to create comes from integration. I am not interested in treating AI, software,
               infrastructure, energy, interfaces, robotics, and research as separate domains. I am interested in the
-              moments where they become one system, because that is where the most meaningful engineering leverage often
+              moments where they become one system, because that is where the most meaningful cyber-physical engineering leverage often
               appears.
             </p>
             <p>

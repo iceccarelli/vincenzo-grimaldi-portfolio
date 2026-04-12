@@ -774,8 +774,10 @@ export default function Home() {
 
       <section className="section-shell content-section" id="phd">
         <div className="glass-panel cta-panel spotlight-border">
+          <div>
           <span className="section-kicker">Selected academic applications</span>
           <h2>Original application links and supporting documents presented as part of the broader research narrative.</h2>
+          </div>
         </div>
         <div className="card-grid two-up">
           {phdApplications.map((application) => (
@@ -819,7 +821,7 @@ export default function Home() {
             <a className="secondary-button" href="#ecosystem">
               Trusted ecosystem
             </a>
-            <a className="secondary-button" href="mailto:vincenzocgwork@gmail.com">
+            <a className="secondary-button" href="mailto:vince.ceccarelli@gmail.com">
               Email me
             </a>
           </div>

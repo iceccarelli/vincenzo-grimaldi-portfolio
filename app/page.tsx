@@ -578,12 +578,15 @@ export default function Home() {
                 alt="Vincenzo Ceccarelli Grimaldi"
                 className="hero-portrait"
               />
-            <div>
+            </div>
             <div className="panel-topline">
               <span className="live-dot" />
-              <span>VINCENZO IN BRIEF</span>
+              <span>Vincenzo in brief</span>
             </div>
-            <h2>Engineering and Personal Branding around systems that are cyber-physical in nature that which connects intelligence, infrastructure, and execution.</h2>
+            <h2>
+              Engineering and personal branding around cyber-physical systems that connect intelligence,
+              infrastructure, and execution.
+            </h2>
             <div className="metric-pills">
               <span className="metric-pill">AI-native middleware</span>
               <span className="metric-pill">Grid and DER intelligence</span>
@@ -592,12 +595,18 @@ export default function Home() {
             </div>
             <div className="mini-note-grid">
               <div className="mini-note">
-                <strong>To my Portfolio</strong>
-                <p>Keeping up with the state-of-the-art technology which entagles work that is technically rigorous, strategically focused, and continuously moving from concept toward deployable and value creation systems.</p>
+                <strong>Portfolio focus</strong>
+                <p>
+                  A technical profile built around rigorous implementation, systems thinking, and work that moves from
+                  concept toward operational value.
+                </p>
               </div>
               <div className="mini-note">
-                <strong>How the following is structured</strong>
-                <p>It connects live intelligence, selected repositories, trusted external context, and supporting documents.</p>
+                <strong>How this site is structured</strong>
+                <p>
+                  It connects live intelligence, selected repositories, trusted external context, and supporting
+                  documents.
+                </p>
               </div>
             </div>
           </aside>

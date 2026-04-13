@@ -578,7 +578,7 @@ export default function Home() {
                 alt="Vincenzo Ceccarelli Grimaldi"
                 className="hero-portrait"
               />
-            </div>
+            <div>
             <div className="panel-topline">
               <span className="live-dot" />
               <span>VINCENZO IN BRIEF</span>
@@ -659,7 +659,7 @@ export default function Home() {
 
       <section className="section-shell content-section" id="architecture">
         <div className="glass-panel cta-panel spotlight-border">
-          </div>
+          <div>
           <span className="section-kicker">Architecture of value creation</span>
           <h2>The projects are strongest when understood as layers of one larger systems thesis.</h2>
           </div>

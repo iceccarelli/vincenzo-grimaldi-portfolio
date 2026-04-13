@@ -123,7 +123,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <a className="footer-link" href="#phd">
                   Research trajectory
                 </a>
-                <a className="footer-link" href="mailto:vincenzocgwork@gmail.com">
+                <a className="footer-link" href="mailto:vincenzo@grimaldi.engineering">
                   vincenzocgwork@gmail.com
                 </a>
               </div>

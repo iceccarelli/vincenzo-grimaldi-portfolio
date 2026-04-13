@@ -696,7 +696,7 @@ export default function Home() {
         <div className="glass-panel cta-panel spotlight-border">
           <div>
             <span className="section-kicker">Live Intelligence Hub</span>
-            <h2>A Bloomberg-style surface for CPS-relevant signals, market context, and execution momentum.</h2>
+            <h2>Relevant market value and news context, and momentum.</h2>
             <p className="section-intro">{lastSync}</p>
           </div>
         </div>

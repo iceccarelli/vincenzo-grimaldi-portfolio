@@ -869,6 +869,31 @@ function ControlSystemStepResponse() {
   );
 }
 
+// ====================== ROTATOR WRAPPER ======================
+// Rotates through all 5 System Insight Visualizers every 30 seconds
+const visualizers = [
+  GridLoadFrequencySimulator,
+  NeuralBridgeActivityMap,
+  DERMCoordinationField,
+  LidarPointCloudVisualizer,
+  ControlSystemStepResponse,
+];
+
+function SystemInsightVisualizerRotator() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const CurrentVisualizer = visualizers[currentIndex];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % visualizers.length);
+    }, 30000); // 30-second rotation
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return <CurrentVisualizer />;
+}
+
 // ====================== MAIN PAGE COMPONENT ======================
 export default function Home() {
   const [clocks, setClocks] = useState<ClockEntry[]>(
@@ -1080,6 +1105,7 @@ export default function Home() {
           </div>
 
           {/* Hero Portrait + Waveform Panel */}
+          {/* Hero Portrait + Waveform Panel */}
           <aside className="glass-panel spotlight-border hero-panel">
             <div className="hero-portrait-shell">
               <img
@@ -1089,37 +1115,17 @@ export default function Home() {
               />
             </div>
 
+            {/* ← This is the only line you need in the hero panel now */}
             <div style={{ marginTop: '1.5rem' }}>
-              const visualizers = [
-                GridLoadFrequencySimulator,
-                NeuralBridgeActivityMap,
-                DERMCoordinationField,
-                LidarPointCloudVisualizer,
-                ControlSystemStepResponse,
-              ];
-              
-              function SystemInsightVisualizerRotator() {
-                const [currentIndex, setCurrentIndex] = useState(0);
-                const CurrentVisualizer = visualizers[currentIndex];
-              
-                useEffect(() => {
-                  const interval = setInterval(() => {
-                    setCurrentIndex(prev => (prev + 1) % visualizers.length);
-                  }, 30000); // 30-second rotation
-              
-                  return () => clearInterval(interval);
-                }, []);
-              
-                return <CurrentVisualizer />;
-              }
+              <SystemInsightVisualizerRotator />
             </div>
 
             <div className="panel-topline" style={{ marginTop: '1.5rem' }}>
               <span className="live-dot" />
-              <span>Vincenzo Grimaldi — CPS Engineer</span>
+              <span>Vincenzo Grimaldi — Grid Networks Engineer</span>
             </div>
             <h2>
-              Engineering deterministic systems that connect intelligence, infrastructure, and verifiable execution.
+              Engineering deterministic systems that connect AI Driven Infrastructure and Automate Verifiable Executions.
             </h2>
             <div className="metric-pills">
               <span className="metric-pill">Embedded Control</span>

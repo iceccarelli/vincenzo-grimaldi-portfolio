@@ -39,7 +39,7 @@ const clockZones = [
 
 const strengths = [
   {
-    title: 'Deterministic Cyber-Physical Systems',
+    title: 'Deterministic Physics-Informed AI Systems',
     body: 'I design control architectures where embedded logic, RTOS scheduling, and real-time signal integrity guarantee predictable, safety-critical behavior.',
   },
   {
@@ -88,7 +88,7 @@ const flagshipInitiatives = [
     title: 'NeuralBridge',
     href: 'https://github.com/iceccarelli/neuralbridge',
     summary:
-      'AI-native middleware for human-to-model orchestration in safety-critical cyber-physical environments.',
+      'AI-native middleware for human-to-model orchestration in safety-critical physics-informed environments.',
   },
   {
     title: 'GridOS',
@@ -541,9 +541,9 @@ export default function Home() {
         <div className="hero-grid">
           <div className="hero-copy">
             <div>
-            <span className="section-kicker">CYBER-PHYSICAL SYSTEMS • DETERMINISTIC CONTROL • GRID INTELLIGENCE</span>
+            <span className="section-kicker">PHYSICS-INFORMED SYSTEMS • DETERMINISTIC CONTROL • GRID INTELLIGENCE</span>
             <h1>
-              <span className="gradient-text">Designing deterministic cyber-physical systems that make complex control loops operational, verifiable, and alive</span> .
+              <span className="gradient-text">Designing deterministic, physics-informed intelligence that transforms complex control systems into operational, verifiable, and adaptive realities.</span>
             </h1>
             </div>
             <p className="hero-lead">
@@ -623,14 +623,14 @@ export default function Home() {
         <div className="glass-panel cta-panel spotlight-border">
           <div>
             <span className="section-kicker">About the Work</span>
-            <h2>A portfolio engineered for technical credibility in cyber-physical systems.</h2>
+            <h2>A portfolio engineered for technical credibility in physics-informed systems.</h2>
           </div>
         </div>
         <div className="two-column-layout">
           <div className="glass-panel immersive-card">
             <p>
               I do not treat AI, software, infrastructure, energy, and robotics as isolated domains.
-              I integrate them into deterministic cyber-physical systems where every layer — from RTOS scheduling to AI orchestration — is verifiable and safety-critical.
+              I integrate them into deterministic physics-informed systems where every layer — from RTOS scheduling to AI orchestration — is verifiable and safety-critical.
             </p>
             <p>
               This site is structured to move visitors from high-level systems thinking → technical substance → live operational signals → immediate action.
@@ -652,7 +652,7 @@ export default function Home() {
         <div className="glass-panel cta-panel spotlight-border">
           <div>
             <span className="section-kicker">Architecture of Value Creation</span>
-            <h2>The projects form layers of one coherent cyber-physical systems thesis.</h2>
+            <h2>The projects form layers of one coherent physics-informed systems thesis.</h2>
           </div>
         </div>
         <div className="card-grid four-up">

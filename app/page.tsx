@@ -540,10 +540,12 @@ export default function Home() {
       <section className="section-shell hero-section" id="top">
         <div className="hero-grid">
           <div className="hero-copy">
+            <div>
             <span className="section-kicker">CYBER-PHYSICAL SYSTEMS • DETERMINISTIC CONTROL • GRID INTELLIGENCE</span>
             <h1>
-              I engineer <span className="gradient-text">deterministic cyber-physical systems</span> that make complex control loops operational, verifiable, and alive.
+              <span className="gradient-text">Designing deterministic cyber-physical systems that make complex control loops operational, verifiable, and alive</span> .
             </h1>
+            </div>
             <p className="hero-lead">
               At the intersection of embedded logic, real-time operating systems, AI orchestration, and grid-scale infrastructure.
               My work translates high-stakes technical complexity into systems that are predictable, legible, and deployable in safety-critical environments.

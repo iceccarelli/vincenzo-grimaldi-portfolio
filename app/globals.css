@@ -52,6 +52,56 @@ a {
   color: #ffffff;
 }
 
+/* ====================== NEW STYLES FOR 2026 PORTFOLIO ====================== */
+.math-block {
+  background: rgba(7, 12, 23, 0.75);
+  border: 1px solid rgba(125, 211, 252, 0.25);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  color: #7dd3fc;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.impact-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.impact-card {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.12), rgba(16, 185, 129, 0.08));
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.impact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 60px rgba(52, 211, 153, 0.25);
+}
+
+.standards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.standards-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(125, 211, 252, 0.16);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--muted-strong);
+}
+
+/* ====================== ORIGINAL STYLES (unchanged) ====================== */
 .site-chrome {
   position: relative;
   overflow: clip;
@@ -794,34 +844,19 @@ small {
 }
 
 @keyframes pulse-dot {
-  0% {
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6); }
+  70% { box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
 }
 
 @keyframes float-orb {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(0, -18px, 0) scale(1.06);
-  }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(0, -18px, 0) scale(1.06); }
 }
 
 @keyframes marquee-left {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(calc(-50% - 0.5rem), 0, 0);
-  }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(calc(-50% - 0.5rem), 0, 0); }
 }
 
 ::-webkit-scrollbar {
@@ -838,6 +873,7 @@ small {
   border: 2px solid rgba(5, 11, 21, 0.9);
 }
 
+/* ====================== MEDIA QUERIES (unchanged) ====================== */
 @media (max-width: 1100px) {
   .hero-grid,
   .two-column-layout,
@@ -845,13 +881,11 @@ small {
   .footer-grid {
     grid-template-columns: 1fr;
   }
-
   .hero-portrait-shell {
     min-height: clamp(300px, 62vw, 560px);
     max-width: min(100%, 560px);
     margin: 0 auto;
   }
-
   .four-up,
   .three-up,
   .two-up,
@@ -859,16 +893,13 @@ small {
   .mini-note-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
   .topbar-inner {
     flex-wrap: wrap;
   }
-
   .topbar-nav {
     width: 100%;
     justify-content: flex-start;
   }
-
   .footer-content {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -878,22 +909,18 @@ small {
   .section-shell {
     width: min(calc(100% - 1.2rem), var(--max-width));
   }
-
   .hero-section {
     padding-top: 2.8rem;
   }
-
   .hero-portrait-shell {
     aspect-ratio: 1 / 1.15;
     min-height: clamp(280px, 86vw, 460px);
     max-height: 460px;
   }
-
   .hero-copy h1 {
     font-size: clamp(2.5rem, 12vw, 4rem);
     max-width: 100%;
   }
-
   .hero-panel,
   .signal-ribbon,
   .feature-card,
@@ -905,7 +932,6 @@ small {
   .market-overview-shell {
     padding: 1.2rem;
   }
-
   .four-up,
   .three-up,
   .two-up,
@@ -913,45 +939,35 @@ small {
   .mini-note-grid {
     grid-template-columns: 1fr;
   }
-
   .clock-marquee-track {
     animation-duration: 24s;
   }
-
   .signal-chip {
     min-width: 82vw;
   }
-
   .brand-copy small {
     white-space: normal;
   }
-
   .topbar-nav {
     gap: 0.8rem;
   }
-
   .hero-actions {
     flex-direction: column;
   }
-
   .primary-button,
   .secondary-button,
   .topbar-button {
     width: 100%;
   }
-
   .hamburger {
     display: flex;
   }
-
   .topbar-nav {
     display: none;
   }
-
   .topbar-inner {
     min-height: 60px;
   }
-
   .footer-content {
     grid-template-columns: 1fr;
   }

@@ -5,19 +5,28 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://vincenzo-grimaldi-portfolio.vercel.app'),
-  title: 'Vincenzo Grimaldi | Cyber-Physical Systems Engineer',
+  title: 'Vincenzo Grimaldi | Physics-Informed CPS Engineer',
   description:
-    'Deterministic control systems at the intersection of embedded logic, AI orchestration, grid intelligence, RTOS, and safety-critical infrastructure.',
+    'Physics-Informed Neural Networks • Agentic Digital Twins • Deterministic Grid Intelligence • MARL • RTOS • Deutsche Bahn Grid Networks Engineer',
   keywords: [
     'Vincenzo Grimaldi',
+    'Physics-Informed Neural Networks',
+    'PINNs',
+    'Agentic Digital Twins',
+    'MARL',
+    'GridOS',
+    'NeuralBridge',
+    'DERIM',
     'Cyber-Physical Systems',
     'CPS Engineer',
     'Grid Intelligence',
     'DER Coordination',
     'Embedded Systems',
     'AI-native Middleware',
-    'Control Loops',
+    'Deterministic Control',
     'RTOS',
+    'OT Cybersecurity',
+    'Deutsche Bahn',
     'Signal Integrity',
     'Verification & Validation',
   ],
@@ -26,8 +35,8 @@ export const metadata: Metadata = {
   publisher: 'Vincenzo Grimaldi',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Vincenzo Grimaldi | Cyber-Physical Systems Engineer',
-    description: 'Engineering deterministic, safety-critical systems that connect intelligence, infrastructure, and execution.',
+    title: 'Vincenzo Grimaldi | Physics-Informed CPS Engineer',
+    description: 'Embedding governing equations into AI for guaranteed physical consistency in safety-critical grids and autonomous systems.',
     url: 'https://vincenzo-grimaldi-portfolio.vercel.app/',
     siteName: 'Vincenzo Grimaldi Portfolio',
     locale: 'en_GB',
@@ -35,8 +44,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vincenzo Grimaldi | Cyber-Physical Systems Engineer',
-    description: 'Deterministic control • Grid intelligence • AI orchestration • Embedded systems.',
+    title: 'Vincenzo Grimaldi | Physics-Informed CPS Engineer',
+    description: 'Physics-Informed AI • Agentic Systems • Grid Intelligence • Deterministic Control',
   },
 };
 
@@ -46,9 +55,11 @@ const structuredData = {
   name: 'Vincenzo Grimaldi',
   url: 'https://vincenzo-grimaldi-portfolio.vercel.app/',
   sameAs: ['https://github.com/iceccarelli'],
-  jobTitle: 'Cyber-Physical Systems Engineer',
+  jobTitle: 'Physics-Informed Cyber-Physical Systems Engineer • Grid Networks Engineer at Deutsche Bahn',
   knowsAbout: [
-    'Artificial Intelligence',
+    'Physics-Informed Neural Networks',
+    'Agentic Digital Twins',
+    'Multi-Agent Reinforcement Learning',
     'Smart Grids',
     'Distributed Energy Resources',
     'Digital Infrastructure',
@@ -56,10 +67,10 @@ const structuredData = {
     'Systems Engineering',
     'Embedded Control Systems',
     'RTOS',
-    'Signal Integrity',
-    'Control Loops',
+    'OT Cybersecurity',
+    'Deterministic Control Loops',
   ],
-  description: 'Engineer building deterministic cyber-physical systems that connect intelligence, infrastructure, and execution.',
+  description: 'Engineer building verifiable, physics-guaranteed intelligence for safety-critical grids, autonomous systems, and real-time orchestration.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -98,6 +109,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   <h4>Platform</h4>
                   <div className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <a className="footer-link" href="#architecture">Systems</a>
+                    <a className="footer-link" href="#physics-informed">Physics-Informed</a>
                     <a className="footer-link" href="#flagship-systems">Flagship Work</a>
                     <a className="footer-link" href="#live-intelligence">Live Intelligence</a>
                     <a className="footer-link" href="#phd">Research</a>

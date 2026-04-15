@@ -1287,7 +1287,7 @@ export default function Home() {
               My work translates high-stakes technical complexity into systems that are predictable, legible, and deployable in safety-critical environments.
             </p>
             <p>
-              This portfolio is a living engineering record — connecting live market intelligence, flagship repositories, research trajectory, and implementation signals to demonstrate a coherent CPS execution path.
+              Connecting live market intelligence, flagship repositories, research trajectory, and implementation signals to demonstrate a coherent multiple execution paths.
             </p>
             <div className="hero-actions">
               <a className="primary-button" href="#live-intelligence">

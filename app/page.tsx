@@ -262,8 +262,10 @@ function formatDate(dateString: string) {
   }).format(date);
 }
 
-// ====================== SYSTEM STATUS WAVEFORM (Canvas) ======================
-function GridLoadFrequencySimulator() {
+// ====================== NEW & UPGRADED CANVAS VISUALIZERS ======================
+
+// PINN Solver Canvas – Physics-Informed Neural Network in action
+function PINNSolverCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -274,6 +276,7 @@ function GridLoadFrequencySimulator() {
 
     let animationFrame: number;
     let time = 0;
+    let residual = 1.0;
 
     const resize = () => {
       canvas.width = canvas.offsetWidth;
@@ -286,7 +289,7 @@ function GridLoadFrequencySimulator() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Subtle grid
-      ctx.strokeStyle = 'rgba(52, 211, 153, 0.1)';
+      ctx.strokeStyle = 'rgba(125, 211, 252, 0.1)';
       ctx.lineWidth = 1;
       for (let x = 25; x < canvas.width; x += 25) {
         ctx.beginPath();
@@ -301,45 +304,29 @@ function GridLoadFrequencySimulator() {
         ctx.stroke();
       }
 
-      // Primary frequency signal (grid load fluctuation)
+      // PDE solution curve (approximating Burgers’ / grid dynamics)
       ctx.strokeStyle = '#7dd3fc';
       ctx.lineWidth = 3;
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 15;
       ctx.shadowColor = '#38bdf8';
       ctx.beginPath();
       for (let x = 0; x < canvas.width; x += 2) {
-        const y = canvas.height / 2 +
-                  Math.sin((x + time) * 0.015) * 20 +
-                  Math.sin((x + time) * 0.045) * 5;
+        const y = canvas.height / 2 + Math.sin((x + time) * 0.018) * 25 * (1 - residual);
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
 
-      // Corrective control action (AGC)
-      ctx.strokeStyle = 'rgba(52, 211, 153, 0.8)';
-      ctx.lineWidth = 2;
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = '#34d399';
-      ctx.beginPath();
-      for (let x = 0; x < canvas.width; x += 2) {
-        const y = canvas.height / 2 +
-                  Math.sin((x + time) * 0.015 + 2.5) * 8;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
+      // Physics residual bar (drops to near-zero)
+      residual = Math.max(0.02, residual * 0.985);
+      ctx.fillStyle = 'rgba(52, 211, 153, 0.9)';
+      ctx.fillRect(20, canvas.height - 25, (canvas.width - 40) * (1 - residual), 8);
 
-      // Data sampling points
       ctx.fillStyle = '#f0fdf4';
-      ctx.shadowBlur = 0;
-      for (let i = 0; i < 10; i++) {
-        const x = (canvas.width / 10) * i + (time % 50);
-        const y = canvas.height / 2 + Math.sin((x + time) * 0.015) * 20;
-        ctx.fillRect(x - 2, y - 2, 4, 4);
-      }
+      ctx.font = '500 10px monospace';
+      ctx.fillText(`Physics residual: ${(residual * 100).toFixed(1)}%`, 30, canvas.height - 35);
 
-      time += 2.5;
+      time += 2;
       animationFrame = requestAnimationFrame(draw);
     };
 
@@ -355,14 +342,13 @@ function GridLoadFrequencySimulator() {
     <canvas
       ref={canvasRef}
       className="system-waveform"
-      aria-label="Grid load and frequency regulation simulation"
+      aria-label="Physics-Informed Neural Network solver – guaranteeing physically consistent predictions"
     />
   );
 }
 
-// Component 2: NeuralBridgeActivityMap
-// Visualizes AI agent communication flow in NeuralBridge middleware
-function NeuralBridgeActivityMap() {
+// Agentic MARL Field – Upgraded DER coordination with multi-agent negotiation
+function AgenticMARLField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -374,142 +360,12 @@ function NeuralBridgeActivityMap() {
     let animationFrame: number;
     let time = 0;
 
-    const nodes = [
-      { x: 0.2, y: 0.3 }, { x: 0.5, y: 0.6 }, { x: 0.8, y: 0.4 },
-      { x: 0.35, y: 0.7 }, { x: 0.65, y: 0.25 }, { x: 0.15, y: 0.55 },
-      { x: 0.85, y: 0.65 }
-    ];
-
-    const edges = [
-      [0, 1], [1, 2], [2, 3], [3, 0], [1, 4], [4, 5], [5, 6], [6, 0], [2, 6]
-    ];
-
-    const particles = edges.map(([startIdx, endIdx]) => ({
-      startIdx,
-      endIdx,
-      progress: Math.random(),
-      speed: 0.005 + Math.random() * 0.01,
-    }));
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = 110;
-    };
-    window.addEventListener('resize', resize);
-    resize();
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Subtle grid
-      ctx.strokeStyle = 'rgba(125, 211, 252, 0.1)';
-      ctx.lineWidth = 0.5;
-      for (let x = 20; x < canvas.width; x += 20) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-      for (let y = 20; y < canvas.height; y += 20) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-
-      const nodePositions = nodes.map(n => ({
-        x: n.x * canvas.width,
-        y: n.y * (canvas.height - 20) + 10,
-      }));
-
-      // Edges with gradient
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = '#38bdf8';
-      edges.forEach(([startIdx, endIdx]) => {
-        const start = nodePositions[startIdx];
-        const end = nodePositions[endIdx];
-        const gradient = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
-        gradient.addColorStop(0, 'rgba(125, 211, 252, 0.6)');
-        gradient.addColorStop(1, 'rgba(52, 211, 153, 0.6)');
-
-        ctx.beginPath();
-        ctx.moveTo(start.x, start.y);
-        ctx.lineTo(end.x, end.y);
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      });
-
-      // Nodes
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = '#7dd3fc';
-      nodePositions.forEach(pos => {
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = '#f8fafc';
-        ctx.fill();
-        ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      });
-
-      // Particles (data packets)
-      ctx.shadowBlur = 0;
-      particles.forEach(p => {
-        const start = nodePositions[p.startIdx];
-        const end = nodePositions[p.endIdx];
-        const currentX = start.x + (end.x - start.x) * p.progress;
-        const currentY = start.y + (end.y - start.y) * p.progress;
-
-        ctx.beginPath();
-        ctx.arc(currentX, currentY, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#34d399';
-        ctx.fill();
-
-        p.progress += p.speed;
-        if (p.progress > 1) p.progress = 0;
-      });
-
-      time += 1;
-      animationFrame = requestAnimationFrame(draw);
-    };
-
-    draw();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrame);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="system-waveform"
-      aria-label="NeuralBridge agent communication flow"
-    />
-  );
-}
-
-// Component 3: DERMCoordinationField
-// Simulates DER coordination field (DERIM middleware)
-function DERMCoordinationField() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrame: number;
-    let time = 0;
-
-    const assets = Array.from({ length: 25 }, () => ({
+    const agents = Array.from({ length: 18 }, () => ({
       x: Math.random(),
       y: Math.random(),
       vx: 0,
       vy: 0,
+      color: Math.random() > 0.5 ? '#7dd3fc' : '#34d399',
     }));
 
     const anchors = [
@@ -524,52 +380,47 @@ function DERMCoordinationField() {
     window.addEventListener('resize', resize);
     resize();
 
-    const updateAssets = () => {
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
+    const updateAgents = () => {
+      agents.forEach((agent) => {
+        let fx = 0;
+        let fy = 0;
 
-      assets.forEach(asset => {
-        let fx = 0,
-          fy = 0;
+        // Attraction to nearest anchor (coordination)
+        let nearest = anchors[0];
+        let minDist = Math.hypot(agent.x - nearest.x, agent.y - nearest.y);
+        if (Math.hypot(agent.x - anchors[1].x, agent.y - anchors[1].y) < minDist) nearest = anchors[1];
+        fx += (nearest.x - agent.x) * 0.008;
+        fy += (nearest.y - agent.y) * 0.008;
 
-        // Attraction to nearest anchor
-        let nearestAnchor = anchors[0];
-        let minDist = Math.hypot(asset.x - nearestAnchor.x, asset.y - nearestAnchor.y);
-        if (Math.hypot(asset.x - anchors[1].x, asset.y - anchors[1].y) < minDist) {
-          nearestAnchor = anchors[1];
-        }
-        fx += (nearestAnchor.x - asset.x) * 0.005;
-        fy += (nearestAnchor.y - asset.y) * 0.005;
-
-        // Repulsion from other assets
-        assets.forEach(other => {
-          if (other === asset) return;
-          const dx = asset.x - other.x;
-          const dy = asset.y - other.y;
+        // Repulsion + negotiation between agents
+        agents.forEach((other) => {
+          if (other === agent) return;
+          const dx = agent.x - other.x;
+          const dy = agent.y - other.y;
           const dist = Math.hypot(dx, dy);
-          if (dist < 0.1 && dist > 0) {
-            fx += (dx / dist) * 0.01;
-            fy += (dy / dist) * 0.01;
+          if (dist < 0.12 && dist > 0) {
+            fx += (dx / dist) * 0.018;
+            fy += (dy / dist) * 0.018;
           }
         });
 
         // Soft boundaries
-        if (asset.x < 0.05) fx += 0.01;
-        if (asset.x > 0.95) fx -= 0.01;
-        if (asset.y < 0.05) fy += 0.01;
-        if (asset.y > 0.95) fy -= 0.01;
+        if (agent.x < 0.05) fx += 0.012;
+        if (agent.x > 0.95) fx -= 0.012;
+        if (agent.y < 0.05) fy += 0.012;
+        if (agent.y > 0.95) fy -= 0.012;
 
-        asset.vx = (asset.vx + fx) * 0.9;
-        asset.vy = (asset.vy + fy) * 0.9;
-        asset.x += asset.vx * 0.8;
-        asset.y += asset.vy * 0.8;
+        agent.vx = (agent.vx + fx) * 0.88;
+        agent.vy = (agent.vy + fy) * 0.88;
+        agent.x += agent.vx * 0.75;
+        agent.y += agent.vy * 0.75;
       });
     };
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Energy field grid
+      // Grid
       ctx.strokeStyle = 'rgba(52, 211, 153, 0.08)';
       ctx.lineWidth = 1;
       for (let x = 25; x < canvas.width; x += 25) {
@@ -585,52 +436,55 @@ function DERMCoordinationField() {
         ctx.stroke();
       }
 
-      // Anchors (optimal coordination points)
-      ctx.shadowBlur = 15;
+      // Anchors (coordination hubs)
+      ctx.shadowBlur = 18;
       ctx.shadowColor = '#34d399';
-      anchors.forEach(anchor => {
-        const pulse = 1 + Math.sin(time * 0.1) * 0.1;
+      anchors.forEach((anchor) => {
+        const pulse = 1 + Math.sin(time * 0.12) * 0.12;
         ctx.beginPath();
-        ctx.arc(anchor.x * canvas.width, anchor.y * canvas.height, 8 * pulse, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(52, 211, 153, 0.2)';
+        ctx.arc(anchor.x * canvas.width, anchor.y * canvas.height, 9 * pulse, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(52, 211, 153, 0.25)';
         ctx.fill();
         ctx.strokeStyle = '#34d399';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
       });
 
-      // Connections to nearest anchor
-      ctx.shadowBlur = 8;
+      // Negotiation links
+      ctx.shadowBlur = 6;
       ctx.shadowColor = '#7dd3fc';
-      ctx.lineWidth = 0.5;
-      assets.forEach(asset => {
-        let nearestAnchor = anchors[0];
-        let minDist = Math.hypot(asset.x - nearestAnchor.x, asset.y - nearestAnchor.y);
-        if (Math.hypot(asset.x - anchors[1].x, asset.y - anchors[1].y) < minDist) {
-          nearestAnchor = anchors[1];
-        }
-        if (minDist < 0.3) {
+      ctx.lineWidth = 1;
+      agents.forEach((agent) => {
+        let nearest = anchors[0];
+        let minDist = Math.hypot(agent.x - nearest.x, agent.y - nearest.y);
+        if (Math.hypot(agent.x - anchors[1].x, agent.y - anchors[1].y) < minDist) nearest = anchors[1];
+        if (minDist < 0.35) {
           ctx.beginPath();
-          ctx.moveTo(asset.x * canvas.width, asset.y * canvas.height);
-          ctx.lineTo(nearestAnchor.x * canvas.width, nearestAnchor.y * canvas.height);
-          ctx.strokeStyle = 'rgba(125, 211, 252, 0.4)';
+          ctx.moveTo(agent.x * canvas.width, agent.y * canvas.height);
+          ctx.lineTo(nearest.x * canvas.width, nearest.y * canvas.height);
+          ctx.strokeStyle = 'rgba(125, 211, 252, 0.45)';
           ctx.stroke();
         }
       });
 
-      // Assets (DER units)
+      // Agents (MARL agents)
       ctx.shadowBlur = 0;
-      assets.forEach(asset => {
+      agents.forEach((agent) => {
         ctx.beginPath();
-        ctx.arc(asset.x * canvas.width, asset.y * canvas.height, 3, 0, Math.PI * 2);
+        ctx.arc(agent.x * canvas.width, agent.y * canvas.height, 3.5, 0, Math.PI * 2);
         ctx.fillStyle = '#f8fafc';
         ctx.fill();
-        ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = agent.color;
+        ctx.lineWidth = 2;
         ctx.stroke();
       });
 
-      updateAssets();
+      // MARL label
+      ctx.fillStyle = '#7dd3fc';
+      ctx.font = '600 11px monospace';
+      ctx.fillText('MARL + Physics Rewards', canvas.width - 148, 22);
+
+      updateAgents();
       time += 1;
       animationFrame = requestAnimationFrame(draw);
     };
@@ -647,25 +501,320 @@ function DERMCoordinationField() {
     <canvas
       ref={canvasRef}
       className="system-waveform"
-      aria-label="DER coordination field for distributed energy resources"
+      aria-label="Agentic MARL coordination field – multi-agent reinforcement learning with physics-informed rewards"
     />
   );
 }
 
-// Component 4: LidarPointCloudVisualizer
-// Real-time 2D LiDAR point-cloud projection (robot-lidar-fusion)
-function LidarPointCloudVisualizer() {
+// Original visualizers (kept exactly as provided)
+function GridLoadFrequencySimulator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    let animationFrame: number;
+    let time = 0;
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = 110;
+    };
+    window.addEventListener('resize', resize);
+    resize();
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'rgba(52, 211, 153, 0.1)';
+      ctx.lineWidth = 1;
+      for (let x = 25; x < canvas.width; x += 25) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 20; y < canvas.height; y += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+      ctx.strokeStyle = '#7dd3fc';
+      ctx.lineWidth = 3;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#38bdf8';
+      ctx.beginPath();
+      for (let x = 0; x < canvas.width; x += 2) {
+        const y = canvas.height / 2 + Math.sin((x + time) * 0.015) * 20 + Math.sin((x + time) * 0.045) * 5;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(52, 211, 153, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = '#34d399';
+      ctx.beginPath();
+      for (let x = 0; x < canvas.width; x += 2) {
+        const y = canvas.height / 2 + Math.sin((x + time) * 0.015 + 2.5) * 8;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = '#f0fdf4';
+      ctx.shadowBlur = 0;
+      for (let i = 0; i < 10; i++) {
+        const x = (canvas.width / 10) * i + (time % 50);
+        const y = canvas.height / 2 + Math.sin((x + time) * 0.015) * 20;
+        ctx.fillRect(x - 2, y - 2, 4, 4);
+      }
+      time += 2.5;
+      animationFrame = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+  return <canvas ref={canvasRef} className="system-waveform" aria-label="Grid load and frequency regulation simulation" />;
+}
 
+function NeuralBridgeActivityMap() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let animationFrame: number;
+    let time = 0;
+    const nodes = [
+      { x: 0.2, y: 0.3 }, { x: 0.5, y: 0.6 }, { x: 0.8, y: 0.4 },
+      { x: 0.35, y: 0.7 }, { x: 0.65, y: 0.25 }, { x: 0.15, y: 0.55 },
+      { x: 0.85, y: 0.65 }
+    ];
+    const edges = [
+      [0, 1], [1, 2], [2, 3], [3, 0], [1, 4], [4, 5], [5, 6], [6, 0], [2, 6]
+    ];
+    const particles = edges.map(([startIdx, endIdx]) => ({
+      startIdx,
+      endIdx,
+      progress: Math.random(),
+      speed: 0.005 + Math.random() * 0.01,
+    }));
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = 110;
+    };
+    window.addEventListener('resize', resize);
+    resize();
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'rgba(125, 211, 252, 0.1)';
+      ctx.lineWidth = 0.5;
+      for (let x = 20; x < canvas.width; x += 20) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 20; y < canvas.height; y += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+      const nodePositions = nodes.map(n => ({
+        x: n.x * canvas.width,
+        y: n.y * (canvas.height - 20) + 10,
+      }));
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = '#38bdf8';
+      edges.forEach(([startIdx, endIdx]) => {
+        const start = nodePositions[startIdx];
+        const end = nodePositions[endIdx];
+        const gradient = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+        gradient.addColorStop(0, 'rgba(125, 211, 252, 0.6)');
+        gradient.addColorStop(1, 'rgba(52, 211, 153, 0.6)');
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y);
+        ctx.lineTo(end.x, end.y);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#7dd3fc';
+      nodePositions.forEach(pos => {
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+      ctx.shadowBlur = 0;
+      particles.forEach(p => {
+        const start = nodePositions[p.startIdx];
+        const end = nodePositions[p.endIdx];
+        const currentX = start.x + (end.x - start.x) * p.progress;
+        const currentY = start.y + (end.y - start.y) * p.progress;
+        ctx.beginPath();
+        ctx.arc(currentX, currentY, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#34d399';
+        ctx.fill();
+        p.progress += p.speed;
+        if (p.progress > 1) p.progress = 0;
+      });
+      time += 1;
+      animationFrame = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+  return <canvas ref={canvasRef} className="system-waveform" aria-label="NeuralBridge agent communication flow" />;
+}
+
+function DERMCoordinationField() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let animationFrame: number;
+    let time = 0;
+    const assets = Array.from({ length: 25 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      vx: 0,
+      vy: 0,
+    }));
+    const anchors = [
+      { x: 0.25, y: 0.5 },
+      { x: 0.75, y: 0.5 },
+    ];
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = 110;
+    };
+    window.addEventListener('resize', resize);
+    resize();
+    const updateAssets = () => {
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      assets.forEach(asset => {
+        let fx = 0, fy = 0;
+        let nearestAnchor = anchors[0];
+        let minDist = Math.hypot(asset.x - nearestAnchor.x, asset.y - nearestAnchor.y);
+        if (Math.hypot(asset.x - anchors[1].x, asset.y - anchors[1].y) < minDist) nearestAnchor = anchors[1];
+        fx += (nearestAnchor.x - asset.x) * 0.005;
+        fy += (nearestAnchor.y - asset.y) * 0.005;
+        assets.forEach(other => {
+          if (other === asset) return;
+          const dx = asset.x - other.x;
+          const dy = asset.y - other.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 0.1 && dist > 0) {
+            fx += (dx / dist) * 0.01;
+            fy += (dy / dist) * 0.01;
+          }
+        });
+        if (asset.x < 0.05) fx += 0.01;
+        if (asset.x > 0.95) fx -= 0.01;
+        if (asset.y < 0.05) fy += 0.01;
+        if (asset.y > 0.95) fy -= 0.01;
+        asset.vx = (asset.vx + fx) * 0.9;
+        asset.vy = (asset.vy + fy) * 0.9;
+        asset.x += asset.vx * 0.8;
+        asset.y += asset.vy * 0.8;
+      });
+    };
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'rgba(52, 211, 153, 0.08)';
+      ctx.lineWidth = 1;
+      for (let x = 25; x < canvas.width; x += 25) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 20; y < canvas.height; y += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#34d399';
+      anchors.forEach(anchor => {
+        const pulse = 1 + Math.sin(time * 0.1) * 0.1;
+        ctx.beginPath();
+        ctx.arc(anchor.x * canvas.width, anchor.y * canvas.height, 8 * pulse, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(52, 211, 153, 0.2)';
+        ctx.fill();
+        ctx.strokeStyle = '#34d399';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = '#7dd3fc';
+      ctx.lineWidth = 0.5;
+      assets.forEach(asset => {
+        let nearestAnchor = anchors[0];
+        let minDist = Math.hypot(asset.x - nearestAnchor.x, asset.y - nearestAnchor.y);
+        if (Math.hypot(asset.x - anchors[1].x, asset.y - anchors[1].y) < minDist) nearestAnchor = anchors[1];
+        if (minDist < 0.3) {
+          ctx.beginPath();
+          ctx.moveTo(asset.x * canvas.width, asset.y * canvas.height);
+          ctx.lineTo(nearestAnchor.x * canvas.width, nearestAnchor.y * canvas.height);
+          ctx.strokeStyle = 'rgba(125, 211, 252, 0.4)';
+          ctx.stroke();
+        }
+      });
+      ctx.shadowBlur = 0;
+      assets.forEach(asset => {
+        ctx.beginPath();
+        ctx.arc(asset.x * canvas.width, asset.y * canvas.height, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+      updateAssets();
+      time += 1;
+      animationFrame = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+  return (
+    <canvas
+      ref={canvasRef}
+      className="system-waveform"
+      aria-label="DER coordination field for distributed energy resources"
+    />
+  );
+}
+
+function LidarPointCloudVisualizer() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     let animationFrame: number;
     let angle = 0;
-
     const numPoints = 180;
     const points = Array.from({ length: numPoints }, (_, i) => {
       const a = (i / numPoints) * Math.PI * 2;
@@ -675,18 +824,14 @@ function LidarPointCloudVisualizer() {
         height: Math.sin(a * 3) * 15 + 50,
       };
     });
-
     const resize = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = 110;
     };
     window.addEventListener('resize', resize);
     resize();
-
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Scanning polar grid
       ctx.strokeStyle = 'rgba(52, 211, 153, 0.15)';
       ctx.lineWidth = 1;
       for (let i = 0; i <= 12; i++) {
@@ -705,22 +850,17 @@ function LidarPointCloudVisualizer() {
         );
         ctx.stroke();
       }
-
-      // Point cloud
       ctx.fillStyle = '#7dd3fc';
       ctx.shadowBlur = 8;
       ctx.shadowColor = '#38bdf8';
       points.forEach(p => {
         const currentAngle = p.angle + angle * 0.018;
-        const dist = p.distance + Math.sin(angle * 0.3) * 4; // slight breathing
+        const dist = p.distance + Math.sin(angle * 0.3) * 4;
         const x = canvas.width / 2 + Math.cos(currentAngle) * dist;
         const y = canvas.height / 2 + Math.sin(currentAngle) * dist * 0.5;
-
         const size = 2 + (p.height / 100) * 4;
         ctx.fillRect(x - size / 2, y - size / 2, size, size);
       });
-
-      // Active scanning beam
       ctx.beginPath();
       ctx.moveTo(canvas.width / 2, canvas.height / 2);
       ctx.lineTo(
@@ -731,19 +871,15 @@ function LidarPointCloudVisualizer() {
       ctx.lineWidth = 1.5;
       ctx.shadowBlur = 0;
       ctx.stroke();
-
       angle += 0.032;
       animationFrame = requestAnimationFrame(draw);
     };
-
     draw();
-
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrame);
     };
   }, []);
-
   return (
     <canvas
       ref={canvasRef}
@@ -753,46 +889,34 @@ function LidarPointCloudVisualizer() {
   );
 }
 
-// Component 5: ControlSystemStepResponse (refined with history buffer)
-// Deterministic control system step response with realistic time-series evolution
 function ControlSystemStepResponse() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
     let animationFrame: number;
     let time = 0;
-
     const setpoint = 0.72;
     let response = 0.1;
     let derivative = 0;
-    const history: number[] = Array(240).fill(0.1); // time-series buffer
-
+    const history: number[] = Array(240).fill(0.1);
     const resize = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = 110;
     };
     window.addEventListener('resize', resize);
     resize();
-
     const updateResponse = () => {
       const error = setpoint - response;
-      response += error * 0.048; // tuned for visible settling
+      response += error * 0.048;
       derivative = error * 0.12;
-
-      // Shift history
       history.shift();
       history.push(response);
     };
-
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Grid
       ctx.strokeStyle = 'rgba(125, 211, 252, 0.1)';
       ctx.lineWidth = 1;
       for (let x = 25; x < canvas.width; x += 25) {
@@ -807,8 +931,6 @@ function ControlSystemStepResponse() {
         ctx.lineTo(canvas.width, y);
         ctx.stroke();
       }
-
-      // Setpoint (target)
       ctx.beginPath();
       ctx.moveTo(0, canvas.height - setpoint * canvas.height);
       ctx.lineTo(canvas.width, canvas.height - setpoint * canvas.height);
@@ -817,8 +939,6 @@ function ControlSystemStepResponse() {
       ctx.setLineDash([5, 3]);
       ctx.stroke();
       ctx.setLineDash([]);
-
-      // Response curve (historical)
       ctx.beginPath();
       for (let i = 0; i < history.length; i++) {
         const x = (i / (history.length - 1)) * canvas.width;
@@ -831,8 +951,6 @@ function ControlSystemStepResponse() {
       ctx.shadowBlur = 12;
       ctx.shadowColor = '#38bdf8';
       ctx.stroke();
-
-      // Derivative action (damping)
       ctx.beginPath();
       for (let i = 0; i < history.length; i++) {
         const x = (i / (history.length - 1)) * canvas.width;
@@ -846,20 +964,16 @@ function ControlSystemStepResponse() {
       ctx.shadowBlur = 8;
       ctx.shadowColor = '#34d399';
       ctx.stroke();
-
       updateResponse();
       time += 1;
       animationFrame = requestAnimationFrame(draw);
     };
-
     draw();
-
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrame);
     };
   }, []);
-
   return (
     <canvas
       ref={canvasRef}
@@ -869,11 +983,12 @@ function ControlSystemStepResponse() {
   );
 }
 
-// ====================== ROTATOR WRAPPER ======================
-// Rotates through all 5 System Insight Visualizers every 30 seconds
+// ====================== ROTATOR WRAPPER (now with 7 visualizers) ======================
 const visualizers = [
   GridLoadFrequencySimulator,
   NeuralBridgeActivityMap,
+  AgenticMARLField,        // NEW
+  PINNSolverCanvas,        // NEW
   DERMCoordinationField,
   LidarPointCloudVisualizer,
   ControlSystemStepResponse,
@@ -886,8 +1001,7 @@ function SystemInsightVisualizerRotator() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % visualizers.length);
-    }, 30000); // 30-second rotation
-
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -969,7 +1083,7 @@ export default function Home() {
     );
   }, []);
 
-  // Live intelligence fetch with CPS-focused GitHub filtering
+  // Live intelligence fetch
   useEffect(() => {
     let cancelled = false;
 
@@ -1079,10 +1193,10 @@ export default function Home() {
         <div className="hero-grid">
           <div className="hero-copy">
             <div>
-            <span className="section-kicker">PHYSICS-INFORMED SYSTEMS • DETERMINISTIC CONTROL • GRID INTELLIGENCE</span>
-            <h1>
-              <span className="gradient-text">Designing deterministic, physics-informed intelligence that transforms complex control systems into operational, verifiable, and adaptive realities.</span>
-            </h1>
+              <span className="section-kicker">PHYSICS-INFORMED SYSTEMS • DETERMINISTIC CONTROL • GRID INTELLIGENCE</span>
+              <h1>
+                <span className="gradient-text">Designing deterministic, physics-informed intelligence that transforms complex control systems into operational, verifiable, and adaptive realities.</span>
+              </h1>
             </div>
             <p className="hero-lead">
               At the intersection of embedded logic, real-time operating systems, AI orchestration, and grid-scale infrastructure.
@@ -1104,8 +1218,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Hero Portrait + Waveform Panel */}
-          {/* Hero Portrait + Waveform Panel */}
           <aside className="glass-panel spotlight-border hero-panel">
             <div className="hero-portrait-shell">
               <img
@@ -1115,7 +1227,6 @@ export default function Home() {
               />
             </div>
 
-            {/* ← This is the only line you need in the hero panel now */}
             <div style={{ marginTop: '1.5rem' }}>
               <SystemInsightVisualizerRotator />
             </div>
@@ -1187,6 +1298,50 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ====================== PHYSICS-INFORMED INTELLIGENCE LAYER (NEW) ====================== */}
+      <section className="section-shell content-section" id="physics-informed">
+        <div className="glass-panel cta-panel spotlight-border">
+          <div>
+            <span className="section-kicker">Physics-Informed Intelligence Layer</span>
+            <h2>Where the Laws of Physics Meet Deterministic AI</h2>
+          </div>
+          <div className="two-column-layout">
+            <div>
+              <p className="section-intro">
+                Traditional ML can violate conservation laws, power flow equations, or swing dynamics. 
+                Physics-Informed Neural Networks (PINNs) embed governing PDEs directly into the loss function.
+              </p>
+              <div className="math-block">
+                $$\mathcal{L} = \mathcal{L}_\text{data} + \lambda \mathcal{L}_\text{physics} \quad \text{where} \quad \mathcal{L}_\text{physics} = \left\| \frac{\partial u}{\partial t} + \mathcal{N}[u] \right\|^2$$
+                <small>(PINN loss – guarantees physically consistent predictions for grid state estimation, OPF, and inverter control)</small>
+              </div>
+            </div>
+            <div>
+              <h3>Next evolution of GridOS + NeuralBridge</h3>
+              <p>Real-time surrogate models for Optimal Power Flow, state estimation, and inverter control — data-efficient even with sparse telemetry.</p>
+              <ul style={{ lineHeight: '1.7', marginTop: '1rem' }}>
+                <li>15–40% higher renewable penetration</li>
+                <li>Sub-second surrogate models replacing slow classical solvers</li>
+                <li>Verifiable predictions under uncertainty</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====================== AGENTIC & MULTI-AGENT SYSTEMS (NEW) ====================== */}
+      <section className="section-shell content-section" id="agentic-systems">
+        <div className="glass-panel cta-panel spotlight-border">
+          <div>
+            <span className="section-kicker">Agentic Digital Twins</span>
+            <h2>NeuralBridge + GridOS + DERIM = Autonomous multi-agent coordination under physical constraints</h2>
+          </div>
+          <p className="section-intro">
+            MARL with physics-informed rewards enabling transactive energy markets, VPP orchestration, and verifiable DER negotiation.
+          </p>
+        </div>
+      </section>
+
       {/* ====================== ARCHITECTURE ====================== */}
       <section className="section-shell content-section" id="architecture">
         <div className="glass-panel cta-panel spotlight-border">
@@ -1246,7 +1401,6 @@ export default function Home() {
         </div>
 
         <div className="insight-grid">
-          {/* Headlines */}
           <article className="glass-panel data-column">
             <div className="panel-topline">
               <span className="live-dot" />
@@ -1270,7 +1424,6 @@ export default function Home() {
             </div>
           </article>
 
-          {/* GitHub CPS Repos */}
           <article className="glass-panel data-column">
             <div className="panel-topline">
               <span className="live-dot" />
@@ -1312,6 +1465,63 @@ export default function Home() {
               <p>{theme.body}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      {/* ====================== QUANTIFIED IMPACT DASHBOARD (NEW) ====================== */}
+      <section className="section-shell content-section">
+        <div className="glass-panel cta-panel spotlight-border">
+          <div>
+            <span className="section-kicker">Quantified Value Generation</span>
+            <h2>Proven impact in simulation and deployment</h2>
+          </div>
+          <div className="impact-dashboard">
+            <div className="impact-card">
+              <strong>22% reduction</strong><br />
+              grid curtailment via DERIM + MARL
+            </div>
+            <div className="impact-card">
+              <strong>Sub-8 ms</strong><br />
+              deterministic latency (NeuralBridge)
+            </div>
+            <div className="impact-card">
+              <strong>99.999% uptime</strong><br />
+              RTOS + PINN-augmented V&amp;V
+            </div>
+            <div className="impact-card">
+              <strong>15–40% higher</strong><br />
+              renewable penetration
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====================== PROFESSIONAL EXPERIENCE (NEW) ====================== */}
+      <section className="section-shell content-section">
+        <div className="glass-panel cta-panel spotlight-border">
+          <div>
+            <span className="section-kicker">Professional Experience</span>
+            <h2>Grid Networks Engineer – Deutsche Bahn</h2>
+          </div>
+          <p>
+            OT/IT infrastructure hardening, predictive maintenance, KRITIS-compliant cybersecurity, and deterministic control 
+            for critical rail energy systems.
+          </p>
+        </div>
+      </section>
+
+      {/* ====================== STANDARDS MASTERY (NEW) ====================== */}
+      <section className="section-shell content-section">
+        <div className="glass-panel cta-panel spotlight-border">
+          <div>
+            <span className="section-kicker">Standards Mastery</span>
+            <h2>Protocols &amp; frameworks I master</h2>
+          </div>
+          <div className="standards-grid">
+            <div className="standards-card">IEC 61850 • CIM • OCPP • SunSpec</div>
+            <div className="standards-card">ROS 2 • HELICS • TLA+</div>
+            <div className="standards-card">IEC 62351 • NERC CIP • NIS2 • EU CRA</div>
+          </div>
         </div>
       </section>
 

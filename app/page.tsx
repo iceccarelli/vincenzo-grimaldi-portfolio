@@ -32,9 +32,9 @@ type Headline = {
 // ====================== CONSTANTS ======================
 const clockZones = [
   { city: 'London', label: 'Policy & capital markets', timeZone: 'Europe/London' },
-  { city: 'Rome', label: 'Operational home base', timeZone: 'Europe/Rome' },
+  { city: 'Frankfurt', label: 'Operational home base', timeZone: 'Europe/Frankfurt' },
   { city: 'New York', label: 'Infrastructure & energy markets', timeZone: 'America/New_York' },
-  { city: 'Singapore', label: 'Global deployment horizon', timeZone: 'Asia/Singapore' },
+  { city: 'Beijing', label: 'Global deployment horizon', timeZone: 'Asia/Beijing' },
 ];
 
 const strengths = [

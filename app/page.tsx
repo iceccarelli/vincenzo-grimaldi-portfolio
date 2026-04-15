@@ -1337,7 +1337,7 @@ export default function Home() {
         <div className="glass-panel cta-panel spotlight-border">
           <div>
             <span className="section-kicker">Global Orientation</span>
-            <h2 className="compact-heading">Working across time zones, markets, and operational horizons.</h2>
+            <h2 className="compact-heading">Operational Time Zones</h2>
           </div>
           <div className="clock-marquee" aria-label="Global clocks">
             <div className="clock-marquee-track">

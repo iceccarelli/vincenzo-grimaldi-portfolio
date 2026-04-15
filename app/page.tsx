@@ -31,10 +31,11 @@ type Headline = {
 
 // ====================== CONSTANTS ======================
 const clockZones = [
-  { city: 'London', label: 'Policy & capital markets', timeZone: 'Europe/London' },
-  { city: 'Frankfurt', label: 'Operational home base', timeZone: 'Europe/Frankfurt' },
+  { city: 'Lima', label: 'Policy & capital markets', timeZone: 'America/Lima' },
+  { city: 'Toronto', label: 'Operational home base', timeZone: 'America/Toronto' },
   { city: 'New York', label: 'Infrastructure & energy markets', timeZone: 'America/New_York' },
-  { city: 'Beijing', label: 'Global deployment horizon', timeZone: 'Asia/Beijing' },
+  { city: 'Frankfurt', label: 'Infrastructure & energy markets', timeZone: 'Europe/Berlin' },
+  { city: 'Beijing', label: 'Global deployment horizon', timeZone: 'Asia/Shanghai' },
 ];
 
 const strengths = [
@@ -1084,7 +1085,7 @@ function SystemInsightVisualizerRotator() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % visualizers.length);
-    }, 30000);
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 

@@ -41,8 +41,10 @@ export default function Header() {
     if (mobileMenuOpen && window.scrollY > 300) setMobileMenuOpen(false);
   }, [mobileMenuOpen]);
 
+  // Updated navigation – perfectly aligned with all new sections
   const navigation = [
     { label: 'Systems', href: '#architecture' },
+    { label: 'Physics-Informed', href: '#physics-informed' },
     { label: 'Flagship Work', href: '#flagship-systems' },
     { label: 'Live Intelligence', href: '#live-intelligence' },
     { label: 'Research', href: '#phd' },
@@ -62,12 +64,19 @@ export default function Header() {
 
         <nav className="topbar-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
-            <a key={item.href} href={item.href}>{item.label}</a>
+            <a key={item.href} href={item.href}>
+              {item.label}
+            </a>
           ))}
         </nav>
 
         <div className="flex items-center gap-4">
-          <a className="topbar-button" href="https://github.com/iceccarelli" target="_blank" rel="noreferrer">
+          <a
+            className="topbar-button"
+            href="https://github.com/iceccarelli"
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub
           </a>
 
@@ -83,10 +92,14 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu – fully synced with new navigation */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
         {navigation.map((item) => (
-          <a key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}>
+          <a
+            key={item.href}
+            href={item.href}
+            onClick={() => setMobileMenuOpen(false)}
+          >
             {item.label}
           </a>
         ))}

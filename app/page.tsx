@@ -1569,7 +1569,7 @@ export default function Home() {
             <h2>Grid Networks Engineer – Deutsche Bahn</h2>
           </div>
           <p>
-            OT/IT infrastructure hardening, predictive maintenance, KRITIS-compliant cybersecurity and deterministic control 
+            IT/OT infrastructure hardening, predictive maintenance, KRITIS-compliant cybersecurity and deterministic control 
             for critical rail energy systems.
           </p>
         </div>
@@ -1580,7 +1580,7 @@ export default function Home() {
         <div className="glass-panel cta-panel spotlight-border">
           <div>
             <span className="section-kicker">Standards Mastery</span>
-            <h2>Protocols &amp; frameworks I master</h2>
+            <h2>Protocols &amp; Frameworks</h2>
           </div>
           <div className="standards-grid">
             <div className="standards-card">IEC 61850 • CIM • OCPP • SunSpec</div>

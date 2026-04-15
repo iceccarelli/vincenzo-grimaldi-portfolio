@@ -1394,7 +1394,7 @@ export default function Home() {
                 Traditional ML can violate conservation laws. Physics-Informed Neural Networks (PINNs) embed governing equations directly into the loss function.
               </p>
               <div className="math-block">
-                $$\mathcal{L} = \mathcal{L}_\text{data} + \lambda \mathcal{L}_\text{physics} \quad \text{where} \quad \mathcal{L}_\text{physics} = \left\| \frac{\partial u}{\partial t} + \mathcal{N}[u] \right\|^2$$
+                {String.raw`$$\mathcal{L} = \mathcal{L}_\text{data} + \lambda \mathcal{L}_\text{physics} \quad \text{where} \quad \mathcal{L}_\text{physics} = \left\| \frac{\partial u}{\partial t} + \mathcal{N}[u] \right\|^2$$`}
                 <small>(PINN loss for PDEs governing grid dynamics)</small>
               </div>
             </div>

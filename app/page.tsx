@@ -1389,20 +1389,69 @@ export default function Home() {
             <h2>Where the Laws of Physics Meet Deterministic AI</h2>
           </div>
           <div className="two-column-layout">
-            <div>
-              <p className="section-intro">
-                Traditional ML can violate conservation laws. Physics-Informed Neural Networks (PINNs) embed governing equations directly into the loss function.
-              </p>
-              <div className="math-block">
-                {String.raw`$$\mathcal{L} = \mathcal{L}_\text{data} + \lambda \mathcal{L}_\text{physics} \quad \text{where} \quad \mathcal{L}_\text{physics} = \left\| \frac{\partial u}{\partial t} + \mathcal{N}[u] \right\|^2$$`}
-                <small>(PINN loss for PDEs governing grid dynamics)</small>
-              </div>
-            </div>
-            <div>
-              <h3>Next evolution of GridOS + NeuralBridge</h3>
-              <p>Real-time surrogate models for Optimal Power Flow, state estimation, and inverter control.</p>
-            </div>
-          </div>
+  <div>
+    <p className="section-intro">
+      Physics-informed intelligence does not stop at pattern recognition. It constrains learning with the same governing equations that define the physical system, so the model is optimized not only for data fit, but also for physical consistency, stability, and control relevance.
+    </p>
+
+    <div className="math-block" style={{ display: 'grid', gap: '1rem' }}>
+      <div
+        style={{
+          fontSize: '1.2rem',
+          lineHeight: 1.7,
+          color: 'var(--text-primary)',
+          fontWeight: 700,
+          letterSpacing: '-0.02em',
+        }}
+      >
+        <span style={{ color: 'var(--accent-strong)' }}>Total objective</span>
+        {' = '}
+        <span>Data fidelity</span>
+        {' + '}
+        <span style={{ color: 'var(--success)' }}>Physics penalty</span>
+      </div>
+
+      <div style={{ color: 'var(--muted-strong)', lineHeight: 1.7 }}>
+        In practical terms, the model is penalized whenever its predicted state evolution violates the governing dynamics of the system.
+      </div>
+
+      <div
+        style={{
+          padding: '1rem 1.1rem',
+          border: '1px solid rgba(125, 211, 252, 0.16)',
+          borderRadius: '16px',
+          background: 'rgba(8, 15, 28, 0.72)',
+          fontFamily: 'var(--font-mono, "JetBrains Mono", "Fira Code", monospace)',
+          color: 'var(--text-primary)',
+          lineHeight: 1.8,
+          overflowX: 'auto',
+        }}
+      >
+        <div>
+          L<sub>total</sub> = L<sub>data</sub> + λL<sub>physics</sub>
+        </div>
+        <div style={{ marginTop: '0.45rem', color: 'var(--muted-strong)' }}>
+          L<sub>physics</sub> = ‖∂u/∂t + N[u]‖<sup>2</sup>
+        </div>
+      </div>
+
+      <small style={{ color: 'var(--muted)' }}>
+        The first term rewards predictive accuracy. The second enforces compliance with the PDE structure governing grid dynamics.
+      </small>
+    </div>
+  </div>
+
+  <div>
+    <h3>Next evolution of GridOS + NeuralBridge</h3>
+    <p>
+      This is the path toward real-time surrogate models for Optimal Power Flow, state estimation, and inverter control: systems that are not merely intelligent, but operationally trustworthy under physical constraints.
+    </p>
+    <p style={{ color: 'var(--muted-strong)' }}>
+      For the reader, the message is immediate: the platform is designed to reason within the laws of the system it governs, which is precisely what high-stakes cyber-physical infrastructure demands.
+    </p>
+  </div>
+</div>
+
         </div>
       </section>
 

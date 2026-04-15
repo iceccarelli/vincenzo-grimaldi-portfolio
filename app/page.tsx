@@ -262,7 +262,7 @@ function formatDate(dateString: string) {
   }).format(date);
 }
 
-// ====================== ORIGINAL 5 VISUALIZERS (kept exactly as you provided) ======================
+// ====================== ORIGINAL 5 VISUALIZERS ======================
 function GridLoadFrequencySimulator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -285,7 +285,6 @@ function GridLoadFrequencySimulator() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Subtle grid
       ctx.strokeStyle = 'rgba(52, 211, 153, 0.1)';
       ctx.lineWidth = 1;
       for (let x = 25; x < canvas.width; x += 25) {
@@ -301,7 +300,6 @@ function GridLoadFrequencySimulator() {
         ctx.stroke();
       }
 
-      // Primary frequency signal (grid load fluctuation)
       ctx.strokeStyle = '#7dd3fc';
       ctx.lineWidth = 3;
       ctx.shadowBlur = 12;
@@ -316,7 +314,6 @@ function GridLoadFrequencySimulator() {
       }
       ctx.stroke();
 
-      // Corrective control action (AGC)
       ctx.strokeStyle = 'rgba(52, 211, 153, 0.8)';
       ctx.lineWidth = 2;
       ctx.shadowBlur = 8;
@@ -330,7 +327,6 @@ function GridLoadFrequencySimulator() {
       }
       ctx.stroke();
 
-      // Data sampling points
       ctx.fillStyle = '#f0fdf4';
       ctx.shadowBlur = 0;
       for (let i = 0; i < 10; i++) {
@@ -399,7 +395,6 @@ function NeuralBridgeActivityMap() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Subtle grid
       ctx.strokeStyle = 'rgba(125, 211, 252, 0.1)';
       ctx.lineWidth = 0.5;
       for (let x = 20; x < canvas.width; x += 20) {
@@ -420,7 +415,6 @@ function NeuralBridgeActivityMap() {
         y: n.y * (canvas.height - 20) + 10,
       }));
 
-      // Edges with gradient
       ctx.shadowBlur = 8;
       ctx.shadowColor = '#38bdf8';
       edges.forEach(([startIdx, endIdx]) => {
@@ -438,7 +432,6 @@ function NeuralBridgeActivityMap() {
         ctx.stroke();
       });
 
-      // Nodes
       ctx.shadowBlur = 12;
       ctx.shadowColor = '#7dd3fc';
       nodePositions.forEach(pos => {
@@ -451,7 +444,6 @@ function NeuralBridgeActivityMap() {
         ctx.stroke();
       });
 
-      // Particles (data packets)
       ctx.shadowBlur = 0;
       particles.forEach(p => {
         const start = nodePositions[p.startIdx];
@@ -1074,7 +1066,7 @@ function AgenticMARLField() {
   );
 }
 
-// ====================== ROTATOR WRAPPER (updated to 7 visualizers) ======================
+// ====================== ROTATOR WRAPPER (7 visualizers) ======================
 const visualizers = [
   GridLoadFrequencySimulator,
   NeuralBridgeActivityMap,
@@ -1093,7 +1085,6 @@ function SystemInsightVisualizerRotator() {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % visualizers.length);
     }, 30000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -1280,7 +1271,7 @@ export default function Home() {
 
   return (
     <main className="portfolio-shell">
-      {/* ====================== HERO SECTION ====================== */}
+      {/* HERO SECTION */}
       <section className="section-shell hero-section" id="top">
         <div className="hero-grid">
           <div className="hero-copy">
@@ -1340,7 +1331,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== GLOBAL ORIENTATION ====================== */}
+      {/* GLOBAL ORIENTATION */}
       <section className="section-shell">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1361,7 +1352,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== ABOUT THE WORK ====================== */}
+      {/* ABOUT THE WORK */}
       <section className="section-shell content-section" id="about">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1390,7 +1381,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== PHYSICS-INFORMED INTELLIGENCE LAYER ====================== */}
+      {/* PHYSICS-INFORMED INTELLIGENCE LAYER */}
       <section className="section-shell content-section" id="physics-informed">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1415,7 +1406,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== AGENTIC & MULTI-AGENT SYSTEMS ====================== */}
+      {/* AGENTIC & MULTI-AGENT SYSTEMS */}
       <section className="section-shell content-section" id="agentic-systems">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1428,7 +1419,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== ARCHITECTURE ====================== */}
+      {/* ARCHITECTURE */}
       <section className="section-shell content-section" id="architecture">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1447,7 +1438,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== FLAGSHIP SYSTEMS ====================== */}
+      {/* FLAGSHIP SYSTEMS */}
       <section className="section-shell content-section" id="flagship-systems">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1472,7 +1463,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== LIVE INTELLIGENCE HUB ====================== */}
+      {/* LIVE INTELLIGENCE HUB */}
       <section className="section-shell content-section" id="live-intelligence">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1554,7 +1545,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== QUANTIFIED IMPACT DASHBOARD ====================== */}
+      {/* QUANTIFIED IMPACT DASHBOARD */}
       <section className="section-shell content-section">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1562,27 +1553,15 @@ export default function Home() {
             <h2>Proven impact in simulation and deployment</h2>
           </div>
           <div className="impact-dashboard">
-            <div className="impact-card">
-              <strong>22% reduction</strong><br />
-              grid curtailment via DERIM + MARL
-            </div>
-            <div className="impact-card">
-              <strong>Sub-8 ms</strong><br />
-              deterministic latency (NeuralBridge)
-            </div>
-            <div className="impact-card">
-              <strong>99.999% uptime</strong><br />
-              RTOS + PINN-augmented V&amp;V
-            </div>
-            <div className="impact-card">
-              <strong>15–40% higher</strong><br />
-              renewable penetration
-            </div>
+            <div className="impact-card"><strong>22% reduction</strong><br/>grid curtailment via DERIM + MARL</div>
+            <div className="impact-card"><strong>Sub-8 ms</strong><br/>deterministic latency (NeuralBridge)</div>
+            <div className="impact-card"><strong>99.999% uptime</strong><br/>RTOS + PINN-augmented V&amp;V</div>
+            <div className="impact-card"><strong>15–40% higher</strong><br/>renewable penetration</div>
           </div>
         </div>
       </section>
 
-      {/* ====================== PROFESSIONAL EXPERIENCE ====================== */}
+      {/* PROFESSIONAL EXPERIENCE */}
       <section className="section-shell content-section">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1596,7 +1575,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== STANDARDS MASTERY ====================== */}
+      {/* STANDARDS MASTERY */}
       <section className="section-shell content-section">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1611,7 +1590,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== TRUSTED ECOSYSTEM ====================== */}
+      {/* TRUSTED ECOSYSTEM */}
       <section className="section-shell content-section" id="ecosystem">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1630,7 +1609,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== RESEARCH TRAJECTORY ====================== */}
+      {/* RESEARCH TRAJECTORY */}
       <section className="section-shell content-section" id="phd">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
@@ -1662,7 +1641,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====================== CONNECT ====================== */}
+      {/* CONNECT */}
       <section className="section-shell content-section" id="connect">
         <div className="glass-panel cta-panel spotlight-border">
           <div>

@@ -1659,38 +1659,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* RESEARCH TRAJECTORY */}
-      <section className="section-shell content-section" id="phd">
-        <div className="glass-panel cta-panel spotlight-border">
-          <div>
-            <span className="section-kicker">Research Trajectory</span>
-            <h2>Selected academic applications and supporting documents as part of the broader CPS narrative.</h2>
-          </div>
-        </div>
-        <div className="card-grid two-up">
-          {phdApplications.map((application) => (
-            <article className="glass-panel immersive-card" key={application.title}>
-              <span className="card-label">Research Application</span>
-              <h3>{application.title}</h3>
-              <p>{application.area}</p>
-              <p>{application.description}</p>
-              <a className="text-link" href={application.href} target="_blank" rel="noreferrer">
-                Open application listing →
-              </a>
-              <div className="data-list" style={{ marginTop: '1rem' }}>
-                {application.docs.map((doc) => (
-                  <a className="data-list-item" href={doc.href} key={doc.href} target="_blank" rel="noreferrer">
-                    <span className="item-meta">Supporting Document</span>
-                    <strong>{doc.label}</strong>
-                    <small>{doc.meta}</small>
-                  </a>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
       {/* CONNECT */}
       <section className="section-shell content-section" id="connect">
         <div className="glass-panel cta-panel spotlight-border">

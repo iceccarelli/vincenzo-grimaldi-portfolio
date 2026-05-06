@@ -159,44 +159,6 @@ const marketThemes = [
   },
 ];
 
-const phdApplications = [
-  {
-    title: 'TIME Application Job-ID: V000010767',
-    href: 'https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11302',
-    area: 'Technology and Innovation Management (RWTH Aachen)',
-    description: 'SAFeR Grid pathway – technology management for next-generation grid systems.',
-    docs: [
-      {
-        label: 'Motivation Letter',
-        meta: '2 pages • 21 March 2026',
-        href: 'https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_TIM_SAFEr_Grid.pdf',
-      },
-      {
-        label: 'Curriculum Vitae',
-        meta: '4 pages • March 2026',
-        href: 'https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_TIM_SAFEr_Grid.pdf',
-      },
-    ],
-  },
-  {
-    title: 'ACS Application Job-ID: V000010837',
-    href: 'https://www.jobs.rwth-aachen.de/index.php?ac=jobad&id=11383&language=2',
-    area: 'Institute for Automation of Complex Power Systems (E.ON Energy Research Center)',
-    description: 'Automation, power systems, and interdisciplinary grid research pathway.',
-    docs: [
-      {
-        label: 'Motivation Letter',
-        meta: '2 pages • 22 March 2026',
-        href: 'https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_Motivation_Letter_ACS_SAFEr_Grid.pdf',
-      },
-      {
-        label: 'Curriculum Vitae',
-        meta: '4 pages • March 2026',
-        href: 'https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Ceccarelli_Grimaldi_CV_ACS_SAFEr_Grid.pdf',
-      },
-    ],
-  },
-];
 
 const fallbackHeadlines: Headline[] = [
   {

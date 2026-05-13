@@ -41,7 +41,7 @@ export default function Header() {
     if (mobileMenuOpen && window.scrollY > 300) setMobileMenuOpen(false);
   }, [mobileMenuOpen]);
 
-  // Updated navigation – perfectly aligned with all new sections
+  // Navigation aligned with all major sections
   const navigation = [
     { label: 'Systems', href: '#architecture' },
     { label: 'Physics-Informed', href: '#physics-informed' },
@@ -54,14 +54,16 @@ export default function Header() {
   return (
     <header className={`topbar ${isNavbarHidden ? 'hidden' : ''}`}>
       <div className="topbar-inner">
+        {/* Brand Lockup — Updated subtitle for dual-surface alignment */}
         <a className="brand-lockup" href="#top">
           <span className="brand-monogram">VG</span>
           <span className="brand-copy">
             <strong>Vincenzo Grimaldi</strong>
-            <small>Cyber-Physical Systems • Control Engineering</small>
+            <small>Physics-Informed • Deterministic Control</small>
           </span>
         </a>
 
+        {/* Primary Navigation */}
         <nav className="topbar-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
             <a key={item.href} href={item.href}>
@@ -71,15 +73,17 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
+          {/* GitHub — Now clearly labeled as the Developer Surface */}
           <a
             className="topbar-button"
             href="https://github.com/iceccarelli"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
-            GitHub
+            GitHub Profile
           </a>
 
+          {/* Mobile Hamburger */}
           <button
             className="hamburger"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -92,7 +96,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu – fully synced with new navigation */}
+      {/* Mobile Menu — Fully synced with navigation */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
         {navigation.map((item) => (
           <a
@@ -106,7 +110,7 @@ export default function Header() {
         <a
           href="https://github.com/iceccarelli"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           onClick={() => setMobileMenuOpen(false)}
           style={{ marginTop: '1rem', fontWeight: 600 }}
         >

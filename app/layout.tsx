@@ -5,9 +5,9 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://vincenzo-grimaldi-portfolio.vercel.app'),
-  title: 'Vincenzo Grimaldi | Physics-Informed CPS Engineer',
+  title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
   description:
-    'Physics-Informed Neural Networks • Agentic Digital Twins • Deterministic Grid Intelligence • MARL • RTOS • Deutsche Bahn Grid Networks Engineer',
+    'Physics-Informed Systems • Deterministic Grid Intelligence • Agentic Digital Twins • NeuralBridge • GridOS • DERIM • Deutsche Bahn Grid Networks Engineer. Two surfaces, one mission: Portfolio + GitHub.',
   keywords: [
     'Vincenzo Grimaldi',
     'Physics-Informed Neural Networks',
@@ -29,14 +29,16 @@ export const metadata: Metadata = {
     'Deutsche Bahn',
     'Signal Integrity',
     'Verification & Validation',
+    'Physics-Informed Systems',
   ],
   authors: [{ name: 'Vincenzo Grimaldi' }],
   creator: 'Vincenzo Grimaldi',
   publisher: 'Vincenzo Grimaldi',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Vincenzo Grimaldi | Physics-Informed CPS Engineer',
-    description: 'Embedding governing equations into AI for guaranteed physical consistency in safety-critical grids and autonomous systems.',
+    title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
+    description:
+      'Embedding governing equations into AI for guaranteed physical consistency. Explore the immersive portfolio and the developer-first GitHub surface.',
     url: 'https://vincenzo-grimaldi-portfolio.vercel.app/',
     siteName: 'Vincenzo Grimaldi Portfolio',
     locale: 'en_GB',
@@ -44,8 +46,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vincenzo Grimaldi | Physics-Informed CPS Engineer',
-    description: 'Physics-Informed AI • Agentic Systems • Grid Intelligence • Deterministic Control',
+    title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
+    description: 'Physics-Informed AI • Deterministic Control • Grid Intelligence • Agentic Systems',
   },
 };
 
@@ -69,8 +71,10 @@ const structuredData = {
     'RTOS',
     'OT Cybersecurity',
     'Deterministic Control Loops',
+    'Physics-Informed AI',
   ],
-  description: 'Engineer building verifiable, physics-guaranteed intelligence for safety-critical grids, autonomous systems, and real-time orchestration.',
+  description:
+    'Engineer building verifiable, physics-guaranteed intelligence for safety-critical grids and autonomous systems. Dual-surface presence: immersive portfolio and developer-first GitHub profile.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -96,7 +100,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     <span className="brand-copy"><strong>Vincenzo Grimaldi</strong></span>
                   </div>
                   <p style={{ color: 'var(--muted-strong)', lineHeight: '1.6', fontSize: '0.95rem' }}>
-                    Cyber-Physical Systems Engineer<br />
+                    Physics-Informed Cyber-Physical Systems Engineer<br />
                     Deterministic control • Grid intelligence • AI orchestration
                   </p>
                   <p style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--muted)' }}>
@@ -121,7 +125,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <div className="footer-column">
                   <h4>Proof of Work</h4>
                   <div className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <a className="footer-link" href="https://github.com/iceccarelli" target="_blank" rel="noreferrer">GitHub — iceccarelli</a>
+                    <a 
+                      className="footer-link" 
+                      href="https://github.com/iceccarelli" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      GitHub — iceccarelli
+                    </a>
                     <a className="footer-link" href="#" target="_blank" rel="noreferrer">ORCID (pending)</a>
                     <a className="footer-link" href="#" target="_blank" rel="noreferrer">Google Scholar</a>
                     <div className="footer-status">
@@ -142,7 +153,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     Europe-based • Open to high-impact CPS, grid intelligence,<br />
                     and autonomous systems opportunities.
                   </p>
-                  <a href="mailto:vincenzo@grimaldi.engineering" style={{ color: 'var(--accent-strong)', marginTop: '1.5rem', display: 'inline-block' }}>
+                  <a 
+                    href="mailto:vincenzo@grimaldi.engineering" 
+                    style={{ color: 'var(--accent-strong)', marginTop: '1.5rem', display: 'inline-block' }}
+                  >
                     vincenzo@grimaldi.engineering →
                   </a>
                 </div>

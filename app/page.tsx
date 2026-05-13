@@ -159,7 +159,6 @@ const marketThemes = [
   },
 ];
 
-
 const fallbackHeadlines: Headline[] = [
   {
     title: 'MIT Technology Review — How AI infrastructure is reshaping industrial control systems',
@@ -225,7 +224,7 @@ function formatDate(dateString: string) {
   }).format(date);
 }
 
-// ====================== ORIGINAL 5 VISUALIZERS ======================
+// ====================== ORIGINAL 7 VISUALIZERS (PRESERVED) ======================
 function GridLoadFrequencySimulator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -480,9 +479,7 @@ function DERMCoordinationField() {
       const canvasHeight = canvas.height;
 
       assets.forEach(asset => {
-        let fx = 0,
-          fy = 0;
-
+        let fx = 0, fy = 0;
         let nearestAnchor = anchors[0];
         let minDist = Math.hypot(asset.x - nearestAnchor.x, asset.y - nearestAnchor.y);
         if (Math.hypot(asset.x - anchors[1].x, asset.y - anchors[1].y) < minDist) {
@@ -801,7 +798,7 @@ function ControlSystemStepResponse() {
   );
 }
 
-// ====================== NEW VISUALIZERS ======================
+// ====================== NEW VISUALIZERS (PRESERVED) ======================
 function PINNSolverCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -1029,7 +1026,7 @@ function AgenticMARLField() {
   );
 }
 
-// ====================== ROTATOR WRAPPER (7 visualizers) ======================
+// ====================== ROTATOR WRAPPER ======================
 const visualizers = [
   GridLoadFrequencySimulator,
   NeuralBridgeActivityMap,
@@ -1249,7 +1246,7 @@ export default function Home() {
               My work translates high-stakes technical complexity into systems that are predictable, legible, and deployable in safety-critical environments.
             </p>
             <p>
-              Connecting live market intelligence, flagship repositories, research trajectory, and implementation signals to demonstrate a coherent multiple execution paths.
+              Connecting live market intelligence, flagship repositories, research trajectory, and implementation signals to demonstrate coherent execution paths across both the immersive portfolio and the developer surface on GitHub.
             </p>
             <div className="hero-actions">
               <a className="primary-button" href="#live-intelligence">
@@ -1259,7 +1256,7 @@ export default function Home() {
                 Explore Flagship Systems
               </a>
               <a className="secondary-button" href="https://github.com/iceccarelli" target="_blank" rel="noreferrer">
-                GitHub Proof of Work
+                GitHub Profile
               </a>
             </div>
           </div>
@@ -1279,10 +1276,10 @@ export default function Home() {
 
             <div className="panel-topline" style={{ marginTop: '1.5rem' }}>
               <span className="live-dot" />
-              <span>Vincenzo Grimaldi — Grid Networks Engineer</span>
+              <span>Vincenzo Grimaldi — Physics-Informed Cyber-Physical Systems Engineer</span>
             </div>
             <h2>
-              Engineering deterministic systems that connect AI Driven Infrastructure and Automate Verifiable Executions.
+              Engineering deterministic systems that connect AI-driven infrastructure with verifiable physical execution.
             </h2>
             <div className="metric-pills">
               <span className="metric-pill">Embedded Control</span>
@@ -1330,7 +1327,7 @@ export default function Home() {
               I integrate them into deterministic physics-informed systems where every layer — from RTOS scheduling to AI orchestration — is verifiable and safety-critical.
             </p>
             <p>
-              This site is structured to move visitors from high-level systems thinking → technical substance → live operational signals → immediate action.
+              This site and my GitHub profile form two complementary surfaces of the same mission: one cinematic and immersive, the other precise and developer-first.
             </p>
           </div>
           <div className="feature-stack">
@@ -1352,82 +1349,31 @@ export default function Home() {
             <h2>Where the Laws of Physics Meet Deterministic AI</h2>
           </div>
           <div className="two-column-layout">
-  <div>
-    <p className="section-intro">
-      Physics-informed intelligence does not stop at pattern recognition. It constrains learning with the same governing equations that define the physical system, so the model is optimized not only for data fit, but also for physical consistency, stability, and control relevance.
-    </p>
+            <div>
+              <p className="section-intro">
+                Physics-informed intelligence does not stop at pattern recognition. It constrains learning with the same governing equations that define the physical system.
+              </p>
 
-    <div className="math-block" style={{ display: 'grid', gap: '1rem' }}>
-      <div
-        style={{
-          fontSize: '1.2rem',
-          lineHeight: 1.7,
-          color: 'var(--text-primary)',
-          fontWeight: 700,
-          letterSpacing: '-0.02em',
-        }}
-      >
-        <span style={{ color: 'var(--accent-strong)' }}>Total objective</span>
-        {' = '}
-        <span>Data fidelity</span>
-        {' + '}
-        <span style={{ color: 'var(--success)' }}>Physics penalty</span>
-      </div>
-
-      <div style={{ color: 'var(--muted-strong)', lineHeight: 1.7 }}>
-        In practical terms, the model is penalized whenever its predicted state evolution violates the governing dynamics of the system.
-      </div>
-
-      <div
-        style={{
-          padding: '1rem 1.1rem',
-          border: '1px solid rgba(125, 211, 252, 0.16)',
-          borderRadius: '16px',
-          background: 'rgba(8, 15, 28, 0.72)',
-          fontFamily: 'var(--font-mono, "JetBrains Mono", "Fira Code", monospace)',
-          color: 'var(--text-primary)',
-          lineHeight: 1.8,
-          overflowX: 'auto',
-        }}
-      >
-        <div>
-          L<sub>total</sub> = L<sub>data</sub> + λL<sub>physics</sub>
-        </div>
-        <div style={{ marginTop: '0.45rem', color: 'var(--muted-strong)' }}>
-          L<sub>physics</sub> = ‖∂u/∂t + N[u]‖<sup>2</sup>
-        </div>
-      </div>
-
-      <small style={{ color: 'var(--muted)' }}>
-        The first term rewards predictive accuracy. The second enforces compliance with the PDE structure governing grid dynamics.
-      </small>
-    </div>
-  </div>
-
-  <div>
-    <h3>Next evolution of GridOS + NeuralBridge</h3>
-    <p>
-      This is the path toward real-time surrogate models for Optimal Power Flow, state estimation, and inverter control: systems that are not merely intelligent, but operationally trustworthy under physical constraints.
-    </p>
-    <p style={{ color: 'var(--muted-strong)' }}>
-      For the reader, the message is immediate: the platform is designed to reason within the laws of the system it governs, which is precisely what high-stakes cyber-physical infrastructure demands.
-    </p>
-  </div>
-</div>
-
-        </div>
-      </section>
-
-      {/* AGENTIC & MULTI-AGENT SYSTEMS */}
-      <section className="section-shell content-section" id="agentic-systems">
-        <div className="glass-panel cta-panel spotlight-border">
-          <div>
-            <span className="section-kicker">Agentic Digital Twins</span>
-            <h2>NeuralBridge + GridOS + DERIM = Autonomous multi-agent coordination under physical constraints</h2>
+              <div className="math-block" style={{ display: 'grid', gap: '1rem' }}>
+                <div style={{ fontSize: '1.2rem', lineHeight: 1.7, fontWeight: 700 }}>
+                  <span style={{ color: 'var(--accent-strong)' }}>Total objective</span> = Data fidelity + <span style={{ color: 'var(--success)' }}>Physics penalty</span>
+                </div>
+                <div style={{ color: 'var(--muted-strong)' }}>
+                  The model is penalized whenever its predictions violate the governing dynamics of the system.
+                </div>
+                <div style={{ padding: '1rem 1.1rem', border: '1px solid rgba(125, 211, 252, 0.16)', borderRadius: '16px', background: 'rgba(8, 15, 28, 0.72)', fontFamily: 'monospace' }}>
+                  L<sub>total</sub> = L<sub>data</sub> + λL<sub>physics</sub><br />
+                  L<sub>physics</sub> = ‖∂u/∂t + N[u]‖²
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3>Next evolution of GridOS + NeuralBridge</h3>
+              <p>
+                Real-time surrogate models for Optimal Power Flow and inverter control — systems that are not merely intelligent, but operationally trustworthy under physical constraints.
+              </p>
+            </div>
           </div>
-          <p className="section-intro">
-            MARL with physics-informed rewards enabling transactive energy markets and verifiable DER negotiation.
-          </p>
         </div>
       </section>
 
@@ -1467,11 +1413,39 @@ export default function Home() {
               </div>
               <h3>{initiative.title}</h3>
               <p>{initiative.summary}</p>
-              <a className="text-link" href={initiative.href} target="_blank" rel="noreferrer">
-                View repository →
-              </a>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <a className="text-link" href={initiative.href} target="_blank" rel="noreferrer">
+                  View repository →
+                </a>
+                <a 
+                  className="text-link" 
+                  href={initiative.href} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  style={{ color: '#34d399' }}
+                >
+                  ★ Star on GitHub
+                </a>
+              </div>
             </article>
           ))}
+        </div>
+
+        {/* NEW: Developer Surface Teaser */}
+        <div className="glass-panel cta-panel spotlight-border" style={{ marginTop: '2rem' }}>
+          <div>
+            <span className="section-kicker">Developer Surface</span>
+            <h3 style={{ marginTop: 0 }}>The same mission, inspected in code.</h3>
+            <p>All flagship systems are open source on GitHub. Star them to support the work.</p>
+          </div>
+          <a 
+            className="primary-button" 
+            href="https://github.com/iceccarelli" 
+            target="_blank" 
+            rel="noreferrer"
+          >
+            Open GitHub Profile →
+          </a>
         </div>
       </section>
 
@@ -1490,6 +1464,7 @@ export default function Home() {
         </div>
 
         <div className="insight-grid">
+          {/* Headlines */}
           <article className="glass-panel data-column">
             <div className="panel-topline">
               <span className="live-dot" />
@@ -1498,13 +1473,7 @@ export default function Home() {
             <h3>Headlines worth watching</h3>
             <div className="data-list">
               {headlines.map((headline) => (
-                <a
-                  className="data-list-item"
-                  href={headline.link}
-                  key={`${headline.source}-${headline.title}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a className="data-list-item" href={headline.link} key={`${headline.source}-${headline.title}`} target="_blank" rel="noreferrer">
                   <span className="item-meta">{headline.category} • {headline.source}</span>
                   <strong>{headline.title}</strong>
                   <small>{formatDate(headline.pubDate)}</small>
@@ -1513,6 +1482,7 @@ export default function Home() {
             </div>
           </article>
 
+          {/* Repos with Star CTAs */}
           <article className="glass-panel data-column">
             <div className="panel-topline">
               <span className="live-dot" />
@@ -1521,18 +1491,23 @@ export default function Home() {
             <h3>Repositories expressing strongest technical value</h3>
             <div className="data-list">
               {repoCards.map((repo) => (
-                <a
-                  className="data-list-item"
-                  href={repo.html_url}
-                  key={repo.id}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a className="data-list-item" href={repo.html_url} key={repo.id} target="_blank" rel="noreferrer">
                   <span className="item-meta">
-                    {repo.language} • Updated {formatDate(repo.updated_at)} • Stars {repo.stargazers_count}
+                    {repo.language} • Updated {formatDate(repo.updated_at)} • {repo.stargazers_count} stars
                   </span>
                   <strong>{repo.name}</strong>
                   <small>{repo.description}</small>
+                  <div style={{ marginTop: '0.5rem' }}>
+                    <span 
+                      style={{ 
+                        fontSize: '0.85rem', 
+                        color: '#34d399', 
+                        fontWeight: 600 
+                      }}
+                    >
+                      ★ Star on GitHub
+                    </span>
+                  </div>
                 </a>
               ))}
             </div>
@@ -1580,10 +1555,13 @@ export default function Home() {
             <span className="section-kicker">Professional Experience</span>
             <h2>Grid Networks Engineer – Deutsche Bahn</h2>
           </div>
-          <p>
-            IT/OT infrastructure hardening, predictive maintenance, KRITIS-compliant cybersecurity and deterministic control 
-            for critical rail energy systems.
-          </p>
+          <div style={{ marginTop: '1rem' }}>
+            <p><strong>ITk Fachspezialist – Digitisation of High-Voltage Assets</strong><br />DB InfraGO AG • Aug 2024 – Present</p>
+            <p style={{ color: 'var(--muted-strong)' }}>Leading digitalisation strategy for railway traction HV grids; IT/OT convergence, KRITIS-compliant cybersecurity governance, and resilience engineering.</p>
+            
+            <p style={{ marginTop: '1.5rem' }}><strong>Industrial Engineering Intern – High-Voltage Maintenance</strong><br />DB Fahrzeuginstandhaltung GmbH &amp; DB Netz AG • Jun 2022 – Sep 2024</p>
+            <p style={{ color: 'var(--muted-strong)' }}>Lifecycle management of traction power substations, asset condition monitoring, and critical systems maintenance.</p>
+          </div>
         </div>
       </section>
 
@@ -1628,8 +1606,7 @@ export default function Home() {
             <span className="section-kicker">Continue the Conversation</span>
             <h2>If this systems-level thinking resonates, the next step should be immediate.</h2>
             <p>
-              Whether you are exploring AI-native middleware, smart-grid operating systems, embedded control platforms,
-              robotics, or large-scale research collaboration — this portfolio is structured to make technical value visible.
+              Whether you are exploring AI-native middleware, smart-grid operating systems, embedded control platforms, robotics, or large-scale research collaboration — both surfaces (this portfolio and GitHub) are structured to make technical value visible.
             </p>
           </div>
           <div className="hero-actions">

@@ -41,13 +41,13 @@ export default function Header() {
     if (mobileMenuOpen && window.scrollY > 300) setMobileMenuOpen(false);
   }, [mobileMenuOpen]);
 
-  // Navigation aligned with all major sections
+  // Navigation aligned with all major sections + NEW flagship simulator
   const navigation = [
     { label: 'Systems', href: '#architecture' },
     { label: 'Physics-Informed', href: '#physics-informed' },
     { label: 'Flagship Work', href: '#flagship-systems' },
+    { label: 'Live Simulator', href: 'https://physics-informed.vercel.app/', external: true }, // NEW
     { label: 'Live Intelligence', href: '#live-intelligence' },
-    { label: 'Research', href: '#phd' },
     { label: 'Connect', href: '#connect' },
   ];
 
@@ -66,9 +66,22 @@ export default function Header() {
         {/* Primary Navigation */}
         <nav className="topbar-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
-            <a key={item.href} href={item.href}>
-              {item.label}
-            </a>
+            item.external ? (
+              <a 
+                key={item.href} 
+                href={item.href} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-1"
+              >
+                {item.label}
+                <span className="text-[10px] px-1.5 py-px rounded bg-emerald-500/20 text-emerald-400">LIVE</span>
+              </a>
+            ) : (
+              <a key={item.href} href={item.href}>
+                {item.label}
+              </a>
+            )
           ))}
         </nav>
 
@@ -99,13 +112,27 @@ export default function Header() {
       {/* Mobile Menu — Fully synced with navigation */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
         {navigation.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {item.label}
-          </a>
+          item.external ? (
+            <a
+              key={item.href}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2"
+            >
+              {item.label}
+              <span className="text-[10px] px-1.5 py-px rounded bg-emerald-500/20 text-emerald-400">LIVE</span>
+            </a>
+          ) : (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {item.label}
+            </a>
+          )
         ))}
         <a
           href="https://github.com/iceccarelli"

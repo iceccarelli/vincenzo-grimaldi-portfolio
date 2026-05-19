@@ -84,7 +84,15 @@ const architectureLayers = [
   },
 ];
 
+// UPDATED: physics-informed is now #1 with special live demo treatment
 const flagshipInitiatives = [
+  {
+    title: 'physics-informed',
+    href: 'https://github.com/iceccarelli/physics-informed',
+    liveUrl: 'https://physics-informed.vercel.app/',
+    summary: 'Production-grade interactive simulator for cross-domain CIM + ThreMA ontology, physics-informed neural networks, RL security agents, and IEEE 9-Bus cyber-physical validation (Grimaldi 2025 RWTH Aachen Master Thesis)',
+    isLive: true,
+  },
   {
     title: 'NeuralBridge',
     href: 'https://github.com/iceccarelli/neuralbridge',
@@ -1249,7 +1257,10 @@ export default function Home() {
               Connecting live market intelligence, flagship repositories, research trajectory, and implementation signals to demonstrate coherent execution paths across both the immersive portfolio and the developer surface on GitHub.
             </p>
             <div className="hero-actions">
-              <a className="primary-button" href="#live-intelligence">
+              <a className="primary-button" href="#thesis-simulator">
+                🚀 Launch Live Thesis Simulator
+              </a>
+              <a className="secondary-button" href="#live-intelligence">
                 Enter the Live Intelligence Hub
               </a>
               <a className="secondary-button" href="#flagship-systems">
@@ -1377,6 +1388,54 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 2025 MASTER THESIS — LIVE SIMULATOR (NEW FLAGSHIP SECTION) */}
+      <section className="section-shell content-section" id="thesis-simulator">
+        <div className="glass-panel cta-panel spotlight-border" style={{ borderColor: '#34d399', borderWidth: '3px', boxShadow: '0 0 60px rgba(52, 211, 153, 0.25)' }}>
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold tracking-[2px]">2025 RWTH AACHEN MASTER THESIS</div>
+            <div className="px-4 py-1.5 rounded-full bg-emerald-500 text-black text-sm font-extrabold flex items-center gap-2">
+              <span className="w-2 h-2 bg-black rounded-full animate-pulse" /> LIVE PRODUCTION DEMO
+            </div>
+          </div>
+
+          <h2 className="text-4xl tracking-tighter">Data Modeling in a Cross-domain Ontology for Cyber Intelligence in Smart-Grids Using Reinforcement Learning</h2>
+          <p className="mt-2 text-xl text-emerald-400">Vincenzo Grimaldi • Matriculation No. 353970 • RWTH Aachen University • June 2025</p>
+
+          <div className="mt-8 grid md:grid-cols-2 gap-8">
+            <div>
+              <p className="text-lg">
+                This thesis establishes the first systematic integration of the <strong>Common Information Model (CIM)</strong> with the <strong>ThreMA cybersecurity framework</strong>, creating unified semantic representations that connect physical power components with security concepts including vulnerabilities and protective measures.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {['CIM–ThreMA Cross-Domain Ontology', '5 Formal Semantic Mappings', 'IEEE 9-Bus Cyber Testbed', '4 Documented Attack Scenarios', 'Q-Learning RL Security Agent', 'Cross-Domain SNR Metric'].map((tag, i) => (
+                  <span key={i} className="px-3 py-1 text-xs rounded-full bg-white/10 border border-white/20 text-emerald-300">{tag}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center gap-4">
+              <a 
+                href="https://physics-informed.vercel.app/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="primary-button bg-emerald-500 hover:bg-emerald-600 text-black font-extrabold text-xl py-5 flex items-center justify-center gap-3"
+              >
+                🚀 LAUNCH LIVE THESIS SIMULATOR
+              </a>
+              <a 
+                href="https://github.com/iceccarelli/physics-informed" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="secondary-button text-center text-lg py-4"
+              >
+                View Full Source on GitHub →
+              </a>
+              <p className="text-center text-xs text-emerald-400/70">Validated on enhanced IEEE 9-Bus system with realistic network infrastructure and documented attack scenarios</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ARCHITECTURE */}
       <section className="section-shell content-section" id="architecture">
         <div className="glass-panel cta-panel spotlight-border">
@@ -1405,45 +1464,50 @@ export default function Home() {
           </div>
         </div>
         <div className="card-grid two-up">
-          {flagshipInitiatives.map((initiative) => (
-            <article className="glass-panel immersive-card" key={initiative.title}>
+          {flagshipInitiatives.map((initiative, index) => (
+            <article 
+              className={`glass-panel immersive-card ${initiative.isLive ? 'border-emerald-500 border-2' : ''}`} 
+              key={index}
+              style={initiative.isLive ? { boxShadow: '0 0 40px rgba(52, 211, 153, 0.3)' } : {}}
+            >
               <div className="card-topline">
                 <span className="live-dot muted" />
-                <span>Flagship Initiative</span>
+                <span>{initiative.isLive ? 'LIVE PRODUCTION DEMO' : 'Flagship Initiative'}</span>
               </div>
               <h3>{initiative.title}</h3>
               <p>{initiative.summary}</p>
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <a className="text-link" href={initiative.href} target="_blank" rel="noreferrer">
-                  View repository →
-                </a>
-                <a 
-                  className="text-link" 
-                  href={initiative.href} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  style={{ color: '#34d399' }}
-                >
-                  ★ Star on GitHub
-                </a>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+                {initiative.isLive ? (
+                  <>
+                    <a className="primary-button bg-emerald-500 hover:bg-emerald-600 text-black" href={initiative.liveUrl} target="_blank" rel="noreferrer">
+                      Launch Live Demo →
+                    </a>
+                    <a className="secondary-button" href={initiative.href} target="_blank" rel="noreferrer">
+                      View Source
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <a className="text-link" href={initiative.href} target="_blank" rel="noreferrer">
+                      View repository →
+                    </a>
+                    <a className="text-link" href={initiative.href} target="_blank" rel="noreferrer" style={{ color: '#34d399' }}>
+                      ★ Star on GitHub
+                    </a>
+                  </>
+                )}
               </div>
             </article>
           ))}
         </div>
 
-        {/* NEW: Developer Surface Teaser */}
         <div className="glass-panel cta-panel spotlight-border" style={{ marginTop: '2rem' }}>
           <div>
             <span className="section-kicker">Developer Surface</span>
             <h3 style={{ marginTop: 0 }}>The same mission, inspected in code.</h3>
             <p>All flagship systems are open source on GitHub. Star them to support the work.</p>
           </div>
-          <a 
-            className="primary-button" 
-            href="https://github.com/iceccarelli" 
-            target="_blank" 
-            rel="noreferrer"
-          >
+          <a className="primary-button" href="https://github.com/iceccarelli" target="_blank" rel="noreferrer">
             Open GitHub Profile →
           </a>
         </div>
@@ -1464,7 +1528,6 @@ export default function Home() {
         </div>
 
         <div className="insight-grid">
-          {/* Headlines */}
           <article className="glass-panel data-column">
             <div className="panel-topline">
               <span className="live-dot" />
@@ -1482,7 +1545,6 @@ export default function Home() {
             </div>
           </article>
 
-          {/* Repos with Star CTAs */}
           <article className="glass-panel data-column">
             <div className="panel-topline">
               <span className="live-dot" />
@@ -1498,13 +1560,7 @@ export default function Home() {
                   <strong>{repo.name}</strong>
                   <small>{repo.description}</small>
                   <div style={{ marginTop: '0.5rem' }}>
-                    <span 
-                      style={{ 
-                        fontSize: '0.85rem', 
-                        color: '#34d399', 
-                        fontWeight: 600 
-                      }}
-                    >
+                    <span style={{ fontSize: '0.85rem', color: '#34d399', fontWeight: 600 }}>
                       ★ Star on GitHub
                     </span>
                   </div>

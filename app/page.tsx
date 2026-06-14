@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Payments from './components/Payments';
+import ContactForm from './components/ContactForm';
 import Image from 'next/image';
 
 // ====================== TYPES ======================
@@ -1691,6 +1692,8 @@ export default function Home() {
               Email — vincenzo@igrimaldi.engineering
             </a>
           </div>
+
+          <ContactForm />
         </div>
       </section>
     </main>

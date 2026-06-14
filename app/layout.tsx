@@ -152,7 +152,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                       GitHub — iceccarelli
                     </a>
                     <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">Live Thesis Simulator</a>
-                    <a className="footer-link" href="#" target="_blank" rel="noreferrer">ORCID (pending)</a>
+                    <span className="footer-link" style={{ opacity: 0.55 }}>ORCID (pending)</span>
                     <div className="footer-status">
                       <span className="live-dot" />
                       <span>Verified Engineering Expertise</span>

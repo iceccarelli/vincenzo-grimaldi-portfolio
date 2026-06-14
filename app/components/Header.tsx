@@ -102,6 +102,7 @@ export default function Header() {
             className={`hamburger ${mobileMenuOpen ? "open" : ""}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle mobile menu"
+            aria-expanded={mobileMenuOpen}
           >
             <span className="bar" />
             <span className="bar" />

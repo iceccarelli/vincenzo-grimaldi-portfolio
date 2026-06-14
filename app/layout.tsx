@@ -4,7 +4,7 @@ import Header from './components/Header';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://vincenzo-grimaldi-portfolio.vercel.app'),
+  metadataBase: new URL('https://igrimaldi.engineering'),
   title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
   description:
     'Physics-Informed Systems • Deterministic Grid Intelligence • Agentic Digital Twins • NeuralBridge • GridOS • DERIM • Deutsche Bahn Grid Networks Engineer. Public implementation of 2025 RWTH Aachen Master Thesis: Cross-Domain CIM–ThreMA Ontology Simulator (https://physics-informed.vercel.app/). Two surfaces, one mission: Portfolio + GitHub.',
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
     description:
       'Embedding governing equations into AI for guaranteed physical consistency. Explore the immersive portfolio and the live Cross-Domain Ontology Simulator (2025 RWTH Aachen Master Thesis).',
-    url: 'https://vincenzo-grimaldi-portfolio.vercel.app/',
+    url: 'https://igrimaldi.engineering/',
     siteName: 'Vincenzo Grimaldi Portfolio',
     locale: 'en_GB',
     type: 'website',
     images: [
       {
-        url: 'https://vincenzo-grimaldi-portfolio.vercel.app/og-image.jpg',
+        url: 'https://igrimaldi.engineering/og-image.jpg',
         width: 1200,
         height: 630,
       },
@@ -65,7 +65,7 @@ const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Vincenzo Grimaldi',
-  url: 'https://vincenzo-grimaldi-portfolio.vercel.app/',
+  url: 'https://igrimaldi.engineering/',
   sameAs: ['https://github.com/iceccarelli', 'https://physics-informed.vercel.app/'],
   jobTitle: 'Physics-Informed Cyber-Physical Systems Engineer • Grid Networks Engineer at Deutsche Bahn',
   knowsAbout: [
@@ -171,10 +171,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     and autonomous systems opportunities.
                   </p>
                   <a 
-                    href="mailto:vincenzo@grimaldi.engineering" 
+                    href="mailto:vincenzo@igrimaldi.engineering" 
                     style={{ color: 'var(--accent-strong)', marginTop: '1.5rem', display: 'inline-block' }}
                   >
-                    vincenzo@grimaldi.engineering →
+                    vincenzo@igrimaldi.engineering →
                   </a>
                 </div>
               </div>

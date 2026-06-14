@@ -1672,8 +1672,8 @@ export default function Home() {
             <a className="secondary-button" href="#ecosystem">
               Trusted Ecosystem
             </a>
-            <a className="secondary-button" href="mailto:vincenzo@grimaldi.engineering">
-              Email — vincenzo@grimaldi.engineering
+            <a className="secondary-button" href="mailto:vincenzo@igrimaldi.engineering">
+              Email — vincenzo@igrimaldi.engineering
             </a>
           </div>
         </div>

@@ -1058,3 +1058,10 @@ small {
     grid-template-columns: 1fr;
   }
 }
+
+/* Responsive nav fix: hamburger on phone + tablet (≤1100px), inline nav desktop only */
+@media (max-width: 1100px) {
+  .topbar-inner { flex-wrap: nowrap; }
+  .topbar-nav { display: none; }
+  .hamburger { display: flex; }
+}

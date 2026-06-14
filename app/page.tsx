@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Payments from './components/Payments';
 
 // ====================== TYPES ======================
 type ClockEntry = {
@@ -1656,6 +1657,8 @@ export default function Home() {
       </section>
 
       {/* CONNECT */}
+      <Payments />
+
       <section className="section-shell content-section" id="connect">
         <div className="glass-panel cta-panel spotlight-border">
           <div>

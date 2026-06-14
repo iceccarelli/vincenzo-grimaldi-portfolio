@@ -48,6 +48,7 @@ export default function Header() {
     { label: 'Flagship Work', href: '#flagship-systems' },
     { label: 'Live Simulator', href: 'https://physics-informed.vercel.app/', external: true }, // NEW
     { label: 'Live Intelligence', href: '#live-intelligence' },
+    { label: 'Payments', href: '#payments' },
     { label: 'Connect', href: '#connect' },
   ];
 

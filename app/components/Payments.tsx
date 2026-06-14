@@ -11,18 +11,18 @@ const STRIPE = {
 const methods = ['Visa', 'Mastercard', 'Amex', 'Apple Pay', 'Google Pay', 'SEPA', 'Link'];
 
 const tiers = [
-  { icon: CalendarClock, title: 'Consultation', price: 'from €250', sub: '60-minute session',
-    desc: 'A focused technical deep-dive on grid intelligence, cyber-physical systems, or physics-informed AI.',
-    points: ['Live working session', 'Written follow-up summary', 'Booked within 48h'],
-    cta: 'Reserve a session', href: STRIPE.deposit, featured: false },
-  { icon: Briefcase, title: 'Project Retainer', price: 'from €2,400', sub: 'monthly engagement',
-    desc: 'A scoped advisory or engineering block with priority availability and direct access.',
-    points: ['Priority response', 'Scoped deliverables', 'Flexible monthly block'],
-    cta: 'Start a retainer', href: STRIPE.retainer, featured: true },
-  { icon: ReceiptText, title: 'Pay an Invoice', price: 'custom', sub: 'agreed amount',
-    desc: 'Settle an existing engagement securely. Enter the amount from your invoice at checkout.',
-    points: ['Any agreed amount', 'Instant receipt', 'Card · wallet · SEPA'],
-    cta: 'Pay invoice', href: STRIPE.invoice, featured: false },
+  { icon: CalendarClock, title: 'Consultation', price: '€280', sub: 'per 60-min session',
+    desc: 'A focused, high-density working session on grid intelligence, cyber-physical systems, or physics-informed AI.',
+    points: ['Live problem-solving', 'Written recap you keep', 'Slot within 48 hours'],
+    cta: 'Book a session', href: STRIPE.deposit, featured: false },
+  { icon: Briefcase, title: 'Advisory Retainer', price: '€3,200', sub: 'per month',
+    desc: 'A dedicated advisory and engineering block with priority access and guaranteed turnaround. Cancel anytime.',
+    points: ['Priority direct access', 'Scoped monthly deliverables', 'Senior, hands-on work'],
+    cta: 'Start retainer', href: STRIPE.retainer, featured: true },
+  { icon: ReceiptText, title: 'Pay Any Amount', price: 'You decide', sub: 'any currency',
+    desc: 'Enter exactly what you owe — from €5 to €5,000 — and pay with the method you prefer.',
+    points: ['Type any amount at checkout', 'Card, Apple / Google Pay, SEPA', 'Instant emailed receipt'],
+    cta: 'Enter an amount', href: STRIPE.invoice, featured: false },
 ];
 
 export default function Payments() {

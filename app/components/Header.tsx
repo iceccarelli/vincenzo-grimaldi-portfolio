@@ -99,7 +99,7 @@ export default function Header() {
 
           {/* Mobile Hamburger */}
           <button
-            className="hamburger"
+            className={`hamburger ${mobileMenuOpen ? "open" : ""}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >

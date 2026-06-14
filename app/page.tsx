@@ -100,6 +100,7 @@ const flagshipInitiatives = [
     href: 'https://github.com/iceccarelli/neuralbridge',
     summary:
       'AI-native middleware for human-to-model orchestration in safety-critical physics-informed environments.',
+    published: false,
   },
   {
     title: 'GridOS',
@@ -118,6 +119,7 @@ const flagshipInitiatives = [
     href: 'https://github.com/iceccarelli/robot-lidar-fusion',
     summary:
       'Real-time perception and sensor fusion stack bridging software intelligence with physical autonomy.',
+    published: false,
   },
 ];
 
@@ -1492,6 +1494,11 @@ export default function Home() {
                     </a>
                   </>
                 ) : (
+                  initiative.published === false ? (
+                    <span className="text-link" style={{ opacity: 0.55, cursor: 'default' }}>
+                      Private repository — available on request
+                    </span>
+                  ) : (
                   <>
                     <a className="text-link" href={initiative.href} target="_blank" rel="noreferrer">
                       View repository →
@@ -1500,6 +1507,7 @@ export default function Home() {
                       ★ Star on GitHub
                     </a>
                   </>
+                  )
                 )}
               </div>
             </article>

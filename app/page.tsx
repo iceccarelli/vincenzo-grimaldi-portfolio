@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Payments from './components/Payments';
+import Image from 'next/image';
 
 // ====================== TYPES ======================
 type ClockEntry = {
@@ -1275,9 +1276,12 @@ export default function Home() {
 
           <aside className="glass-panel spotlight-border hero-panel">
             <div className="hero-portrait-shell">
-              <img
-                src="https://raw.githubusercontent.com/iceccarelli/vincenzo-grimaldi-portfolio/main/Vincenzo_Grimaldi_footer_picture_website.jpg"
+              <Image
+                src="/Vincenzo_Grimaldi_footer_picture_website.jpg"
                 alt="Vincenzo Grimaldi"
+                fill
+                priority
+                sizes="(max-width: 1100px) 100vw, 40vw"
                 className="hero-portrait"
               />
             </div>

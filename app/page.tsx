@@ -1066,8 +1066,9 @@ function SystemInsightVisualizerRotator() {
 
 // ====================== MAIN PAGE COMPONENT ======================
 export default function Home() {
+  // Static placeholder so SSR HTML matches first client render (no hydration mismatch).
   const [clocks, setClocks] = useState<ClockEntry[]>(
-    clockZones.map((zone) => ({ ...zone, time: formatTime(zone.timeZone) })),
+    clockZones.map((zone) => ({ ...zone, time: '--:--:--' })),
   );
   const [repoCards, setRepoCards] = useState<RepoCard[]>(fallbackRepos);
   const [headlines, setHeadlines] = useState<Headline[]>(fallbackHeadlines);
@@ -1076,8 +1077,9 @@ export default function Home() {
   const tickerTapeRef = useRef<HTMLDivElement | null>(null);
   const marketOverviewRef = useRef<HTMLDivElement | null>(null);
 
-  // Live clocks
+  // Live clocks — populate immediately on mount (client-only), then tick.
   useEffect(() => {
+    setClocks(clockZones.map((zone) => ({ ...zone, time: formatTime(zone.timeZone) })));
     const interval = window.setInterval(() => {
       setClocks(clockZones.map((zone) => ({ ...zone, time: formatTime(zone.timeZone) })));
     }, 1000);

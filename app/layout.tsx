@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Header from './components/Header';
+import SocialBar from './components/SocialBar';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
@@ -121,7 +122,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     Deterministic control • Grid intelligence • AI orchestration<br />
                     <span style={{ color: '#34d399' }}>Creator of the 2025 RWTH Aachen Cross-Domain Ontology Simulator</span>
                   </p>
-                  <p style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--muted)' }}>
+
+                  <SocialBar />
+
+                  <p style={{ marginTop: '1.75rem', fontSize: '0.85rem', color: 'var(--muted)' }}>
                     © 2026 Vincenzo Grimaldi. All Rights Reserved.
                   </p>
                 </div>

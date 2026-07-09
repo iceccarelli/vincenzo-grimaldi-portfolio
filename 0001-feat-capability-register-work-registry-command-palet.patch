@@ -1,0 +1,1442 @@
+From 5bcd16ccd55fa06eca29b714b6ac1c948187a882 Mon Sep 17 00:00:00 2001
+From: Vincenzo Grimaldi <vincenzo@igrimaldi.engineering>
+Date: Thu, 9 Jul 2026 13:49:12 +0000
+Subject: [PATCH] feat: capability register, work registry, command palette,
+ mega menu
+
+Adds app/lib/registry.ts as the single source of truth for capabilities and
+shipped work. Every capability names the employer, thesis or public repository
+where it was exercised; entries without provenance are not admitted. Selecting
+a domain filters the work registry beneath it.
+
+Navigation, adapted from the three references:
+  AWS    - labelled 'Work' mega menu generated from the registry
+  Square - Cmd/Ctrl+K palette, subsequence matching, full keyboard control
+  Tesla  - hairline reading-progress rail
+
+React and CSS only. package.json is unchanged: no next-themes, no
+framer-motion, no cmdk, no shadcn.
+---
+ app/components/CapabilitySystem.tsx | 137 +++++++
+ app/components/CommandPalette.tsx   | 252 +++++++++++++
+ app/components/Header.tsx           |   5 +
+ app/components/MegaMenu.tsx         | 115 ++++++
+ app/components/ScrollProgress.tsx   |  38 ++
+ app/globals.css                     | 531 ++++++++++++++++++++++++++++
+ app/layout.tsx                      |   4 +-
+ app/lib/registry.ts                 | 222 ++++++++++++
+ app/page.tsx                        |   4 +
+ 9 files changed, 1307 insertions(+), 1 deletion(-)
+ create mode 100644 app/components/CapabilitySystem.tsx
+ create mode 100644 app/components/CommandPalette.tsx
+ create mode 100644 app/components/MegaMenu.tsx
+ create mode 100644 app/components/ScrollProgress.tsx
+ create mode 100644 app/lib/registry.ts
+
+diff --git a/app/components/CapabilitySystem.tsx b/app/components/CapabilitySystem.tsx
+new file mode 100644
+index 0000000..1165ddd
+--- /dev/null
++++ b/app/components/CapabilitySystem.tsx
+@@ -0,0 +1,137 @@
++'use client';
++
++import { useMemo, useState } from 'react';
++import { capabilities, projects, type CapabilityDomain } from '../lib/registry';
++
++/**
++ * Two sections that share one piece of state: the selected domain.
++ * Selecting a capability domain filters the registry below it, so the
++ * claim and the evidence for the claim stay in the same field of view.
++ */
++export default function CapabilitySystem() {
++  const [selected, setSelected] = useState<CapabilityDomain | null>(null);
++
++  const visibleProjects = useMemo(
++    () => (selected ? projects.filter((project) => project.domain === selected) : projects),
++    [selected],
++  );
++
++  const toggle = (domain: string) =>
++    setSelected((current) => (current === domain ? null : (domain as CapabilityDomain)));
++
++  return (
++    <>
++      <section className="section-shell content-section" id="capabilities">
++        <div className="glass-panel cta-panel spotlight-border">
++          <div>
++            <span className="section-kicker">Capability Register</span>
++            <h2>Every competence below names where it was actually exercised.</h2>
++            <p>
++              Grouped by domain rather than by tool. Select a domain to filter the work
++              registry underneath it.
++            </p>
++          </div>
++        </div>
++
++        <div className="capability-matrix">
++          {capabilities.map((capability) => {
++            const active = selected === capability.domain;
++            return (
++              <article
++                key={capability.domain}
++                className={`glass-panel capability-row${active ? ' is-active' : ''}`}
++              >
++                <button
++                  type="button"
++                  className="capability-domain"
++                  aria-pressed={active}
++                  onClick={() => toggle(capability.domain)}
++                >
++                  <span className="capability-domain-name">{capability.domain}</span>
++                  <span className="capability-filter-hint">
++                    {active ? 'Filtering registry' : 'Filter registry'}
++                  </span>
++                </button>
++
++                <p className="capability-summary">{capability.summary}</p>
++
++                <ul className="capability-signals">
++                  {capability.signals.map((signal) => (
++                    <li key={signal}>{signal}</li>
++                  ))}
++                </ul>
++
++                <div className="capability-provenance">
++                  <span className="capability-provenance-label">Exercised in</span>
++                  <div className="capability-provenance-items">
++                    {capability.provenance.map((entry) =>
++                      entry.href ? (
++                        <a key={entry.label} href={entry.href} target="_blank" rel="noreferrer">
++                          {entry.label}
++                        </a>
++                      ) : (
++                        <span key={entry.label}>{entry.label}</span>
++                      ),
++                    )}
++                  </div>
++                </div>
++              </article>
++            );
++          })}
++        </div>
++      </section>
++
++      <section className="section-shell content-section" id="registry">
++        <div className="glass-panel cta-panel spotlight-border">
++          <div>
++            <span className="section-kicker">Work Registry</span>
++            <h2>
++              {selected ? (
++                <>
++                  {visibleProjects.length} repositor{visibleProjects.length === 1 ? 'y' : 'ies'} under{' '}
++                  <span className="gradient-text">{selected}</span>
++                </>
++              ) : (
++                'Public repositories, with their status stated plainly.'
++              )}
++            </h2>
++          </div>
++          {selected && (
++            <div className="hero-actions">
++              <button type="button" className="secondary-button" onClick={() => setSelected(null)}>
++                Clear filter
++              </button>
++            </div>
++          )}
++        </div>
++
++        <div className="card-grid three-up">
++          {visibleProjects.map((project) => (
++            <article className="glass-panel glow-card registry-card" key={project.name}>
++              <span className={`registry-status registry-status--${project.status}`}>
++                {project.status === 'shipped' ? 'Shipped' : 'In development'}
++              </span>
++              <h3>{project.name}</h3>
++              <p>{project.summary}</p>
++              <ul className="registry-stack">
++                {project.stack.map((item) => (
++                  <li key={item}>{item}</li>
++                ))}
++              </ul>
++              <div className="registry-links">
++                <a href={project.repo} target="_blank" rel="noreferrer">
++                  Source
++                </a>
++                {project.live && (
++                  <a href={project.live} target="_blank" rel="noreferrer">
++                    Live demo
++                  </a>
++                )}
++              </div>
++            </article>
++          ))}
++        </div>
++      </section>
++    </>
++  );
++}
+diff --git a/app/components/CommandPalette.tsx b/app/components/CommandPalette.tsx
+new file mode 100644
+index 0000000..d0c016b
+--- /dev/null
++++ b/app/components/CommandPalette.tsx
+@@ -0,0 +1,252 @@
++'use client';
++
++import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
++import { createPortal } from 'react-dom';
++import { capabilities, projects } from '../lib/registry';
++
++type Command = {
++  id: string;
++  label: string;
++  group: 'Sections' | 'Capabilities' | 'Repositories' | 'Elsewhere';
++  hint?: string;
++  href: string;
++  external?: boolean;
++};
++
++const sectionCommands: Command[] = [
++  { id: 'top', label: 'Top', group: 'Sections', href: '#top' },
++  { id: 'about', label: 'About', group: 'Sections', href: '#about' },
++  { id: 'architecture', label: 'Architecture', group: 'Sections', href: '#architecture' },
++  { id: 'capabilities', label: 'Capability register', group: 'Sections', href: '#capabilities' },
++  { id: 'registry', label: 'Work registry', group: 'Sections', href: '#registry' },
++  { id: 'physics-informed', label: 'Physics-informed', group: 'Sections', href: '#physics-informed' },
++  { id: 'thesis-simulator', label: 'Thesis simulator', group: 'Sections', href: '#thesis-simulator' },
++  { id: 'flagship-systems', label: 'Flagship systems', group: 'Sections', href: '#flagship-systems' },
++  { id: 'live-intelligence', label: 'Live intelligence', group: 'Sections', href: '#live-intelligence' },
++  { id: 'ecosystem', label: 'Trusted ecosystem', group: 'Sections', href: '#ecosystem' },
++  { id: 'connect', label: 'Connect', group: 'Sections', href: '#connect' },
++];
++
++const commands: Command[] = [
++  ...sectionCommands,
++  ...capabilities.map((capability) => ({
++    id: `cap-${capability.domain}`,
++    label: capability.domain,
++    group: 'Capabilities' as const,
++    hint: capability.signals.slice(0, 3).join(' · '),
++    href: '#capabilities',
++  })),
++  ...projects.map((project) => ({
++    id: `repo-${project.name}`,
++    label: project.name,
++    group: 'Repositories' as const,
++    hint: project.stack.join(' · '),
++    href: project.repo,
++    external: true,
++  })),
++  {
++    id: 'gh',
++    label: 'GitHub profile',
++    group: 'Elsewhere',
++    href: 'https://github.com/iceccarelli',
++    external: true,
++  },
++  {
++    id: 'sim',
++    label: 'Live thesis simulator',
++    group: 'Elsewhere',
++    href: 'https://physics-informed.vercel.app/',
++    external: true,
++  },
++  {
++    id: 'mail',
++    label: 'Email Vincenzo',
++    group: 'Elsewhere',
++    hint: 'vincenzo@igrimaldi.engineering',
++    href: 'mailto:vincenzo@igrimaldi.engineering',
++    external: true,
++  },
++];
++
++/** Subsequence match: "gos" matches "GridOS". */
++function matches(haystack: string, needle: string) {
++  if (!needle) return true;
++  const target = haystack.toLowerCase();
++  const query = needle.toLowerCase();
++  let cursor = 0;
++  for (const character of query) {
++    cursor = target.indexOf(character, cursor);
++    if (cursor === -1) return false;
++    cursor += 1;
++  }
++  return true;
++}
++
++export default function CommandPalette() {
++  const [open, setOpen] = useState(false);
++  const [query, setQuery] = useState('');
++  const [active, setActive] = useState(0);
++  const [mounted, setMounted] = useState(false);
++  const inputRef = useRef<HTMLInputElement>(null);
++  const listRef = useRef<HTMLDivElement>(null);
++
++  useEffect(() => setMounted(true), []);
++
++  const results = useMemo(
++    () => commands.filter((command) => matches(`${command.label} ${command.hint ?? ''}`, query)),
++    [query],
++  );
++
++  const close = useCallback(() => {
++    setOpen(false);
++    setQuery('');
++    setActive(0);
++  }, []);
++
++  const run = useCallback(
++    (command: Command) => {
++      close();
++      if (command.external) {
++        window.open(command.href, command.href.startsWith('mailto:') ? '_self' : '_blank', 'noopener');
++        return;
++      }
++      const target = document.querySelector(command.href);
++      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
++      history.replaceState(null, '', command.href);
++    },
++    [close],
++  );
++
++  useEffect(() => {
++    const onKeyDown = (event: KeyboardEvent) => {
++      if (event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) {
++        event.preventDefault();
++        setOpen((current) => !current);
++        return;
++      }
++      if (!open) return;
++      if (event.key === 'Escape') {
++        event.preventDefault();
++        close();
++      }
++      if (event.key === 'ArrowDown') {
++        event.preventDefault();
++        setActive((index) => (results.length ? (index + 1) % results.length : 0));
++      }
++      if (event.key === 'ArrowUp') {
++        event.preventDefault();
++        setActive((index) => (results.length ? (index - 1 + results.length) % results.length : 0));
++      }
++      if (event.key === 'Enter' && results[active]) {
++        event.preventDefault();
++        run(results[active]);
++      }
++    };
++    window.addEventListener('keydown', onKeyDown);
++    return () => window.removeEventListener('keydown', onKeyDown);
++  }, [open, results, active, close, run]);
++
++  useEffect(() => {
++    if (open) {
++      inputRef.current?.focus();
++      document.body.style.overflow = 'hidden';
++    } else {
++      document.body.style.overflow = '';
++    }
++    return () => {
++      document.body.style.overflow = '';
++    };
++  }, [open]);
++
++  useEffect(() => setActive(0), [query]);
++
++  useEffect(() => {
++    listRef.current
++      ?.querySelector<HTMLElement>('[data-active="true"]')
++      ?.scrollIntoView({ block: 'nearest' });
++  }, [active]);
++
++  const trigger = (
++    <button type="button" className="palette-trigger" onClick={() => setOpen(true)}>
++      <span>Search</span>
++      <kbd>⌘K</kbd>
++    </button>
++  );
++
++  if (!open || !mounted) return trigger;
++
++  let lastGroup = '';
++
++  // Rendered at document.body so the fixed overlay is never trapped inside the
++  // transformed, hide-on-scroll header.
++  const dialog = (
++    <div className="palette-backdrop" role="presentation" onMouseDown={close}>
++      <div
++        className="palette"
++        role="dialog"
++        aria-modal="true"
++        aria-label="Search this site"
++        onMouseDown={(event) => event.stopPropagation()}
++      >
++        <input
++          ref={inputRef}
++          className="palette-input"
++          value={query}
++          onChange={(event) => setQuery(event.target.value)}
++          placeholder="Jump to a section, capability or repository…"
++          aria-label="Search"
++          autoComplete="off"
++          spellCheck={false}
++        />
++
++        <div className="palette-results" ref={listRef}>
++          {results.length === 0 && (
++            <p className="palette-empty">
++              Nothing matches “{query}”. Try a domain name, or a repository like <code>GridOS</code>.
++            </p>
++          )}
++          {results.map((command, index) => {
++            const showGroup = command.group !== lastGroup;
++            lastGroup = command.group;
++            return (
++              <div key={command.id}>
++                {showGroup && <p className="palette-group">{command.group}</p>}
++                <button
++                  type="button"
++                  className="palette-item"
++                  data-active={index === active}
++                  onMouseEnter={() => setActive(index)}
++                  onClick={() => run(command)}
++                >
++                  <span className="palette-item-label">{command.label}</span>
++                  {command.hint && <span className="palette-item-hint">{command.hint}</span>}
++                  {command.external && <span className="palette-item-external">↗</span>}
++                </button>
++              </div>
++            );
++          })}
++        </div>
++
++        <footer className="palette-footer">
++          <span>
++            <kbd>↑</kbd>
++            <kbd>↓</kbd> navigate
++          </span>
++          <span>
++            <kbd>↵</kbd> open
++          </span>
++          <span>
++            <kbd>esc</kbd> close
++          </span>
++        </footer>
++      </div>
++    </div>
++  );
++
++  return (
++    <>
++      {trigger}
++      {createPortal(dialog, document.body)}
++    </>
++  );
++}
+diff --git a/app/components/Header.tsx b/app/components/Header.tsx
+index 48ee42b..f5e6e71 100644
+--- a/app/components/Header.tsx
++++ b/app/components/Header.tsx
+@@ -1,6 +1,8 @@
+ 'use client';
+ 
+ import { useState, useEffect } from 'react';
++import MegaMenu from './MegaMenu';
++import CommandPalette from './CommandPalette';
+ 
+ function useScrollDirection() {
+   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
+@@ -66,6 +68,7 @@ export default function Header() {
+ 
+         {/* Primary Navigation */}
+         <nav className="topbar-nav" aria-label="Primary navigation">
++          <MegaMenu />
+           {navigation.map((item) => (
+             item.external ? (
+               <a 
+@@ -87,6 +90,8 @@ export default function Header() {
+         </nav>
+ 
+         <div className="flex items-center gap-4">
++          <CommandPalette />
++
+           {/* GitHub — Now clearly labeled as the Developer Surface */}
+           <a
+             className="topbar-button"
+diff --git a/app/components/MegaMenu.tsx b/app/components/MegaMenu.tsx
+new file mode 100644
+index 0000000..1b46612
+--- /dev/null
++++ b/app/components/MegaMenu.tsx
+@@ -0,0 +1,115 @@
++'use client';
++
++import { useEffect, useRef, useState } from 'react';
++import { capabilities, projects } from '../lib/registry';
++
++/**
++ * Labelled "Work" trigger that opens a three-column panel: what the work is
++ * about (capabilities), what exists as code (repositories), and what can be
++ * opened right now (live surfaces). Contents come from the registry, so the
++ * menu can never drift from the page.
++ */
++export default function MegaMenu() {
++  const [open, setOpen] = useState(false);
++  const containerRef = useRef<HTMLDivElement>(null);
++
++  useEffect(() => {
++    if (!open) return;
++
++    const onPointerDown = (event: MouseEvent) => {
++      if (!containerRef.current?.contains(event.target as Node)) setOpen(false);
++    };
++    const onKeyDown = (event: KeyboardEvent) => {
++      if (event.key === 'Escape') setOpen(false);
++    };
++
++    document.addEventListener('mousedown', onPointerDown);
++    document.addEventListener('keydown', onKeyDown);
++    window.addEventListener('scroll', () => setOpen(false), { passive: true, once: true });
++    return () => {
++      document.removeEventListener('mousedown', onPointerDown);
++      document.removeEventListener('keydown', onKeyDown);
++    };
++  }, [open]);
++
++  const shipped = projects.filter((project) => project.status === 'shipped');
++  const live = projects.filter((project) => project.live);
++
++  return (
++    <div className="megamenu" ref={containerRef}>
++      <button
++        type="button"
++        className="megamenu-trigger"
++        aria-expanded={open}
++        aria-haspopup="true"
++        onClick={() => setOpen((current) => !current)}
++      >
++        Work
++        <span className={`megamenu-caret${open ? ' is-open' : ''}`} aria-hidden="true">
++          ▾
++        </span>
++      </button>
++
++      {open && (
++        <div className="megamenu-panel" role="menu">
++          <div className="megamenu-column">
++            <p className="megamenu-heading">Capabilities</p>
++            <ul>
++              {capabilities.map((capability) => (
++                <li key={capability.domain}>
++                  <a href="#capabilities" onClick={() => setOpen(false)}>
++                    <span>{capability.domain}</span>
++                    <small>{capability.signals.length} signals</small>
++                  </a>
++                </li>
++              ))}
++            </ul>
++          </div>
++
++          <div className="megamenu-column">
++            <p className="megamenu-heading">Repositories</p>
++            <ul>
++              {shipped.map((project) => (
++                <li key={project.name}>
++                  <a href={project.repo} target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>
++                    <span>{project.name}</span>
++                    <small>{project.stack[0]}</small>
++                  </a>
++                </li>
++              ))}
++              <li>
++                <a href="#registry" onClick={() => setOpen(false)}>
++                  <span>Full work registry</span>
++                  <small>{projects.length} entries</small>
++                </a>
++              </li>
++            </ul>
++          </div>
++
++          <div className="megamenu-column megamenu-column--feature">
++            <p className="megamenu-heading">Open now</p>
++            {live.map((project) => (
++              <a
++                className="megamenu-feature"
++                key={project.name}
++                href={project.live}
++                target="_blank"
++                rel="noreferrer"
++                onClick={() => setOpen(false)}
++              >
++                <span className="megamenu-feature-tag">Live</span>
++                <strong>{project.name}</strong>
++                <p>{project.summary}</p>
++              </a>
++            ))}
++            <a className="megamenu-feature" href="#connect" onClick={() => setOpen(false)}>
++              <span className="megamenu-feature-tag">Contact</span>
++              <strong>Start a conversation</strong>
++              <p>Grid intelligence, agentic middleware, or research collaboration.</p>
++            </a>
++          </div>
++        </div>
++      )}
++    </div>
++  );
++}
+diff --git a/app/components/ScrollProgress.tsx b/app/components/ScrollProgress.tsx
+new file mode 100644
+index 0000000..62758b0
+--- /dev/null
++++ b/app/components/ScrollProgress.tsx
+@@ -0,0 +1,38 @@
++'use client';
++
++import { useEffect, useState } from 'react';
++
++export default function ScrollProgress() {
++  const [progress, setProgress] = useState(0);
++
++  useEffect(() => {
++    let ticking = false;
++
++    const update = () => {
++      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
++      setProgress(scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0);
++      ticking = false;
++    };
++
++    const onScroll = () => {
++      if (!ticking) {
++        requestAnimationFrame(update);
++        ticking = true;
++      }
++    };
++
++    update();
++    window.addEventListener('scroll', onScroll, { passive: true });
++    window.addEventListener('resize', onScroll, { passive: true });
++    return () => {
++      window.removeEventListener('scroll', onScroll);
++      window.removeEventListener('resize', onScroll);
++    };
++  }, []);
++
++  return (
++    <div className="scroll-progress" aria-hidden="true">
++      <div className="scroll-progress-bar" style={{ transform: `scaleX(${progress})` }} />
++    </div>
++  );
++}
+diff --git a/app/globals.css b/app/globals.css
+index ac96c93..c86fd2c 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1142,3 +1142,534 @@ textarea.contact-input { resize: vertical; min-height: 110px; }
+   .social-link { -webkit-transition: color .22s ease, background .22s ease, border-color .22s ease; transition: color .22s ease, background .22s ease, border-color .22s ease; }
+   .social-link:hover, .social-link:focus-visible { -webkit-transform: none; transform: none; }
+ }
++
++/* ====================== CAPABILITY REGISTER + WORK REGISTRY ====================== */
++.capability-matrix {
++  display: grid;
++  gap: 1rem;
++  margin-top: 2rem;
++}
++
++.capability-row {
++  display: grid;
++  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr) minmax(180px, 220px);
++  gap: 1.75rem;
++  align-items: start;
++  padding: 1.75rem;
++  border-radius: var(--radius-lg);
++  transition: border-color 180ms ease, transform 180ms ease;
++}
++
++.capability-row.is-active {
++  border-color: rgba(125, 211, 252, 0.55);
++}
++
++.capability-domain {
++  display: flex;
++  flex-direction: column;
++  gap: 0.4rem;
++  align-items: flex-start;
++  text-align: left;
++  background: transparent;
++  border: 0;
++  padding: 0;
++  cursor: pointer;
++  color: inherit;
++  font: inherit;
++}
++
++.capability-domain-name {
++  font-size: 1.05rem;
++  font-weight: 600;
++  line-height: 1.3;
++  color: var(--text);
++}
++
++.capability-filter-hint {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.68rem;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  color: var(--muted);
++  transition: color 160ms ease;
++}
++
++.capability-domain:hover .capability-filter-hint,
++.capability-row.is-active .capability-filter-hint {
++  color: var(--accent-strong);
++}
++
++.capability-domain:focus-visible {
++  outline: 2px solid var(--accent-strong);
++  outline-offset: 6px;
++  border-radius: 6px;
++}
++
++.capability-summary {
++  margin: 0 0 1rem;
++  color: var(--muted-strong);
++  font-size: 0.98rem;
++  line-height: 1.6;
++}
++
++.capability-signals {
++  list-style: none;
++  margin: 0;
++  padding: 0;
++  display: grid;
++  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
++  gap: 0.35rem 1.25rem;
++}
++
++.capability-signals li {
++  position: relative;
++  padding-left: 0.9rem;
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.82rem;
++  line-height: 1.7;
++  color: var(--muted-strong);
++}
++
++.capability-signals li::before {
++  content: '';
++  position: absolute;
++  left: 0;
++  top: 0.72em;
++  width: 4px;
++  height: 1px;
++  background: var(--accent);
++}
++
++.capability-provenance {
++  display: flex;
++  flex-direction: column;
++  gap: 0.55rem;
++  padding-left: 1.5rem;
++  border-left: 1px solid var(--panel-border);
++}
++
++.capability-provenance-label {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.66rem;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++
++.capability-provenance-items {
++  display: flex;
++  flex-direction: column;
++  gap: 0.3rem;
++  font-size: 0.85rem;
++  color: var(--muted-strong);
++}
++
++.capability-provenance-items a {
++  color: var(--accent);
++  border-bottom: 1px solid transparent;
++  width: fit-content;
++}
++
++.capability-provenance-items a:hover {
++  border-bottom-color: var(--accent);
++}
++
++.registry-card {
++  display: flex;
++  flex-direction: column;
++  gap: 0.75rem;
++}
++
++.registry-status {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.66rem;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  width: fit-content;
++  padding: 0.25rem 0.6rem;
++  border-radius: 999px;
++  border: 1px solid var(--panel-border);
++}
++
++.registry-status--shipped {
++  color: var(--success);
++  border-color: rgba(52, 211, 153, 0.4);
++}
++
++.registry-status--in-development {
++  color: var(--accent-warm);
++  border-color: rgba(245, 158, 11, 0.4);
++}
++
++.registry-stack {
++  list-style: none;
++  display: flex;
++  flex-wrap: wrap;
++  gap: 0.4rem;
++  margin: 0;
++  padding: 0;
++}
++
++.registry-stack li {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.7rem;
++  color: var(--muted);
++  border: 1px solid var(--panel-border);
++  border-radius: 6px;
++  padding: 0.2rem 0.45rem;
++}
++
++.registry-links {
++  display: flex;
++  gap: 1rem;
++  margin-top: auto;
++  padding-top: 0.5rem;
++}
++
++.registry-links a {
++  font-size: 0.85rem;
++  color: var(--accent);
++  border-bottom: 1px solid rgba(125, 211, 252, 0.3);
++}
++
++.registry-links a:hover {
++  border-bottom-color: var(--accent);
++}
++
++@media (max-width: 960px) {
++  .capability-row {
++    grid-template-columns: 1fr;
++    gap: 1.25rem;
++  }
++
++  .capability-provenance {
++    padding-left: 0;
++    padding-top: 1rem;
++    border-left: 0;
++    border-top: 1px solid var(--panel-border);
++  }
++
++  .capability-provenance-items {
++    flex-direction: row;
++    flex-wrap: wrap;
++    gap: 0.75rem;
++  }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .capability-row {
++    transition: none;
++  }
++}
++
++/* ====================== COMMAND PALETTE + SCROLL PROGRESS ====================== */
++.scroll-progress {
++  position: fixed;
++  top: 0;
++  left: 0;
++  right: 0;
++  height: 2px;
++  z-index: 120;
++  pointer-events: none;
++  background: transparent;
++}
++
++.scroll-progress-bar {
++  height: 100%;
++  width: 100%;
++  transform-origin: 0 50%;
++  transform: scaleX(0);
++  background: linear-gradient(90deg, var(--accent-strong), var(--success));
++}
++
++.palette-trigger {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.6rem;
++  padding: 0.45rem 0.7rem;
++  border-radius: 10px;
++  border: 1px solid var(--panel-border);
++  background: var(--bg-soft);
++  color: var(--muted-strong);
++  font-size: 0.82rem;
++  cursor: pointer;
++  transition: border-color 160ms ease, color 160ms ease;
++}
++
++.palette-trigger:hover {
++  border-color: rgba(125, 211, 252, 0.45);
++  color: var(--text);
++}
++
++.palette-trigger kbd,
++.palette-footer kbd {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.68rem;
++  padding: 0.1rem 0.35rem;
++  border-radius: 5px;
++  border: 1px solid var(--panel-border);
++  color: var(--muted);
++}
++
++.palette-backdrop {
++  position: fixed;
++  inset: 0;
++  z-index: 200;
++  background: rgba(3, 8, 18, 0.72);
++  backdrop-filter: blur(6px);
++  display: flex;
++  justify-content: center;
++  padding: 12vh 1rem 1rem;
++}
++
++.palette {
++  width: min(640px, 100%);
++  max-height: 70vh;
++  display: flex;
++  flex-direction: column;
++  border-radius: var(--radius-lg);
++  border: 1px solid rgba(125, 211, 252, 0.28);
++  background: var(--bg-elevated);
++  box-shadow: var(--shadow);
++  overflow: hidden;
++}
++
++.palette-input {
++  width: 100%;
++  border: 0;
++  border-bottom: 1px solid var(--panel-border);
++  background: transparent;
++  color: var(--text);
++  padding: 1.1rem 1.25rem;
++  font-size: 1rem;
++  outline: none;
++}
++
++.palette-input::placeholder {
++  color: var(--muted);
++}
++
++.palette-results {
++  overflow-y: auto;
++  padding: 0.5rem;
++}
++
++.palette-group {
++  margin: 0.75rem 0 0.35rem;
++  padding: 0 0.75rem;
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.64rem;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++
++.palette-item {
++  display: flex;
++  align-items: baseline;
++  gap: 0.75rem;
++  width: 100%;
++  text-align: left;
++  padding: 0.6rem 0.75rem;
++  border: 0;
++  border-radius: 10px;
++  background: transparent;
++  color: var(--muted-strong);
++  cursor: pointer;
++  font: inherit;
++}
++
++.palette-item[data-active='true'] {
++  background: rgba(56, 189, 248, 0.12);
++  color: var(--text);
++}
++
++.palette-item-label {
++  font-size: 0.94rem;
++}
++
++.palette-item-hint {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.72rem;
++  color: var(--muted);
++  margin-left: auto;
++  overflow: hidden;
++  text-overflow: ellipsis;
++  white-space: nowrap;
++  max-width: 55%;
++}
++
++.palette-item-external {
++  color: var(--accent);
++  font-size: 0.8rem;
++}
++
++.palette-empty {
++  padding: 1.5rem 0.75rem;
++  color: var(--muted);
++  font-size: 0.9rem;
++}
++
++.palette-empty code {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  color: var(--accent);
++}
++
++.palette-footer {
++  display: flex;
++  gap: 1.25rem;
++  padding: 0.7rem 1.25rem;
++  border-top: 1px solid var(--panel-border);
++  font-size: 0.72rem;
++  color: var(--muted);
++}
++
++.palette-footer span {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.3rem;
++}
++
++@media (max-width: 720px) {
++  .palette-trigger span {
++    display: none;
++  }
++  .palette-item-hint {
++    display: none;
++  }
++  .palette-backdrop {
++    padding-top: 6vh;
++  }
++}
++
++/* ====================== MEGA MENU ====================== */
++.megamenu {
++  position: static;
++}
++
++.megamenu-trigger {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.35rem;
++  background: transparent;
++  border: 0;
++  padding: 0;
++  color: var(--muted-strong);
++  font: inherit;
++  font-size: 0.9rem;
++  cursor: pointer;
++  transition: color 160ms ease;
++}
++
++.megamenu-trigger:hover,
++.megamenu-trigger[aria-expanded='true'] {
++  color: var(--text);
++}
++
++.megamenu-caret {
++  font-size: 0.6rem;
++  transition: transform 160ms ease;
++}
++
++.megamenu-caret.is-open {
++  transform: rotate(180deg);
++}
++
++.megamenu-panel {
++  position: absolute;
++  left: 0;
++  right: 0;
++  top: 100%;
++  z-index: 90;
++  display: grid;
++  grid-template-columns: 1.1fr 1fr 1.2fr;
++  gap: 2.5rem;
++  padding: 2rem clamp(1.25rem, 5vw, 3rem);
++  border-top: 1px solid var(--panel-border);
++  border-bottom: 1px solid var(--panel-border);
++  background: var(--bg-elevated);
++  backdrop-filter: blur(18px);
++  box-shadow: var(--shadow);
++}
++
++.megamenu-heading {
++  margin: 0 0 0.9rem;
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.64rem;
++  letter-spacing: 0.18em;
++  text-transform: uppercase;
++  color: var(--muted);
++}
++
++.megamenu-column ul {
++  list-style: none;
++  margin: 0;
++  padding: 0;
++  display: grid;
++  gap: 0.15rem;
++}
++
++.megamenu-column li a {
++  display: flex;
++  align-items: baseline;
++  justify-content: space-between;
++  gap: 1rem;
++  padding: 0.45rem 0.6rem;
++  border-radius: 8px;
++  color: var(--muted-strong);
++  font-size: 0.9rem;
++  transition: background 140ms ease, color 140ms ease;
++}
++
++.megamenu-column li a:hover {
++  background: rgba(56, 189, 248, 0.1);
++  color: var(--text);
++}
++
++.megamenu-column li a small {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.68rem;
++  color: var(--muted);
++}
++
++.megamenu-feature {
++  display: block;
++  padding: 1rem;
++  margin-bottom: 0.75rem;
++  border: 1px solid var(--panel-border);
++  border-radius: var(--radius-md);
++  background: var(--bg-soft);
++  transition: border-color 160ms ease;
++}
++
++.megamenu-feature:hover {
++  border-color: rgba(125, 211, 252, 0.5);
++}
++
++.megamenu-feature-tag {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.62rem;
++  letter-spacing: 0.16em;
++  text-transform: uppercase;
++  color: var(--success);
++}
++
++.megamenu-feature strong {
++  display: block;
++  margin-top: 0.3rem;
++  color: var(--text);
++  font-size: 0.98rem;
++}
++
++.megamenu-feature p {
++  margin: 0.35rem 0 0;
++  font-size: 0.82rem;
++  line-height: 1.55;
++  color: var(--muted);
++}
++
++@media (max-width: 1024px) {
++  .megamenu {
++    display: none;
++  }
++}
+diff --git a/app/layout.tsx b/app/layout.tsx
+index d74c2fd..c3528e6 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -1,6 +1,7 @@
+ import type { Metadata } from 'next';
+ import type { ReactNode } from 'react';
+ import Header from './components/Header';
++import ScrollProgress from './components/ScrollProgress';
+ import SocialBar from './components/SocialBar';
+ import { Analytics } from '@vercel/analytics/react';
+ import './globals.css';
+@@ -104,7 +105,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
+           <div className="background-orb orb-two" />
+           <div className="background-orb orb-three" />
+ 
+-          <Header />
++        <ScrollProgress />
++        <Header />
+ 
+           {children}
+ 
+diff --git a/app/lib/registry.ts b/app/lib/registry.ts
+new file mode 100644
+index 0000000..ec2b09d
+--- /dev/null
++++ b/app/lib/registry.ts
+@@ -0,0 +1,222 @@
++/**
++ * registry.ts — single source of truth for capabilities and shipped work.
++ *
++ * Rule for this file: every capability carries a `provenance` entry naming the
++ * place it was actually exercised (an employer, the thesis, or a public repo).
++ * A capability with no provenance does not belong here. Nothing in this file
++ * is aspirational.
++ */
++
++export type Provenance = {
++  label: string;
++  href?: string;
++};
++
++export type Capability = {
++  domain: string;
++  /** Short line describing what the domain is for, in operator terms. */
++  summary: string;
++  /** Concrete, checkable competencies. Protocols, methods, artefacts. */
++  signals: string[];
++  provenance: Provenance[];
++};
++
++export type Project = {
++  name: string;
++  domain: CapabilityDomain;
++  summary: string;
++  repo: string;
++  live?: string;
++  /** Published to a package index / has a public deployment. */
++  status: 'shipped' | 'in-development';
++  stack: string[];
++};
++
++export type CapabilityDomain =
++  | 'Grid & Power Systems'
++  | 'Industrial Protocols & IT/OT'
++  | 'Physics-Informed Learning'
++  | 'Robotics & Perception'
++  | 'Agentic Middleware'
++  | 'Systems Engineering';
++
++const DB_INFRAGO: Provenance = { label: 'DB InfraGO AG' };
++const THESIS: Provenance = {
++  label: 'RWTH Aachen M.Sc. thesis',
++  href: 'https://physics-informed.vercel.app/',
++};
++
++export const capabilities: Capability[] = [
++  {
++    domain: 'Grid & Power Systems',
++    summary:
++      'Modelling, coordinating and dispatching electrical assets — from traction substations to distributed energy resources.',
++    signals: [
++      'CIM / CGMES semantic modelling',
++      'High-voltage traction asset digitalisation',
++      'DER fleet coordination',
++      'MILP battery dispatch',
++      'MPC and forecast-driven control loops',
++      'IEEE 9-bus cyber-physical testbed',
++    ],
++    provenance: [
++      DB_INFRAGO,
++      THESIS,
++      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
++      { label: 'DERIM', href: 'https://github.com/iceccarelli/derim-middleware' },
++    ],
++  },
++  {
++    domain: 'Industrial Protocols & IT/OT',
++    summary:
++      'Getting field devices to speak to software without losing determinism, and keeping the boundary between the two defensible.',
++    signals: [
++      'Modbus TCP/RTU',
++      'MQTT',
++      'SunSpec',
++      'OPC-UA',
++      'IT/OT convergence',
++      'KRITIS-aligned OT security governance',
++    ],
++    provenance: [
++      DB_INFRAGO,
++      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
++    ],
++  },
++  {
++    domain: 'Physics-Informed Learning',
++    summary:
++      'Embedding governing equations and threat models into learned components so their outputs stay physically admissible.',
++    signals: [
++      'Physics-informed neural networks (PINNs)',
++      'Reinforcement learning security agents',
++      'Multi-agent RL coordination',
++      'ThreMA threat-model ontology',
++      'Time-series anomaly detection',
++    ],
++    provenance: [
++      THESIS,
++      {
++        label: 'physics-informed',
++        href: 'https://github.com/iceccarelli/physics-informed',
++      },
++    ],
++  },
++  {
++    domain: 'Robotics & Perception',
++    summary:
++      'Turning raw sensor returns into geometry a controller can act on, with the calibration maths done properly.',
++    signals: [
++      'LiDAR–camera extrinsic fusion',
++      'SE(3) rigid-body transforms',
++      'Pinhole intrinsics & z-buffer occlusion',
++      'KITTI calibration ingestion',
++      'URDF-driven kinematic simulation',
++    ],
++    provenance: [
++      {
++        label: 'robot-lidar-fusion',
++        href: 'https://github.com/iceccarelli/robot-lidar-fusion',
++      },
++    ],
++  },
++  {
++    domain: 'Agentic Middleware',
++    summary:
++      'Letting language models reach real actuators and real ledgers without giving up an audit trail or a kill switch.',
++    signals: [
++      'Model Context Protocol (MCP) stdio servers',
++      'JSON-RPC transport design',
++      'Deterministic policy engines',
++      'HMAC-signed action tokens',
++      'Hash-chained audit logs',
++    ],
++    provenance: [
++      { label: 'mcp-foundry', href: 'https://github.com/iceccarelli/mcp-foundry' },
++      { label: 'NeuralBridge', href: 'https://github.com/iceccarelli/neuralbridge' },
++    ],
++  },
++  {
++    domain: 'Systems Engineering',
++    summary:
++      'The delivery substrate: typed services, native extensions, real-time browsers surfaces, and pipelines that publish.',
++    signals: [
++      'Python · FastAPI',
++      'C++ via pybind11',
++      'TypeScript · Next.js · React Three Fiber',
++      'TimescaleDB / InfluxDB',
++      'PyPI trusted publishing (OIDC)',
++      'Hardware-in-the-loop test harnesses',
++    ],
++    provenance: [
++      DB_INFRAGO,
++      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
++      {
++        label: 'robot-lidar-fusion',
++        href: 'https://github.com/iceccarelli/robot-lidar-fusion',
++      },
++    ],
++  },
++];
++
++export const projects: Project[] = [
++  {
++    name: 'physics-informed',
++    domain: 'Physics-Informed Learning',
++    summary:
++      'Interactive simulator for the cross-domain CIM + ThreMA ontology, PINN solvers, RL security agents and IEEE 9-bus cyber-physical validation.',
++    repo: 'https://github.com/iceccarelli/physics-informed',
++    live: 'https://physics-informed.vercel.app/',
++    status: 'shipped',
++    stack: ['Python', 'PINNs', 'RL', 'CIM'],
++  },
++  {
++    name: 'GridOS',
++    domain: 'Grid & Power Systems',
++    summary:
++      'DER middleware and control surface: protocol ingest, MILP dispatch, anomaly detection, and an MPC forecast loop.',
++    repo: 'https://github.com/iceccarelli/GridOS',
++    status: 'shipped',
++    stack: ['FastAPI', 'Modbus', 'OPC-UA', 'MILP'],
++  },
++  {
++    name: 'DERIM',
++    domain: 'Grid & Power Systems',
++    summary:
++      'Distributed energy resource integration middleware focused on verifiable coordination and grid-aware execution.',
++    repo: 'https://github.com/iceccarelli/derim-middleware',
++    status: 'in-development',
++    stack: ['Python', 'FastAPI', 'DER'],
++  },
++  {
++    name: 'mcp-foundry',
++    domain: 'Agentic Middleware',
++    summary:
++      'Governance layer for AI agents acting on financial systems: deterministic policy engine, signed action tokens, hash-chained audit log.',
++    repo: 'https://github.com/iceccarelli/mcp-foundry',
++    status: 'shipped',
++    stack: ['MCP', 'JSON-RPC', 'HMAC'],
++  },
++  {
++    name: 'robot-lidar-fusion',
++    domain: 'Robotics & Perception',
++    summary:
++      'LiDAR-to-camera projection with SE(3) extrinsics, pinhole intrinsics, z-buffer occlusion handling and a KITTI calibration loader.',
++    repo: 'https://github.com/iceccarelli/robot-lidar-fusion',
++    status: 'shipped',
++    stack: ['Python', 'SE(3)', 'KITTI'],
++  },
++  {
++    name: 'NeuralBridge',
++    domain: 'Agentic Middleware',
++    summary:
++      'AI-native middleware for human-to-model orchestration in safety-critical, physics-informed environments.',
++    repo: 'https://github.com/iceccarelli/neuralbridge',
++    status: 'in-development',
++    stack: ['Python', 'Orchestration'],
++  },
++];
++
++export const domains: CapabilityDomain[] = capabilities.map(
++  (capability) => capability.domain as CapabilityDomain,
++);
+diff --git a/app/page.tsx b/app/page.tsx
+index 5f5f53d..333b0b5 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { useEffect, useRef, useState } from 'react';
+ import Payments from './components/Payments';
+ import ContactForm from './components/ContactForm';
++import CapabilitySystem from './components/CapabilitySystem';
+ import Image from 'next/image';
+ 
+ // ====================== TYPES ======================
+@@ -1465,6 +1466,9 @@ export default function Home() {
+         </div>
+       </section>
+ 
++      {/* CAPABILITY REGISTER + WORK REGISTRY */}
++      <CapabilitySystem />
++
+       {/* FLAGSHIP SYSTEMS */}
+       <section className="section-shell content-section" id="flagship-systems">
+         <div className="glass-panel cta-panel spotlight-border">

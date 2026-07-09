@@ -1,0 +1,1939 @@
+From 8ca8affd98258327f4c3f81e05ed42a56e41f197 Mon Sep 17 00:00:00 2001
+From: t <t@t.io>
+Date: Thu, 9 Jul 2026 14:27:56 +0000
+Subject: [PATCH] refactor: cut fourteen sections to eight, remove unverifiable
+ claims and dead links
+
+Removed, with reasons:
+
+- 'Proven impact in simulation and deployment' (22% curtailment reduction,
+  sub-8 ms latency, 99.999% uptime, 15-40% renewable penetration). These are
+  attributed to DERIM and NeuralBridge, neither of which is released. Nothing
+  substantiates them.
+- 'Standards Mastery' (IEC 61850, TLA+, NERC CIP, NIS2, EU CRA). 'Mastery' of
+  eleven standards is not a claim a technical buyer will read charitably. The
+  capability register already lists the protocols actually used, with provenance.
+- 'Trusted Ecosystem' (MIT, IEA, NREL, BloombergNEF, AWS). Linking to
+  institutions one has no relationship with borrows authority rather than
+  demonstrating it.
+- 'Live Intelligence Hub'. Two TradingView widgets (NVDA, MSFT, TSLA tickers),
+  an rss2json news feed, and a GitHub repo fetch. A stock ticker on a personal
+  engineering portfolio answers no question a visitor has, and the repo fetch
+  returned nothing because every repository is private.
+- 'Operational Time Zones' marquee. Five clocks and a 1 Hz interval.
+- 'Architecture of Value Creation' and 'Flagship Systems'. Both restated what
+  the capability register and work registry now say once, with provenance.
+- The four 'strengths' cards under About. Same content, said twice.
+
+Merged: About now carries the Deutsche Bahn experience directly beneath it,
+so the claim and the job backing it are read together.
+
+Every repository is private. Verified with git ls-remote against all six.
+The site no longer renders 'View repository', 'View Source' or 'Star on
+GitHub' links that 404 for visitors; private systems say so and route to
+contact. When a repo is made public, restore its 'repo' URL in
+app/lib/registry.ts and every surface starts linking to it again.
+
+Header: four nav items instead of seven, and the 'Live SimulatorLIVE'
+run-together label is gone.
+
+Dead CSS: 56 rules removed, all with zero references in any .tsx.
+
+Page size 22 kB -> 16.1 kB. First Load JS 110 kB -> 104 kB, below the
+108 kB the site shipped before any of this work, despite adding the
+palette, mega menu and registry.
+---
+ app/components/CapabilitySystem.tsx |  12 +-
+ app/components/CommandPalette.tsx   |  20 +-
+ app/components/Header.tsx           |  50 +-
+ app/components/MegaMenu.tsx         |   5 +-
+ app/globals.css                     | 475 +++-------------
+ app/lib/registry.ts                 |  50 +-
+ app/page.tsx                        | 845 +++-------------------------
+ 7 files changed, 199 insertions(+), 1258 deletions(-)
+
+diff --git a/app/components/CapabilitySystem.tsx b/app/components/CapabilitySystem.tsx
+index 1165ddd..8d67a2a 100644
+--- a/app/components/CapabilitySystem.tsx
++++ b/app/components/CapabilitySystem.tsx
+@@ -119,14 +119,18 @@ export default function CapabilitySystem() {
+                 ))}
+               </ul>
+               <div className="registry-links">
+-                <a href={project.repo} target="_blank" rel="noreferrer">
+-                  Source
+-                </a>
+                 {project.live && (
+                   <a href={project.live} target="_blank" rel="noreferrer">
+-                    Live demo
++                    Open live demo
+                   </a>
+                 )}
++                {project.repo ? (
++                  <a href={project.repo} target="_blank" rel="noreferrer">
++                    Source
++                  </a>
++                ) : (
++                  <a href="#connect">Private — request access</a>
++                )}
+               </div>
+             </article>
+           ))}
+diff --git a/app/components/CommandPalette.tsx b/app/components/CommandPalette.tsx
+index d0c016b..479c1a4 100644
+--- a/app/components/CommandPalette.tsx
++++ b/app/components/CommandPalette.tsx
+@@ -7,7 +7,7 @@ import { capabilities, projects } from '../lib/registry';
+ type Command = {
+   id: string;
+   label: string;
+-  group: 'Sections' | 'Capabilities' | 'Repositories' | 'Elsewhere';
++  group: 'Sections' | 'Capabilities' | 'Systems' | 'Elsewhere';
+   hint?: string;
+   href: string;
+   external?: boolean;
+@@ -16,14 +16,11 @@ type Command = {
+ const sectionCommands: Command[] = [
+   { id: 'top', label: 'Top', group: 'Sections', href: '#top' },
+   { id: 'about', label: 'About', group: 'Sections', href: '#about' },
+-  { id: 'architecture', label: 'Architecture', group: 'Sections', href: '#architecture' },
+   { id: 'capabilities', label: 'Capability register', group: 'Sections', href: '#capabilities' },
+   { id: 'registry', label: 'Work registry', group: 'Sections', href: '#registry' },
++  { id: 'experience', label: 'Experience', group: 'Sections', href: '#experience' },
+   { id: 'physics-informed', label: 'Physics-informed', group: 'Sections', href: '#physics-informed' },
+   { id: 'thesis-simulator', label: 'Thesis simulator', group: 'Sections', href: '#thesis-simulator' },
+-  { id: 'flagship-systems', label: 'Flagship systems', group: 'Sections', href: '#flagship-systems' },
+-  { id: 'live-intelligence', label: 'Live intelligence', group: 'Sections', href: '#live-intelligence' },
+-  { id: 'ecosystem', label: 'Trusted ecosystem', group: 'Sections', href: '#ecosystem' },
+   { id: 'connect', label: 'Connect', group: 'Sections', href: '#connect' },
+ ];
+ 
+@@ -39,18 +36,11 @@ const commands: Command[] = [
+   ...projects.map((project) => ({
+     id: `repo-${project.name}`,
+     label: project.name,
+-    group: 'Repositories' as const,
++    group: 'Systems' as const,
+     hint: project.stack.join(' · '),
+-    href: project.repo,
+-    external: true,
++    href: project.live ?? '#registry',
++    external: Boolean(project.live),
+   })),
+-  {
+-    id: 'gh',
+-    label: 'GitHub profile',
+-    group: 'Elsewhere',
+-    href: 'https://github.com/iceccarelli',
+-    external: true,
+-  },
+   {
+     id: 'sim',
+     label: 'Live thesis simulator',
+diff --git a/app/components/Header.tsx b/app/components/Header.tsx
+index f5e6e71..1fa33a8 100644
+--- a/app/components/Header.tsx
++++ b/app/components/Header.tsx
+@@ -45,11 +45,8 @@ export default function Header() {
+ 
+   // Navigation aligned with all major sections + NEW flagship simulator
+   const navigation = [
+-    { label: 'Systems', href: '#architecture' },
+-    { label: 'Physics-Informed', href: '#physics-informed' },
+-    { label: 'Flagship Work', href: '#flagship-systems' },
+-    { label: 'Live Simulator', href: 'https://physics-informed.vercel.app/', external: true }, // NEW
+-    { label: 'Live Intelligence', href: '#live-intelligence' },
++    { label: 'Capabilities', href: '#capabilities' },
++    { label: 'Simulator', href: '#thesis-simulator' },
+     { label: 'Payments', href: '#payments' },
+     { label: 'Connect', href: '#connect' },
+   ];
+@@ -70,22 +67,9 @@ export default function Header() {
+         <nav className="topbar-nav" aria-label="Primary navigation">
+           <MegaMenu />
+           {navigation.map((item) => (
+-            item.external ? (
+-              <a 
+-                key={item.href} 
+-                href={item.href} 
+-                target="_blank" 
+-                rel="noopener noreferrer"
+-                className="flex items-center gap-1"
+-              >
+-                {item.label}
+-                <span className="text-[10px] px-1.5 py-px rounded bg-emerald-500/20 text-emerald-400">LIVE</span>
+-              </a>
+-            ) : (
+-              <a key={item.href} href={item.href}>
+-                {item.label}
+-              </a>
+-            )
++            <a key={item.href} href={item.href}>
++              {item.label}
++            </a>
+           ))}
+         </nav>
+ 
+@@ -119,27 +103,9 @@ export default function Header() {
+       {/* Mobile Menu — Fully synced with navigation */}
+       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+         {navigation.map((item) => (
+-          item.external ? (
+-            <a
+-              key={item.href}
+-              href={item.href}
+-              target="_blank"
+-              rel="noopener noreferrer"
+-              onClick={() => setMobileMenuOpen(false)}
+-              className="flex items-center gap-2"
+-            >
+-              {item.label}
+-              <span className="text-[10px] px-1.5 py-px rounded bg-emerald-500/20 text-emerald-400">LIVE</span>
+-            </a>
+-          ) : (
+-            <a
+-              key={item.href}
+-              href={item.href}
+-              onClick={() => setMobileMenuOpen(false)}
+-            >
+-              {item.label}
+-            </a>
+-          )
++          <a key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}>
++            {item.label}
++          </a>
+         ))}
+         <a
+           href="https://github.com/iceccarelli"
+diff --git a/app/components/MegaMenu.tsx b/app/components/MegaMenu.tsx
+index 1b46612..6081b1b 100644
+--- a/app/components/MegaMenu.tsx
++++ b/app/components/MegaMenu.tsx
+@@ -34,6 +34,7 @@ export default function MegaMenu() {
+ 
+   const shipped = projects.filter((project) => project.status === 'shipped');
+   const live = projects.filter((project) => project.live);
++  const href = (project: (typeof projects)[number]) => project.repo ?? '#registry';
+ 
+   return (
+     <div className="megamenu" ref={containerRef}>
+@@ -67,11 +68,11 @@ export default function MegaMenu() {
+           </div>
+ 
+           <div className="megamenu-column">
+-            <p className="megamenu-heading">Repositories</p>
++            <p className="megamenu-heading">Systems</p>
+             <ul>
+               {shipped.map((project) => (
+                 <li key={project.name}>
+-                  <a href={project.repo} target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>
++                  <a href={href(project)} onClick={() => setOpen(false)}>
+                     <span>{project.name}</span>
+                     <small>{project.stack[0]}</small>
+                   </a>
+diff --git a/app/globals.css b/app/globals.css
+index c86fd2c..1896f09 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -64,130 +64,7 @@ a {
+   overflow-x: auto;
+   color: #7dd3fc;
+   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+-}
+-
+-.impact-dashboard {
+-  display: grid;
+-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+-  gap: 1.25rem;
+-}
+-
+-.impact-card {
+-  background: linear-gradient(135deg, rgba(52, 211, 153, 0.12), rgba(16, 185, 129, 0.08));
+-  border: 1px solid rgba(52, 211, 153, 0.3);
+-  border-radius: var(--radius-lg);
+-  padding: 1.5rem;
+-  transition: all 0.3s ease;
+-}
+-
+-.impact-card:hover {
+-  transform: translateY(-4px);
+-  box-shadow: 0 22px 60px rgba(52, 211, 153, 0.25);
+-}
+-
+-.standards-grid {
+-  display: grid;
+-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+-  gap: 1rem;
+-}
+-
+-.standards-card {
+-  background: rgba(15, 23, 42, 0.6);
+-  border: 1px solid rgba(125, 211, 252, 0.16);
+-  border-radius: var(--radius-md);
+-  padding: 1rem;
+-  text-align: center;
+-  font-weight: 600;
+-  color: var(--muted-strong);
+-}
+-
+-/* ====================== DUAL-SURFACE BRANDING (NEW) ====================== */
+-.dual-surface-note {
+-  font-size: 0.9rem;
+-  color: var(--muted-strong);
+-  border-left: 3px solid var(--accent-strong);
+-  padding-left: 1rem;
+-  margin: 1rem 0;
+-}
+-
+-.github-mirror-card {
+-  border: 1px solid rgba(125, 211, 252, 0.18);
+-  transition: all 0.2s ease;
+-}
+-
+-.github-mirror-card:hover {
+-  border-color: #38bdf8;
+-  transform: translateY(-2px);
+-}
+-
+-.cross-surface-cta {
+-  display: inline-flex;
+-  align-items: center;
+-  gap: 0.5rem;
+-  padding: 0.6rem 1.4rem;
+-  border-radius: 999px;
+-  border: 1px solid rgba(125, 211, 252, 0.25);
+-  background: rgba(15, 23, 42, 0.6);
+-  color: var(--muted-strong);
+-  font-weight: 600;
+-  font-size: 0.95rem;
+-  transition: all 0.2s ease;
+-}
+-
+-.cross-surface-cta:hover {
+-  background: rgba(56, 189, 248, 0.1);
+-  border-color: #38bdf8;
+-  color: #fff;
+-  transform: translateY(-1px);
+-}
+-
+-/* ====================== NEW: THESIS & SIMULATOR HIGHLIGHT STYLES ====================== */
+-.thesis-badge {
+-  display: inline-flex;
+-  align-items: center;
+-  gap: 6px;
+-  background: linear-gradient(90deg, #10b981, #34d399);
+-  color: #052e16;
+-  font-size: 0.75rem;
+-  font-weight: 700;
+-  padding: 2px 10px;
+-  border-radius: 9999px;
+-  letter-spacing: 0.5px;
+-}
+-
+-.live-demo-pill {
+-  background: #10b981;
+-  color: white;
+-  font-size: 0.65rem;
+-  font-weight: 700;
+-  padding: 1px 7px;
+-  border-radius: 9999px;
+-  letter-spacing: 0.3px;
+-}
+-
+-.ontology-feature-pill {
+-  background: rgba(16, 185, 129, 0.1);
+-  border: 1px solid rgba(52, 211, 153, 0.3);
+-  color: #34d399;
+-  font-size: 0.75rem;
+-  padding: 4px 12px;
+-  border-radius: 9999px;
+-  white-space: nowrap;
+-}
+-
+-.simulator-teaser {
+-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.08), rgba(7, 17, 31, 0.95));
+-  border: 1px solid rgba(52, 211, 153, 0.25);
+-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+-}
+-
+-.simulator-teaser:hover {
+-  border-color: #34d399;
+-  box-shadow: 0 30px 70px rgba(16, 185, 129, 0.15);
+-  transform: translateY(-3px);
+-}
+-
+-/* ====================== ORIGINAL STYLES (unchanged) ====================== */
++}/* ====================== DUAL-SURFACE BRANDING (NEW) ====================== *//* ====================== NEW: THESIS & SIMULATOR HIGHLIGHT STYLES ====================== *//* ====================== ORIGINAL STYLES (unchanged) ====================== */
+ .site-chrome {
+   position: relative;
+   overflow: clip;
+@@ -313,45 +190,11 @@ a {
+ 
+ .topbar-nav a,
+ .topbar-button,
+-.footer-link,
+-.text-link {
+-  position: relative;
+-  color: var(--muted-strong);
+-  transition: color 180ms ease, transform 180ms ease;
+-}
+-
+-.topbar-nav a::after,
+-.footer-link::after,
+-.text-link::after {
+-  content: '';
+-  position: absolute;
+-  left: 0;
+-  bottom: -0.35rem;
+-  width: 100%;
+-  height: 1px;
+-  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.9), transparent);
+-  transform: scaleX(0.3);
+-  transform-origin: center;
+-  opacity: 0;
+-  transition: transform 180ms ease, opacity 180ms ease;
+-}
+-
+-.topbar-nav a:hover,
++.footer-link,.topbar-nav a::after,
++.footer-link::after,.topbar-nav a:hover,
+ .topbar-button:hover,
+-.footer-link:hover,
+-.text-link:hover {
+-  color: #ffffff;
+-  transform: translateY(-1px);
+-}
+-
+-.topbar-nav a:hover::after,
+-.footer-link:hover::after,
+-.text-link:hover::after {
+-  opacity: 1;
+-  transform: scaleX(1);
+-}
+-
+-.topbar-button {
++.footer-link:hover,.topbar-nav a:hover::after,
++.footer-link:hover::after,.topbar-button {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+@@ -378,13 +221,7 @@ a {
+   background-color: #f4f8ff;
+   border-radius: 2px;
+   transition: all 0.3s ease;
+-}
+-
+-.portfolio-shell {
+-  padding-bottom: 5rem;
+-}
+-
+-.section-shell {
++}.section-shell {
+   padding: 2rem 0;
+ }
+ 
+@@ -393,14 +230,7 @@ a {
+ }
+ 
+ .hero-grid,
+-.two-column-layout,
+-.insight-grid,
+-.footer-grid {
+-  display: grid;
+-  gap: 1.5rem;
+-}
+-
+-.hero-grid {
++.two-column-layout,.hero-grid {
+   grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+   align-items: stretch;
+ }
+@@ -414,15 +244,7 @@ a {
+ .section-kicker,
+ .card-label,
+ .item-meta,
+-.panel-topline,
+-.card-topline {
+-  letter-spacing: 0.12em;
+-  text-transform: uppercase;
+-  font-size: 0.74rem;
+-  color: var(--accent);
+-}
+-
+-.section-kicker {
++.panel-topline,.section-kicker {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+@@ -541,12 +363,7 @@ small {
+ .immersive-card,
+ .data-column,
+ .source-card,
+-.cta-panel,
+-.market-overview-shell {
+-  padding: 1.5rem;
+-}
+-
+-.hero-portrait-shell {
++.cta-panel,.hero-portrait-shell {
+   position: relative;
+   width: 100%;
+   aspect-ratio: 4 / 5;
+@@ -586,16 +403,7 @@ small {
+   border-color: rgba(125, 211, 252, 0.26);
+ }
+ 
+-.panel-topline,
+-.card-topline {
+-  display: inline-flex;
+-  align-items: center;
+-  gap: 0.55rem;
+-  color: var(--muted);
+-  margin-bottom: 1rem;
+-}
+-
+-.live-dot {
++.panel-topline,.live-dot {
+   width: 0.62rem;
+   height: 0.62rem;
+   border-radius: 999px;
+@@ -617,14 +425,7 @@ small {
+   margin: 1.25rem 0;
+ }
+ 
+-.metric-pill,
+-.signal-chip {
+-  border-radius: 999px;
+-  border: 1px solid rgba(125, 211, 252, 0.16);
+-  background: rgba(15, 23, 42, 0.56);
+-}
+-
+-.metric-pill {
++.metric-pill,.metric-pill {
+   padding: 0.65rem 0.9rem;
+   color: var(--muted-strong);
+ }
+@@ -636,45 +437,14 @@ small {
+ .footer-links {
+   display: grid;
+   gap: 1rem;
+-}
+-
+-.mini-note-grid {
+-  grid-template-columns: repeat(2, minmax(0, 1fr));
+-}
+-
+-.mini-note {
+-  padding: 1rem;
+-  border-radius: var(--radius-md);
+-  background: rgba(7, 12, 23, 0.48);
+-  border: 1px solid rgba(148, 163, 184, 0.08);
+-}
+-
+-.mini-note strong,
+-.hero-panel h2,
+-.glass-panel h3,
+-.compact-heading {
+-  display: block;
+-  margin: 0 0 0.65rem;
+-}
+-
++}.mini-note strong,
+ .hero-panel h2,
++.glass-panel h3,.hero-panel h2,
+ .compact-heading,
+ .section-header h2,
+ .cta-panel h2 {
+   font-size: clamp(1.75rem, 3vw, 2.6rem);
+-}
+-
+-.section-header {
+-  max-width: 54rem;
+-  margin: 0 auto 1.25rem;
+-}
+-
+-.centered-header {
+-  text-align: center;
+-  align-items: center;
+-}
+-
+-.centered-header .section-kicker {
++}.centered-header .section-kicker {
+   justify-content: center;
+ }
+ 
+@@ -682,14 +452,7 @@ small {
+   max-width: 18ch;
+ }
+ 
+-.centered-header h2,
+-.centered-header .compact-heading,
+-.compact-section-header {
+-  margin-left: auto;
+-  margin-right: auto;
+-}
+-
+-.section-intro {
++.centered-header h2,.section-intro {
+   margin-top: 0.8rem;
+ }
+ 
+@@ -699,135 +462,21 @@ small {
+ 
+ .two-column-layout {
+   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+-}
+-
+-.feature-stack {
+-  grid-template-columns: repeat(2, minmax(0, 1fr));
+-}
+-
+-.feature-card,
+-.glow-card,
+-.immersive-card,
+-.source-card,
+-.data-list-item {
+-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+-}
+-
+-.feature-card:hover,
+-.glow-card:hover,
+-.immersive-card:hover,
+-.source-card:hover,
+-.data-list-item:hover {
+-  transform: translateY(-4px);
+-  border-color: rgba(125, 211, 252, 0.28);
+-  box-shadow: 0 22px 60px rgba(2, 8, 23, 0.45);
+-}
+-
+-.glow-card:hover,
+-.source-card:hover {
+-  background: linear-gradient(180deg, rgba(15, 25, 42, 0.94), rgba(11, 19, 34, 0.82));
+-}
+-
+-.four-up {
+-  grid-template-columns: repeat(4, minmax(0, 1fr));
+-}
+-
+-.three-up,
+-.market-thesis-grid {
+-  grid-template-columns: repeat(3, minmax(0, 1fr));
+-}
+-
+-.two-up {
+-  grid-template-columns: repeat(2, minmax(0, 1fr));
+-}
+-
+-.card-topline,
+-.card-label {
+-  margin-bottom: 0.75rem;
+-}
+-
+-.tradingview-widget-shell {
+-  padding: 1rem;
+-  margin-bottom: 1.25rem;
+-}
+-
+-.tradingview-widget-container,
+-.market-widget {
+-  width: 100%;
+-}
+-
+-.signal-ribbon {
+-  display: grid;
+-  gap: 1.25rem;
+-}
+-
+-.clock-marquee {
+-  position: relative;
+-  overflow: hidden;
+-  mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+-  -webkit-mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+-}
+-
+-.clock-marquee-track {
+-  display: flex;
+-  align-items: stretch;
+-  gap: 1rem;
+-  width: max-content;
+-  animation: marquee-left 28s linear infinite;
+-}
+-
+-.signal-chip {
+-  display: flex;
+-  flex-direction: column;
+-  gap: 0.35rem;
+-  padding: 1rem;
+-  min-width: clamp(180px, 22vw, 240px);
+-}
+-
+-.chip-city {
+-  color: var(--muted);
+-  text-transform: uppercase;
+-  letter-spacing: 0.12em;
+-  font-size: 0.74rem;
+-}
+-
+-.signal-chip strong {
++}.feature-card,
++.glow-card,.feature-card:hover,
++.glow-card:hover,.glow-card:hover,.three-up,.signal-chip strong {
+   font-size: 1.3rem;
+   letter-spacing: 0.04em;
+ }
+ 
+ .signal-chip small {
+   color: var(--muted);
+-}
+-
+-.insight-grid {
+-  grid-template-columns: repeat(2, minmax(0, 1fr));
+-  align-items: start;
+-  margin-bottom: 1.25rem;
+-}
+-
+-.data-column h3,
++}.data-column h3,
+ .glass-panel h3 {
+   margin-top: 0;
+   margin-bottom: 1rem;
+   font-size: 1.28rem;
+-}
+-
+-.data-list {
+-  display: grid;
+-  gap: 0.9rem;
+-}
+-
+-.data-list-item {
+-  display: grid;
+-  gap: 0.35rem;
+-  padding: 1rem;
+-  border-radius: var(--radius-md);
+-  background: rgba(7, 12, 23, 0.44);
+-  border: 1px solid rgba(148, 163, 184, 0.08);
+-}
+-
+-.data-list-item strong {
++}.data-list-item strong {
+   font-size: 1rem;
+   line-height: 1.5;
+ }
+@@ -862,14 +511,7 @@ small {
+   padding: 2rem 0 3rem;
+   border-top: 1px solid rgba(148, 163, 184, 0.08);
+   background: rgba(4, 9, 17, 0.34);
+-}
+-
+-.footer-grid {
+-  grid-template-columns: minmax(0, 1fr) auto;
+-  align-items: center;
+-}
+-
+-.footer-content {
++}.footer-content {
+   display: grid;
+   grid-template-columns: 2.2fr 1fr 1fr 1.2fr;
+   gap: 2.5rem;
+@@ -964,24 +606,13 @@ small {
+ /* ====================== MEDIA QUERIES (unchanged) ====================== */
+ @media (max-width: 1100px) {
+   .hero-grid,
+-  .two-column-layout,
+-  .insight-grid,
+-  .footer-grid {
+-    grid-template-columns: 1fr;
+-  }
+-  .hero-portrait-shell {
++  .two-column-layout,  .hero-portrait-shell {
+     min-height: clamp(300px, 62vw, 560px);
+     max-width: min(100%, 560px);
+     margin: 0 auto;
+   }
+   .four-up,
+-  .three-up,
+-  .two-up,
+-  .feature-stack,
+-  .mini-note-grid {
+-    grid-template-columns: repeat(2, minmax(0, 1fr));
+-  }
+-  .topbar-inner {
++  .three-up,  .topbar-inner {
+     flex-wrap: wrap;
+   }
+   .topbar-nav {
+@@ -1016,24 +647,8 @@ small {
+   .immersive-card,
+   .data-column,
+   .source-card,
+-  .cta-panel,
+-  .market-overview-shell {
+-    padding: 1.2rem;
+-  }
+-  .four-up,
+-  .three-up,
+-  .two-up,
+-  .feature-stack,
+-  .mini-note-grid {
+-    grid-template-columns: 1fr;
+-  }
+-  .clock-marquee-track {
+-    animation-duration: 24s;
+-  }
+-  .signal-chip {
+-    min-width: 82vw;
+-  }
+-  .brand-copy small {
++  .cta-panel,  .four-up,
++  .three-up,  .brand-copy small {
+     white-space: normal;
+   }
+   .topbar-nav {
+@@ -1673,3 +1288,43 @@ textarea.contact-input { resize: vertical; min-height: 110px; }
+     display: none;
+   }
+ }
++
++/* ====================== EXPERIENCE + THESIS TAGS ====================== */
++.experience-block {
++  margin-top: 2rem;
++  padding-top: 1.75rem;
++  border-top: 1px solid var(--panel-border);
++  display: grid;
++  gap: 0.4rem;
++}
++
++.experience-block .capability-provenance-label {
++  margin-top: 1rem;
++}
++
++.experience-block p {
++  margin: 0.15rem 0;
++}
++
++.experience-detail {
++  color: var(--muted);
++  font-size: 0.92rem;
++  line-height: 1.6;
++  margin-bottom: 0.5rem !important;
++}
++
++.thesis-tags {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 0.5rem;
++  margin: 1.5rem 0;
++}
++
++.thesis-tags span {
++  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
++  font-size: 0.72rem;
++  color: var(--muted-strong);
++  border: 1px solid var(--panel-border);
++  border-radius: 999px;
++  padding: 0.3rem 0.7rem;
++}
+diff --git a/app/lib/registry.ts b/app/lib/registry.ts
+index ec2b09d..169a093 100644
+--- a/app/lib/registry.ts
++++ b/app/lib/registry.ts
+@@ -1,10 +1,14 @@
+ /**
+  * registry.ts — single source of truth for capabilities and shipped work.
+  *
+- * Rule for this file: every capability carries a `provenance` entry naming the
+- * place it was actually exercised (an employer, the thesis, or a public repo).
+- * A capability with no provenance does not belong here. Nothing in this file
+- * is aspirational.
++ * Two rules for this file.
++ *
++ * 1. Every capability carries a `provenance` entry naming the place it was
++ *    actually exercised. A capability with no provenance does not belong here.
++ * 2. Nothing links to a surface a visitor cannot open. All six repositories are
++ *    currently private, so no `repo` is set and no provenance entry links to
++ *    GitHub. When a repository is made public, add its `repo` URL back and the
++ *    card, the mega menu and the command palette will all start linking to it.
+  */
+ 
+ export type Provenance = {
+@@ -25,9 +29,10 @@ export type Project = {
+   name: string;
+   domain: CapabilityDomain;
+   summary: string;
+-  repo: string;
++  /** Only set when the source is actually browsable by a visitor. */
++  repo?: string;
++  /** A deployment anyone can open right now. */
+   live?: string;
+-  /** Published to a package index / has a public deployment. */
+   status: 'shipped' | 'in-development';
+   stack: string[];
+ };
+@@ -62,8 +67,8 @@ export const capabilities: Capability[] = [
+     provenance: [
+       DB_INFRAGO,
+       THESIS,
+-      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
+-      { label: 'DERIM', href: 'https://github.com/iceccarelli/derim-middleware' },
++      { label: 'GridOS' },
++      { label: 'DERIM' },
+     ],
+   },
+   {
+@@ -80,7 +85,7 @@ export const capabilities: Capability[] = [
+     ],
+     provenance: [
+       DB_INFRAGO,
+-      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
++      { label: 'GridOS' },
+     ],
+   },
+   {
+@@ -96,10 +101,7 @@ export const capabilities: Capability[] = [
+     ],
+     provenance: [
+       THESIS,
+-      {
+-        label: 'physics-informed',
+-        href: 'https://github.com/iceccarelli/physics-informed',
+-      },
++      { label: 'physics-informed' },
+     ],
+   },
+   {
+@@ -114,10 +116,7 @@ export const capabilities: Capability[] = [
+       'URDF-driven kinematic simulation',
+     ],
+     provenance: [
+-      {
+-        label: 'robot-lidar-fusion',
+-        href: 'https://github.com/iceccarelli/robot-lidar-fusion',
+-      },
++      { label: 'robot-lidar-fusion' },
+     ],
+   },
+   {
+@@ -132,8 +131,8 @@ export const capabilities: Capability[] = [
+       'Hash-chained audit logs',
+     ],
+     provenance: [
+-      { label: 'mcp-foundry', href: 'https://github.com/iceccarelli/mcp-foundry' },
+-      { label: 'NeuralBridge', href: 'https://github.com/iceccarelli/neuralbridge' },
++      { label: 'mcp-foundry' },
++      { label: 'NeuralBridge' },
+     ],
+   },
+   {
+@@ -150,11 +149,8 @@ export const capabilities: Capability[] = [
+     ],
+     provenance: [
+       DB_INFRAGO,
+-      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
+-      {
+-        label: 'robot-lidar-fusion',
+-        href: 'https://github.com/iceccarelli/robot-lidar-fusion',
+-      },
++      { label: 'GridOS' },
++      { label: 'robot-lidar-fusion' },
+     ],
+   },
+ ];
+@@ -165,7 +161,6 @@ export const projects: Project[] = [
+     domain: 'Physics-Informed Learning',
+     summary:
+       'Interactive simulator for the cross-domain CIM + ThreMA ontology, PINN solvers, RL security agents and IEEE 9-bus cyber-physical validation.',
+-    repo: 'https://github.com/iceccarelli/physics-informed',
+     live: 'https://physics-informed.vercel.app/',
+     status: 'shipped',
+     stack: ['Python', 'PINNs', 'RL', 'CIM'],
+@@ -175,7 +170,6 @@ export const projects: Project[] = [
+     domain: 'Grid & Power Systems',
+     summary:
+       'DER middleware and control surface: protocol ingest, MILP dispatch, anomaly detection, and an MPC forecast loop.',
+-    repo: 'https://github.com/iceccarelli/GridOS',
+     status: 'shipped',
+     stack: ['FastAPI', 'Modbus', 'OPC-UA', 'MILP'],
+   },
+@@ -184,7 +178,6 @@ export const projects: Project[] = [
+     domain: 'Grid & Power Systems',
+     summary:
+       'Distributed energy resource integration middleware focused on verifiable coordination and grid-aware execution.',
+-    repo: 'https://github.com/iceccarelli/derim-middleware',
+     status: 'in-development',
+     stack: ['Python', 'FastAPI', 'DER'],
+   },
+@@ -193,7 +186,6 @@ export const projects: Project[] = [
+     domain: 'Agentic Middleware',
+     summary:
+       'Governance layer for AI agents acting on financial systems: deterministic policy engine, signed action tokens, hash-chained audit log.',
+-    repo: 'https://github.com/iceccarelli/mcp-foundry',
+     status: 'shipped',
+     stack: ['MCP', 'JSON-RPC', 'HMAC'],
+   },
+@@ -202,7 +194,6 @@ export const projects: Project[] = [
+     domain: 'Robotics & Perception',
+     summary:
+       'LiDAR-to-camera projection with SE(3) extrinsics, pinhole intrinsics, z-buffer occlusion handling and a KITTI calibration loader.',
+-    repo: 'https://github.com/iceccarelli/robot-lidar-fusion',
+     status: 'shipped',
+     stack: ['Python', 'SE(3)', 'KITTI'],
+   },
+@@ -211,7 +202,6 @@ export const projects: Project[] = [
+     domain: 'Agentic Middleware',
+     summary:
+       'AI-native middleware for human-to-model orchestration in safety-critical, physics-informed environments.',
+-    repo: 'https://github.com/iceccarelli/neuralbridge',
+     status: 'in-development',
+     stack: ['Python', 'Orchestration'],
+   },
+diff --git a/app/page.tsx b/app/page.tsx
+index 333b0b5..85d4b1e 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -6,238 +6,6 @@ import ContactForm from './components/ContactForm';
+ import CapabilitySystem from './components/CapabilitySystem';
+ import Image from 'next/image';
+ 
+-// ====================== TYPES ======================
+-type ClockEntry = {
+-  city: string;
+-  label: string;
+-  timeZone: string;
+-  time: string;
+-};
+-
+-type RepoCard = {
+-  id: number;
+-  name: string;
+-  description: string;
+-  html_url: string;
+-  updated_at: string;
+-  language: string;
+-  stargazers_count: number;
+-  topics?: string[];
+-};
+-
+-type Headline = {
+-  title: string;
+-  link: string;
+-  pubDate: string;
+-  source: string;
+-  category: string;
+-};
+-
+-// ====================== CONSTANTS ======================
+-const clockZones = [
+-  { city: 'Lima', label: 'Policy & capital markets', timeZone: 'America/Lima' },
+-  { city: 'Toronto', label: 'Operational home base', timeZone: 'America/Toronto' },
+-  { city: 'New York', label: 'Infrastructure & energy markets', timeZone: 'America/New_York' },
+-  { city: 'Frankfurt', label: 'Infrastructure & energy markets', timeZone: 'Europe/Berlin' },
+-  { city: 'Beijing', label: 'Global deployment horizon', timeZone: 'Asia/Shanghai' },
+-];
+-
+-const strengths = [
+-  {
+-    title: 'Deterministic Physics-Informed AI Systems',
+-    body: 'I design control architectures where embedded logic, RTOS scheduling, and real-time signal integrity guarantee predictable, safety-critical behavior.',
+-  },
+-  {
+-    title: 'Grid Intelligence & DER Coordination',
+-    body: 'I build operational platforms that translate distributed energy resources, grid telemetry, and market signals into verifiable control loops.',
+-  },
+-  {
+-    title: 'AI-Native Orchestration Layers',
+-    body: 'I create middleware that fuses high-level AI reasoning with low-level hardware constraints, making complex systems legible to operators and engineers.',
+-  },
+-  {
+-    title: 'Verification & Validation (V&V)',
+-    body: 'Every system I deliver includes formal verification pathways, simulation harnesses, and hardware-in-the-loop testing to ensure deterministic execution.',
+-  },
+-];
+-
+-const architectureLayers = [
+-  {
+-    title: 'Embedded Control Layer',
+-    project: 'RTOS + Signal Integrity',
+-    description:
+-      'Hard real-time kernels, interrupt handling, and deterministic scheduling that guarantee bounded latency in safety-critical environments.',
+-  },
+-  {
+-    title: 'Grid Operating Layer',
+-    project: 'GridOS',
+-    description:
+-      'Digital command surface for observability, coordination, and closed-loop control of smart grids and DER fleets.',
+-  },
+-  {
+-    title: 'AI Orchestration Layer',
+-    project: 'NeuralBridge',
+-    description:
+-      'Middleware that connects human intent, large language models, and physical actuators while preserving deterministic guarantees.',
+-  },
+-  {
+-    title: 'Autonomous & Sensing Layer',
+-    project: 'Robotics & LiDAR Fusion',
+-    description:
+-      'Perception pipelines and embodied intelligence that translate sensor data into verifiable physical actions.',
+-  },
+-];
+-
+-// UPDATED: physics-informed is now #1 with special live demo treatment
+-const flagshipInitiatives = [
+-  {
+-    title: 'physics-informed',
+-    href: 'https://github.com/iceccarelli/physics-informed',
+-    liveUrl: 'https://physics-informed.vercel.app/',
+-    summary: 'Production-grade interactive simulator for cross-domain CIM + ThreMA ontology, physics-informed neural networks, RL security agents, and IEEE 9-Bus cyber-physical validation (Grimaldi 2025 RWTH Aachen Master Thesis)',
+-    isLive: true,
+-  },
+-  {
+-    title: 'NeuralBridge',
+-    href: 'https://github.com/iceccarelli/neuralbridge',
+-    summary:
+-      'AI-native middleware for human-to-model orchestration in safety-critical physics-informed environments.',
+-    published: false,
+-  },
+-  {
+-    title: 'GridOS',
+-    href: 'https://github.com/iceccarelli/GridOS',
+-    summary:
+-      'Control-oriented operating surface for smart-grid intelligence, DER coordination, and real-time observability.',
+-  },
+-  {
+-    title: 'DERIM',
+-    href: 'https://github.com/iceccarelli/derim-middleware',
+-    summary:
+-      'Distributed energy resource intelligence middleware focused on verifiable coordination and grid-aware execution.',
+-  },
+-  {
+-    title: 'Robot LiDAR Fusion',
+-    href: 'https://github.com/iceccarelli/robot-lidar-fusion',
+-    summary:
+-      'Real-time perception and sensor fusion stack bridging software intelligence with physical autonomy.',
+-    published: false,
+-  },
+-];
+-
+-const trustedSources = [
+-  {
+-    title: 'MIT Technology Review',
+-    href: 'https://www.technologyreview.com/',
+-    focus: 'Frontier signals in AI infrastructure and industrial systems.',
+-  },
+-  {
+-    title: 'MIT Energy Initiative',
+-    href: 'https://energy.mit.edu/',
+-    focus: 'Research-grounded perspective on energy systems and grid modernization.',
+-  },
+-  {
+-    title: 'International Energy Agency',
+-    href: 'https://www.iea.org/',
+-    focus: 'Global market intelligence on electricity systems and energy security.',
+-  },
+-  {
+-    title: 'NREL',
+-    href: 'https://www.nrel.gov/',
+-    focus: 'Applied research in grid integration, renewables, and system deployment.',
+-  },
+-  {
+-    title: 'BloombergNEF',
+-    href: 'https://about.bnef.com/',
+-    focus: 'Investment and technology intelligence across energy transition.',
+-  },
+-  {
+-    title: 'AWS Energy',
+-    href: 'https://aws.amazon.com/energy/',
+-    focus: 'Enterprise-grade benchmark for cloud-native infrastructure and control systems.',
+-  },
+-];
+-
+-const marketThemes = [
+-  {
+-    title: 'Compute & Model Infrastructure',
+-    body: 'Monitoring the economics of AI infrastructure to inform deterministic orchestration strategies.',
+-  },
+-  {
+-    title: 'Energy Transition & Grid Flexibility',
+-    body: 'Live signals that shape the operational context of my grid intelligence and DER work.',
+-  },
+-  {
+-    title: 'Industrial Systems Execution',
+-    body: 'Companies translating technological possibility into verifiable, large-scale deployment.',
+-  },
+-];
+-
+-const fallbackHeadlines: Headline[] = [
+-  {
+-    title: 'MIT Technology Review — How AI infrastructure is reshaping industrial control systems',
+-    link: 'https://www.technologyreview.com/',
+-    pubDate: 'Live source',
+-    source: 'MIT Technology Review',
+-    category: 'AI & Control',
+-  },
+-  {
+-    title: 'MIT Energy — Grid modernization and the future of distributed energy resources',
+-    link: 'https://news.mit.edu/topic/energy',
+-    pubDate: 'Live source',
+-    source: 'MIT News',
+-    category: 'Energy Systems',
+-  },
+-  {
+-    title: 'IEA — Global electricity market outlook and grid flexibility requirements',
+-    link: 'https://www.iea.org/news',
+-    pubDate: 'Live source',
+-    source: 'IEA',
+-    category: 'Policy & Markets',
+-  },
+-];
+-
+-const fallbackRepos: RepoCard[] = [
+-  {
+-    id: 1,
+-    name: 'NeuralBridge',
+-    description: 'AI-native middleware for deterministic human-to-model orchestration in CPS.',
+-    html_url: 'https://github.com/iceccarelli/neuralbridge',
+-    updated_at: new Date().toISOString(),
+-    language: 'Python',
+-    stargazers_count: 0,
+-  },
+-  {
+-    id: 2,
+-    name: 'GridOS',
+-    description: 'Control-oriented smart-grid operating surface with real-time observability.',
+-    html_url: 'https://github.com/iceccarelli/GridOS',
+-    updated_at: new Date().toISOString(),
+-    language: 'TypeScript',
+-    stargazers_count: 0,
+-  },
+-];
+-
+-// ====================== UTILITIES ======================
+-function formatTime(timeZone: string) {
+-  return new Intl.DateTimeFormat('en-GB', {
+-    hour: '2-digit',
+-    minute: '2-digit',
+-    second: '2-digit',
+-    timeZone,
+-  }).format(new Date());
+-}
+-
+-function formatDate(dateString: string) {
+-  const date = new Date(dateString);
+-  if (Number.isNaN(date.getTime())) return dateString;
+-  return new Intl.DateTimeFormat('en-GB', {
+-    day: '2-digit',
+-    month: 'short',
+-    year: 'numeric',
+-  }).format(date);
+-}
+-
+ // ====================== ORIGINAL 7 VISUALIZERS (PRESERVED) ======================
+ function GridLoadFrequencySimulator() {
+   const canvasRef = useRef<HTMLCanvasElement>(null);
+@@ -1067,215 +835,29 @@ function SystemInsightVisualizerRotator() {
+ 
+ // ====================== MAIN PAGE COMPONENT ======================
+ export default function Home() {
+-  // Static placeholder so SSR HTML matches first client render (no hydration mismatch).
+-  const [clocks, setClocks] = useState<ClockEntry[]>(
+-    clockZones.map((zone) => ({ ...zone, time: '--:--:--' })),
+-  );
+-  const [repoCards, setRepoCards] = useState<RepoCard[]>(fallbackRepos);
+-  const [headlines, setHeadlines] = useState<Headline[]>(fallbackHeadlines);
+-  const [lastSync, setLastSync] = useState('Refreshing live signals...');
+-
+-  const tickerTapeRef = useRef<HTMLDivElement | null>(null);
+-  const marketOverviewRef = useRef<HTMLDivElement | null>(null);
+-
+-  // Live clocks — populate immediately on mount (client-only), then tick.
+-  useEffect(() => {
+-    setClocks(clockZones.map((zone) => ({ ...zone, time: formatTime(zone.timeZone) })));
+-    const interval = window.setInterval(() => {
+-      setClocks(clockZones.map((zone) => ({ ...zone, time: formatTime(zone.timeZone) })));
+-    }, 1000);
+-    return () => window.clearInterval(interval);
+-  }, []);
+-
+-  // TradingView widgets
+-  useEffect(() => {
+-    const loadWidget = (
+-      ref: HTMLDivElement | null,
+-      scriptSource: string,
+-      config: Record<string, unknown>,
+-    ) => {
+-      if (!ref) return;
+-      ref.innerHTML = '<div class="tradingview-widget-container__widget"></div>';
+-      const script = document.createElement('script');
+-      script.src = scriptSource;
+-      script.async = true;
+-      script.type = 'text/javascript';
+-      script.innerHTML = JSON.stringify(config);
+-      ref.appendChild(script);
+-    };
+-
+-    loadWidget(tickerTapeRef.current, 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js', {
+-      symbols: [
+-        { proName: 'NASDAQ:NVDA', title: 'NVIDIA' },
+-        { proName: 'NASDAQ:MSFT', title: 'Microsoft' },
+-        { proName: 'NASDAQ:AMZN', title: 'Amazon' },
+-        { proName: 'NASDAQ:TSLA', title: 'Tesla' },
+-        { proName: 'NYSE:NEE', title: 'NextEra Energy' },
+-        { proName: 'NASDAQ:ENPH', title: 'Enphase' },
+-      ],
+-      showSymbolLogo: true,
+-      isTransparent: true,
+-      displayMode: 'adaptive',
+-      colorTheme: 'dark',
+-      locale: 'en',
+-    });
+-
+-    loadWidget(
+-      marketOverviewRef.current,
+-      'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js',
+-      {
+-        colorTheme: 'dark',
+-        dateRange: '12M',
+-        showChart: true,
+-        locale: 'en',
+-        width: '100%',
+-        height: 480,
+-        largeChartUrl: 'https://github.com/iceccarelli',
+-        isTransparent: true,
+-        showSymbolLogo: true,
+-        tabs: [
+-          { title: 'AI & Cloud', symbols: [{ s: 'NASDAQ:NVDA' }, { s: 'NASDAQ:MSFT' }, { s: 'NASDAQ:AMZN' }, { s: 'NASDAQ:GOOGL' }] },
+-          { title: 'Energy & Grid', symbols: [{ s: 'NYSE:NEE' }, { s: 'NASDAQ:ENPH' }, { s: 'NASDAQ:TSLA' }, { s: 'NYSE:GEV' }] },
+-          { title: 'Industrial Systems', symbols: [{ s: 'NYSE:ETN' }, { s: 'NYSE:PH' }, { s: 'NASDAQ:HON' }, { s: 'NYSE:EMR' }] },
+-        ],
+-      },
+-    );
+-  }, []);
+-
+-  // Live intelligence fetch
+-  useEffect(() => {
+-    let cancelled = false;
+-
+-    const fetchSignals = async () => {
+-      try {
+-        const githubPromise = fetch('https://api.github.com/users/iceccarelli/repos?sort=updated&per_page=100', {
+-          headers: { Accept: 'application/vnd.github+json' },
+-        }).then((res) => res.json());
+-
+-        const feedSources = [
+-          { source: 'MIT Technology Review', category: 'AI & Control', url: 'https://www.technologyreview.com/feed/' },
+-          { source: 'MIT News', category: 'Energy Systems', url: 'https://news.mit.edu/rss/topic/energy' },
+-        ];
+-
+-        const newsPromise = Promise.all(
+-          feedSources.map(async (feed) => {
+-            const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`);
+-            const data = await res.json();
+-            if (data.status !== 'ok' || !Array.isArray(data.items)) return [];
+-            return data.items.slice(0, 4).map((item: any) => ({
+-              title: item.title ?? 'Untitled update',
+-              link: item.link ?? feed.url,
+-              pubDate: item.pubDate ?? 'Live source',
+-              source: feed.source,
+-              category: feed.category,
+-            }));
+-          }),
+-        );
+-
+-        const [githubData, newsData] = await Promise.all([githubPromise, newsPromise]);
+-
+-        if (!cancelled && Array.isArray(githubData)) {
+-          const cpsPatterns = [
+-            { matcher: /neuralbridge|neural|bridge/i, fallbackName: 'NeuralBridge', priority: 1 },
+-            { matcher: /gridos|grid|os/i, fallbackName: 'GridOS', priority: 1 },
+-            { matcher: /derim|der|energy|grid/i, fallbackName: 'DERIM', priority: 2 },
+-            { matcher: /robot|lidar|fusion|slam|perception|embedded|rtos/i, fallbackName: 'Robotics & Sensing', priority: 2 },
+-            { matcher: /control|signal|rtos|vhdl|verilog|embedded/i, fallbackName: 'Control Systems', priority: 3 },
+-          ];
+-
+-          const matched = cpsPatterns
+-            .map((pattern) => {
+-              const found = githubData.find((repo: any) => pattern.matcher.test(repo.name ?? ''));
+-              if (!found) return null;
+-              return {
+-                id: found.id,
+-                name: found.name,
+-                description: found.description || `${pattern.fallbackName} – CPS engineering artifact`,
+-                html_url: found.html_url,
+-                updated_at: found.updated_at,
+-                language: found.language || 'Multi-language',
+-                stargazers_count: found.stargazers_count || 0,
+-              } as RepoCard;
+-            })
+-            .filter(Boolean) as RepoCard[];
+-
+-          const remainder = githubData
+-            .filter((repo: any) => !matched.some((m) => m.id === repo.id))
+-            .slice(0, 2)
+-            .map((repo: any) => ({
+-              id: repo.id,
+-              name: repo.name,
+-              description: repo.description ?? 'Recent CPS-aligned development',
+-              html_url: repo.html_url,
+-              updated_at: repo.updated_at,
+-              language: repo.language ?? 'Multi-language',
+-              stargazers_count: repo.stargazers_count ?? 0,
+-            }));
+-
+-          if (!cancelled) {
+-            setRepoCards([...matched, ...remainder].slice(0, 6));
+-          }
+-        }
+-
+-        const flattenedNews = newsData.flat().sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()).slice(0, 6);
+-        if (!cancelled && flattenedNews.length > 0) setHeadlines(flattenedNews);
+-
+-        if (!cancelled) {
+-          setLastSync(
+-            `Last refreshed ${new Intl.DateTimeFormat('en-GB', {
+-              day: '2-digit',
+-              month: 'short',
+-              hour: '2-digit',
+-              minute: '2-digit',
+-            }).format(new Date())}`,
+-          );
+-        }
+-      } catch {
+-        if (!cancelled) {
+-          setLastSync('Live sources temporarily unavailable — curated CPS signals still visible.');
+-        }
+-      }
+-    };
+-
+-    fetchSignals();
+-    const interval = window.setInterval(fetchSignals, 1000 * 60 * 15);
+-    return () => {
+-      cancelled = true;
+-      window.clearInterval(interval);
+-    };
+-  }, []);
+-
+   return (
+-    <main className="portfolio-shell">
+-      {/* HERO SECTION */}
++    <main>
++      {/* HERO */}
+       <section className="section-shell hero-section" id="top">
+         <div className="hero-grid">
+           <div className="hero-copy">
+             <div>
+-              <span className="section-kicker">PHYSICS-INFORMED SYSTEMS • DETERMINISTIC CONTROL • GRID INTELLIGENCE</span>
++              <span className="section-kicker">Physics-Informed Systems • Deterministic Control • Grid Intelligence</span>
+               <h1>
+-                <span className="gradient-text">Designing deterministic, physics-informed intelligence that transforms complex control systems into operational, verifiable, and adaptive realities.</span>
++                <span className="gradient-text">Designing deterministic, physics-informed intelligence for safety-critical control and grid systems.</span>
+               </h1>
+             </div>
+             <p className="hero-lead">
+-              At the intersection of embedded logic, real-time operating systems, AI orchestration, and grid-scale infrastructure.
+-              My work translates high-stakes technical complexity into systems that are predictable, legible, and deployable in safety-critical environments.
+-            </p>
+-            <p>
+-              Connecting live market intelligence, flagship repositories, research trajectory, and implementation signals to demonstrate coherent execution paths across both the immersive portfolio and the developer surface on GitHub.
++              At the intersection of embedded logic, real-time operating systems, AI orchestration, and grid-scale
++              infrastructure. My work translates high-stakes technical complexity into systems that are predictable,
++              legible, and deployable in safety-critical environments.
+             </p>
+             <div className="hero-actions">
+               <a className="primary-button" href="#thesis-simulator">
+-                🚀 Launch Live Thesis Simulator
++                Launch the thesis simulator
+               </a>
+-              <a className="secondary-button" href="#live-intelligence">
+-                Enter the Live Intelligence Hub
+-              </a>
+-              <a className="secondary-button" href="#flagship-systems">
+-                Explore Flagship Systems
+-              </a>
+-              <a className="secondary-button" href="https://github.com/iceccarelli" target="_blank" rel="noreferrer">
+-                GitHub Profile
++              <a className="secondary-button" href="#capabilities">
++                See what I build
+               </a>
+             </div>
+           </div>
+@@ -1298,11 +880,8 @@ export default function Home() {
+ 
+             <div className="panel-topline" style={{ marginTop: '1.5rem' }}>
+               <span className="live-dot" />
+-              <span>Vincenzo Grimaldi — Physics-Informed Cyber-Physical Systems Engineer</span>
++              <span>Grid Networks Engineer, DB InfraGO AG</span>
+             </div>
+-            <h2>
+-              Engineering deterministic systems that connect AI-driven infrastructure with verifiable physical execution.
+-            </h2>
+             <div className="metric-pills">
+               <span className="metric-pill">Embedded Control</span>
+               <span className="metric-pill">Grid Intelligence</span>
+@@ -1313,389 +892,145 @@ export default function Home() {
+         </div>
+       </section>
+ 
+-      {/* GLOBAL ORIENTATION */}
+-      <section className="section-shell">
+-        <div className="glass-panel cta-panel spotlight-border">
+-          <div>
+-            <span className="section-kicker">Global Orientation</span>
+-            <h2 className="compact-heading">Operational Time Zones</h2>
+-          </div>
+-          <div className="clock-marquee" aria-label="Global clocks">
+-            <div className="clock-marquee-track">
+-              {clocks.concat(clocks).map((clock, index) => (
+-                <article className="signal-chip" key={`${clock.city}-${index}`}>
+-                  <span className="chip-city">{clock.city}</span>
+-                  <strong>{clock.time}</strong>
+-                  <small>{clock.label}</small>
+-                </article>
+-              ))}
+-            </div>
+-          </div>
+-        </div>
+-      </section>
+-
+-      {/* ABOUT THE WORK */}
++      {/* ABOUT + EXPERIENCE — merged: the claim and the job that backs it */}
+       <section className="section-shell content-section" id="about">
+         <div className="glass-panel cta-panel spotlight-border">
+           <div>
+-            <span className="section-kicker">About the Work</span>
+-            <h2>A portfolio engineered for technical credibility in physics-informed systems.</h2>
++            <span className="section-kicker">About the work</span>
++            <h2>I integrate AI, software, energy and robotics into systems where every layer is verifiable.</h2>
++            <p>
++              I do not treat them as isolated domains. From RTOS scheduling to AI orchestration, each layer has to be
++              checkable before the one above it is allowed to depend on it.
++            </p>
+           </div>
+-        </div>
+-        <div className="two-column-layout">
+-          <div className="glass-panel immersive-card">
++
++          <div className="experience-block" id="experience">
++            <span className="capability-provenance-label">Currently</span>
+             <p>
+-              I do not treat AI, software, infrastructure, energy, and robotics as isolated domains.
+-              I integrate them into deterministic physics-informed systems where every layer — from RTOS scheduling to AI orchestration — is verifiable and safety-critical.
++              <strong>ITk Fachspezialist — Digitisation of high-voltage assets</strong>
++              <br />
++              DB InfraGO AG · Aug 2024 – present · Frankfurt
++            </p>
++            <p className="experience-detail">
++              Digitalisation of railway traction HV grids, IT/OT convergence, and KRITIS-aligned cybersecurity
++              governance for mission-critical rail infrastructure.
+             </p>
++
++            <span className="capability-provenance-label">Previously</span>
+             <p>
+-              This site and my GitHub profile form two complementary surfaces of the same mission: one cinematic and immersive, the other precise and developer-first.
++              <strong>Industrial Engineering Intern — High-voltage maintenance</strong>
++              <br />
++              DB Fahrzeuginstandhaltung GmbH &amp; DB Netz AG · Jun 2022 – Sep 2024
++            </p>
++            <p className="experience-detail">
++              Lifecycle management of traction power substations, asset condition monitoring, and predictive
++              maintenance.
+             </p>
+-          </div>
+-          <div className="feature-stack">
+-            {strengths.map((strength) => (
+-              <article className="glass-panel feature-card" key={strength.title}>
+-                <h3>{strength.title}</h3>
+-                <p>{strength.body}</p>
+-              </article>
+-            ))}
+           </div>
+         </div>
+       </section>
+ 
++      {/* CAPABILITY REGISTER + WORK REGISTRY */}
++      <CapabilitySystem />
++
+       {/* PHYSICS-INFORMED INTELLIGENCE LAYER */}
+       <section className="section-shell content-section" id="physics-informed">
+         <div className="glass-panel cta-panel spotlight-border">
+           <div>
+-            <span className="section-kicker">Physics-Informed Intelligence Layer</span>
+-            <h2>Where the Laws of Physics Meet Deterministic AI</h2>
++            <span className="section-kicker">Physics-informed intelligence</span>
++            <h2>Where the laws of physics meet deterministic AI</h2>
+           </div>
+           <div className="two-column-layout">
+             <div>
+               <p className="section-intro">
+-                Physics-informed intelligence does not stop at pattern recognition. It constrains learning with the same governing equations that define the physical system.
++                Physics-informed intelligence does not stop at pattern recognition. It constrains learning with the
++                same governing equations that define the physical system.
+               </p>
+ 
+               <div className="math-block" style={{ display: 'grid', gap: '1rem' }}>
+                 <div style={{ fontSize: '1.2rem', lineHeight: 1.7, fontWeight: 700 }}>
+-                  <span style={{ color: 'var(--accent-strong)' }}>Total objective</span> = Data fidelity + <span style={{ color: 'var(--success)' }}>Physics penalty</span>
++                  <span style={{ color: 'var(--accent-strong)' }}>Total objective</span> = Data fidelity +{' '}
++                  <span style={{ color: 'var(--success)' }}>Physics penalty</span>
+                 </div>
+                 <div style={{ color: 'var(--muted-strong)' }}>
+-                  The model is penalized whenever its predictions violate the governing dynamics of the system.
++                  The model is penalised whenever its predictions violate the governing dynamics of the system.
+                 </div>
+-                <div style={{ padding: '1rem 1.1rem', border: '1px solid rgba(125, 211, 252, 0.16)', borderRadius: '16px', background: 'rgba(8, 15, 28, 0.72)', fontFamily: 'monospace' }}>
+-                  L<sub>total</sub> = L<sub>data</sub> + λL<sub>physics</sub><br />
+-                  L<sub>physics</sub> = ‖∂u/∂t + N[u]‖²
++                <div
++                  style={{
++                    padding: '1rem 1.1rem',
++                    border: '1px solid rgba(125, 211, 252, 0.16)',
++                    borderRadius: '16px',
++                    background: 'rgba(8, 15, 28, 0.72)',
++                    fontFamily: 'monospace',
++                  }}
++                >
++                  L<sub>total</sub> = L<sub>data</sub> + &lambda;L<sub>physics</sub>
++                  <br />
++                  L<sub>physics</sub> = &#8214;&part;u/&part;t + N[u]&#8214;&sup2;
+                 </div>
+               </div>
+             </div>
+             <div>
+-              <h3>Next evolution of GridOS + NeuralBridge</h3>
++              <h3>Where this is heading</h3>
+               <p>
+-                Real-time surrogate models for Optimal Power Flow and inverter control — systems that are not merely intelligent, but operationally trustworthy under physical constraints.
++                Real-time surrogate models for optimal power flow and inverter control — systems that are not merely
++                intelligent, but operationally trustworthy under physical constraints.
+               </p>
+             </div>
+           </div>
+         </div>
+       </section>
+ 
+-      {/* 2025 MASTER THESIS — LIVE SIMULATOR (NEW FLAGSHIP SECTION) */}
++      {/* THESIS SIMULATOR — the one thing a visitor can open and use */}
+       <section className="section-shell content-section" id="thesis-simulator">
+-        <div className="glass-panel cta-panel spotlight-border" style={{ borderColor: '#34d399', borderWidth: '3px', boxShadow: '0 0 60px rgba(52, 211, 153, 0.25)' }}>
+-          <div className="flex flex-wrap items-center gap-3 mb-6">
+-            <div className="px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold tracking-[2px]">2025 RWTH AACHEN MASTER THESIS</div>
+-            <div className="px-4 py-1.5 rounded-full bg-emerald-500 text-black text-sm font-extrabold flex items-center gap-2">
+-              <span className="w-2 h-2 bg-black rounded-full animate-pulse" /> LIVE PRODUCTION DEMO
+-            </div>
+-          </div>
+-
+-          <h2 className="text-4xl tracking-tighter">Data Modeling in a Cross-domain Ontology for Cyber Intelligence in Smart-Grids Using Reinforcement Learning</h2>
+-          <p className="mt-2 text-xl text-emerald-400">Vincenzo Grimaldi • Matriculation No. 353970 • RWTH Aachen University • June 2025</p>
+-
+-          <div className="mt-8 grid md:grid-cols-2 gap-8">
+-            <div>
+-              <p className="text-lg">
+-                This thesis establishes the first systematic integration of the <strong>Common Information Model (CIM)</strong> with the <strong>ThreMA cybersecurity framework</strong>, creating unified semantic representations that connect physical power components with security concepts including vulnerabilities and protective measures.
+-              </p>
+-              <div className="mt-6 flex flex-wrap gap-2">
+-                {['CIM–ThreMA Cross-Domain Ontology', '5 Formal Semantic Mappings', 'IEEE 9-Bus Cyber Testbed', '4 Documented Attack Scenarios', 'Q-Learning RL Security Agent', 'Cross-Domain SNR Metric'].map((tag, i) => (
+-                  <span key={i} className="px-3 py-1 text-xs rounded-full bg-white/10 border border-white/20 text-emerald-300">{tag}</span>
+-                ))}
+-              </div>
+-            </div>
+-
+-            <div className="flex flex-col justify-center gap-4">
+-              <a 
+-                href="https://physics-informed.vercel.app/" 
+-                target="_blank" 
+-                rel="noopener noreferrer"
+-                className="primary-button bg-emerald-500 hover:bg-emerald-600 text-black font-extrabold text-xl py-5 flex items-center justify-center gap-3"
+-              >
+-                🚀 LAUNCH LIVE THESIS SIMULATOR
+-              </a>
+-              <a 
+-                href="https://github.com/iceccarelli/physics-informed" 
+-                target="_blank" 
+-                rel="noopener noreferrer"
+-                className="secondary-button text-center text-lg py-4"
+-              >
+-                View Full Source on GitHub →
+-              </a>
+-              <p className="text-center text-xs text-emerald-400/70">Validated on enhanced IEEE 9-Bus system with realistic network infrastructure and documented attack scenarios</p>
+-            </div>
+-          </div>
+-        </div>
+-      </section>
+-
+-      {/* ARCHITECTURE */}
+-      <section className="section-shell content-section" id="architecture">
+-        <div className="glass-panel cta-panel spotlight-border">
+-          <div>
+-            <span className="section-kicker">Architecture of Value Creation</span>
+-            <h2>The projects form layers of one coherent physics-informed systems thesis.</h2>
+-          </div>
+-        </div>
+-        <div className="card-grid four-up">
+-          {architectureLayers.map((layer) => (
+-            <article className="glass-panel glow-card" key={layer.title}>
+-              <span className="card-label">{layer.title}</span>
+-              <h3>{layer.project}</h3>
+-              <p>{layer.description}</p>
+-            </article>
+-          ))}
+-        </div>
+-      </section>
+-
+-      {/* CAPABILITY REGISTER + WORK REGISTRY */}
+-      <CapabilitySystem />
+-
+-      {/* FLAGSHIP SYSTEMS */}
+-      <section className="section-shell content-section" id="flagship-systems">
+-        <div className="glass-panel cta-panel spotlight-border">
+-          <div>
+-            <span className="section-kicker">Flagship Systems</span>
+-            <h2>Selected initiatives that demonstrate depth, direction, and execution quality.</h2>
+-          </div>
+-        </div>
+-        <div className="card-grid two-up">
+-          {flagshipInitiatives.map((initiative, index) => (
+-            <article 
+-              className={`glass-panel immersive-card ${initiative.isLive ? 'border-emerald-500 border-2' : ''}`} 
+-              key={index}
+-              style={initiative.isLive ? { boxShadow: '0 0 40px rgba(52, 211, 153, 0.3)' } : {}}
+-            >
+-              <div className="card-topline">
+-                <span className="live-dot muted" />
+-                <span>{initiative.isLive ? 'LIVE PRODUCTION DEMO' : 'Flagship Initiative'}</span>
+-              </div>
+-              <h3>{initiative.title}</h3>
+-              <p>{initiative.summary}</p>
+-              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+-                {initiative.isLive ? (
+-                  <>
+-                    <a className="primary-button bg-emerald-500 hover:bg-emerald-600 text-black" href={initiative.liveUrl} target="_blank" rel="noreferrer">
+-                      Launch Live Demo →
+-                    </a>
+-                    <a className="secondary-button" href={initiative.href} target="_blank" rel="noreferrer">
+-                      View Source
+-                    </a>
+-                  </>
+-                ) : (
+-                  initiative.published === false ? (
+-                    <span className="text-link" style={{ opacity: 0.55, cursor: 'default' }}>
+-                      Private repository — available on request
+-                    </span>
+-                  ) : (
+-                  <>
+-                    <a className="text-link" href={initiative.href} target="_blank" rel="noreferrer">
+-                      View repository →
+-                    </a>
+-                    <a className="text-link" href={initiative.href} target="_blank" rel="noreferrer" style={{ color: '#34d399' }}>
+-                      ★ Star on GitHub
+-                    </a>
+-                  </>
+-                  )
+-                )}
+-              </div>
+-            </article>
+-          ))}
+-        </div>
+-
+-        <div className="glass-panel cta-panel spotlight-border" style={{ marginTop: '2rem' }}>
+-          <div>
+-            <span className="section-kicker">Developer Surface</span>
+-            <h3 style={{ marginTop: 0 }}>The same mission, inspected in code.</h3>
+-            <p>All flagship systems are open source on GitHub. Star them to support the work.</p>
+-          </div>
+-          <a className="primary-button" href="https://github.com/iceccarelli" target="_blank" rel="noreferrer">
+-            Open GitHub Profile →
+-          </a>
+-        </div>
+-      </section>
+-
+-      {/* LIVE INTELLIGENCE HUB */}
+-      <section className="section-shell content-section" id="live-intelligence">
+-        <div className="glass-panel cta-panel spotlight-border">
+-          <div>
+-            <span className="section-kicker">Live Intelligence Hub</span>
+-            <h2>Relevant market value and news context, and momentum.</h2>
+-            <p className="section-intro">{lastSync}</p>
+-          </div>
+-        </div>
+-
+-        <div className="tradingview-widget-shell glass-panel">
+-          <div ref={tickerTapeRef} className="tradingview-widget-container" />
+-        </div>
+-
+-        <div className="insight-grid">
+-          <article className="glass-panel data-column">
+-            <div className="panel-topline">
+-              <span className="live-dot" />
+-              <span>Reputable CPS &amp; Energy Signals</span>
+-            </div>
+-            <h3>Headlines worth watching</h3>
+-            <div className="data-list">
+-              {headlines.map((headline) => (
+-                <a className="data-list-item" href={headline.link} key={`${headline.source}-${headline.title}`} target="_blank" rel="noreferrer">
+-                  <span className="item-meta">{headline.category} • {headline.source}</span>
+-                  <strong>{headline.title}</strong>
+-                  <small>{formatDate(headline.pubDate)}</small>
+-                </a>
+-              ))}
+-            </div>
+-          </article>
+-
+-          <article className="glass-panel data-column">
+-            <div className="panel-topline">
+-              <span className="live-dot" />
+-              <span>Active CPS &amp; Firmware Development</span>
+-            </div>
+-            <h3>Repositories expressing strongest technical value</h3>
+-            <div className="data-list">
+-              {repoCards.map((repo) => (
+-                <a className="data-list-item" href={repo.html_url} key={repo.id} target="_blank" rel="noreferrer">
+-                  <span className="item-meta">
+-                    {repo.language} • Updated {formatDate(repo.updated_at)} • {repo.stargazers_count} stars
+-                  </span>
+-                  <strong>{repo.name}</strong>
+-                  <small>{repo.description}</small>
+-                  <div style={{ marginTop: '0.5rem' }}>
+-                    <span style={{ fontSize: '0.85rem', color: '#34d399', fontWeight: 600 }}>
+-                      ★ Star on GitHub
+-                    </span>
+-                  </div>
+-                </a>
+-              ))}
+-            </div>
+-          </article>
+-        </div>
+-
+-        <div className="tradingview-widget-shell glass-panel market-overview-shell">
+-          <div className="panel-topline">
+-            <span className="live-dot" />
+-            <span>Market Context Aligned with CPS Interests</span>
+-          </div>
+-          <div ref={marketOverviewRef} className="tradingview-widget-container market-widget" />
+-        </div>
+-
+-        <div className="card-grid three-up market-thesis-grid">
+-          {marketThemes.map((theme) => (
+-            <article className="glass-panel glow-card" key={theme.title}>
+-              <h3>{theme.title}</h3>
+-              <p>{theme.body}</p>
+-            </article>
+-          ))}
+-        </div>
+-      </section>
+-
+-      {/* QUANTIFIED IMPACT DASHBOARD */}
+-      <section className="section-shell content-section">
+-        <div className="glass-panel cta-panel spotlight-border">
+-          <div>
+-            <span className="section-kicker">Quantified Value Generation</span>
+-            <h2>Proven impact in simulation and deployment</h2>
+-          </div>
+-          <div className="impact-dashboard">
+-            <div className="impact-card"><strong>22% reduction</strong><br/>grid curtailment via DERIM + MARL</div>
+-            <div className="impact-card"><strong>Sub-8 ms</strong><br/>deterministic latency (NeuralBridge)</div>
+-            <div className="impact-card"><strong>99.999% uptime</strong><br/>RTOS + PINN-augmented V&amp;V</div>
+-            <div className="impact-card"><strong>15–40% higher</strong><br/>renewable penetration</div>
+-          </div>
+-        </div>
+-      </section>
+-
+-      {/* PROFESSIONAL EXPERIENCE */}
+-      <section className="section-shell content-section">
+         <div className="glass-panel cta-panel spotlight-border">
+           <div>
+-            <span className="section-kicker">Professional Experience</span>
+-            <h2>Grid Networks Engineer – Deutsche Bahn</h2>
+-          </div>
+-          <div style={{ marginTop: '1rem' }}>
+-            <p><strong>ITk Fachspezialist – Digitisation of High-Voltage Assets</strong><br />DB InfraGO AG • Aug 2024 – Present</p>
+-            <p style={{ color: 'var(--muted-strong)' }}>Leading digitalisation strategy for railway traction HV grids; IT/OT convergence, KRITIS-compliant cybersecurity governance, and resilience engineering.</p>
+-            
+-            <p style={{ marginTop: '1.5rem' }}><strong>Industrial Engineering Intern – High-Voltage Maintenance</strong><br />DB Fahrzeuginstandhaltung GmbH &amp; DB Netz AG • Jun 2022 – Sep 2024</p>
+-            <p style={{ color: 'var(--muted-strong)' }}>Lifecycle management of traction power substations, asset condition monitoring, and critical systems maintenance.</p>
++            <span className="section-kicker">RWTH Aachen M.Sc. thesis · June 2025</span>
++            <h2>Data modelling in a cross-domain ontology for cyber intelligence in smart grids using reinforcement learning</h2>
++            <p className="section-intro">
++              The first systematic integration of the Common Information Model (CIM) with the ThreMA cybersecurity
++              framework: unified semantic representations connecting physical power components with vulnerabilities and
++              protective measures. Validated on an enhanced IEEE 9-bus system.
++            </p>
+           </div>
+-        </div>
+-      </section>
+ 
+-      {/* STANDARDS MASTERY */}
+-      <section className="section-shell content-section">
+-        <div className="glass-panel cta-panel spotlight-border">
+-          <div>
+-            <span className="section-kicker">Standards Mastery</span>
+-            <h2>Protocols &amp; Frameworks</h2>
+-          </div>
+-          <div className="standards-grid">
+-            <div className="standards-card">IEC 61850 • CIM • OCPP • SunSpec</div>
+-            <div className="standards-card">ROS 2 • HELICS • TLA+</div>
+-            <div className="standards-card">IEC 62351 • NERC CIP • NIS2 • EU CRA</div>
++          <div className="thesis-tags">
++            {[
++              'CIM–ThreMA cross-domain ontology',
++              '5 formal semantic mappings',
++              'IEEE 9-bus cyber testbed',
++              '4 documented attack scenarios',
++              'Q-learning RL security agent',
++              'Cross-domain SNR metric',
++            ].map((tag) => (
++              <span key={tag}>{tag}</span>
++            ))}
+           </div>
+-        </div>
+-      </section>
+ 
+-      {/* TRUSTED ECOSYSTEM */}
+-      <section className="section-shell content-section" id="ecosystem">
+-        <div className="glass-panel cta-panel spotlight-border">
+-          <div>
+-            <span className="section-kicker">Trusted Ecosystem</span>
+-            <h2>Institutions and platforms that anchor the domains I operate in.</h2>
+-          </div>
+-        </div>
+-        <div className="card-grid three-up">
+-          {trustedSources.map((source) => (
+-            <a className="glass-panel source-card" href={source.href} key={source.title} target="_blank" rel="noreferrer">
+-              <span className="card-label">Trusted Reference</span>
+-              <h3>{source.title}</h3>
+-              <p>{source.focus}</p>
++          <div className="hero-actions">
++            <a className="primary-button" href="https://physics-informed.vercel.app/" target="_blank" rel="noreferrer">
++              Open the simulator
+             </a>
+-          ))}
++          </div>
+         </div>
+       </section>
+ 
+-      {/* CONNECT */}
+       <Payments />
+ 
++      {/* CONNECT */}
+       <section className="section-shell content-section" id="connect">
+         <div className="glass-panel cta-panel spotlight-border">
+           <div>
+-            <span className="section-kicker">Continue the Conversation</span>
++            <span className="section-kicker">Connect</span>
+             <h2>If this systems-level thinking resonates, the next step should be immediate.</h2>
+             <p>
+-              Whether you are exploring AI-native middleware, smart-grid operating systems, embedded control platforms, robotics, or large-scale research collaboration — both surfaces (this portfolio and GitHub) are structured to make technical value visible.
++              AI-native middleware, smart-grid operating systems, embedded control platforms, robotics, or research
++              collaboration. The repositories are private; access is granted on request.
+             </p>
+           </div>
+           <div className="hero-actions">
+-            <a className="primary-button" href="https://github.com/iceccarelli" target="_blank" rel="noreferrer">
+-              GitHub Profile
+-            </a>
+-            <a className="secondary-button" href="#ecosystem">
+-              Trusted Ecosystem
+-            </a>
+             <a className="secondary-button" href="mailto:vincenzo@igrimaldi.engineering">
+-              Email — vincenzo@igrimaldi.engineering
++              vincenzo@igrimaldi.engineering
+             </a>
+           </div>
+ 

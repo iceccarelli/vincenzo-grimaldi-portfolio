@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Payments from './components/Payments';
 import ContactForm from './components/ContactForm';
+import CapabilitySystem from './components/CapabilitySystem';
 import Image from 'next/image';
 
 // ====================== TYPES ======================
@@ -1464,6 +1465,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* CAPABILITY REGISTER + WORK REGISTRY */}
+      <CapabilitySystem />
 
       {/* FLAGSHIP SYSTEMS */}
       <section className="section-shell content-section" id="flagship-systems">

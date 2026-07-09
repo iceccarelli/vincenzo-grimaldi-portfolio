@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import MegaMenu from './MegaMenu';
+import CommandPalette from './CommandPalette';
 
 function useScrollDirection() {
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
@@ -66,6 +68,7 @@ export default function Header() {
 
         {/* Primary Navigation */}
         <nav className="topbar-nav" aria-label="Primary navigation">
+          <MegaMenu />
           {navigation.map((item) => (
             item.external ? (
               <a 
@@ -87,6 +90,8 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
+          <CommandPalette />
+
           {/* GitHub — Now clearly labeled as the Developer Surface */}
           <a
             className="topbar-button"

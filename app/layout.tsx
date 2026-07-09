@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Header from './components/Header';
+import ScrollProgress from './components/ScrollProgress';
 import SocialBar from './components/SocialBar';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
@@ -104,7 +105,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <div className="background-orb orb-two" />
           <div className="background-orb orb-three" />
 
-          <Header />
+        <ScrollProgress />
+        <Header />
 
           {children}
 

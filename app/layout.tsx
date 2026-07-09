@@ -136,11 +136,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <div className="footer-column">
                   <h4>Platform</h4>
                   <div className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <a className="footer-link" href="#architecture">Systems</a>
+                    <a className="footer-link" href="#capabilities">Capabilities</a>
+                    <a className="footer-link" href="#registry">Work registry</a>
                     <a className="footer-link" href="#physics-informed">Physics-Informed</a>
-                    <a className="footer-link" href="#flagship-systems">Flagship Work</a>
                     <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">Live Simulator</a>
-                    <a className="footer-link" href="#live-intelligence">Live Intelligence</a>
+                    <a className="footer-link" href="#payments">Payments</a>
                     <a className="footer-link" href="#connect">Connect</a>
                   </div>
                 </div>

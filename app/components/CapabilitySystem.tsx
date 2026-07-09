@@ -53,13 +53,15 @@ export default function CapabilitySystem() {
                   </span>
                 </button>
 
-                <p className="capability-summary">{capability.summary}</p>
+                <div className="capability-body">
+                  <p className="capability-summary">{capability.summary}</p>
 
-                <ul className="capability-signals">
-                  {capability.signals.map((signal) => (
-                    <li key={signal}>{signal}</li>
-                  ))}
-                </ul>
+                  <ul className="capability-signals">
+                    {capability.signals.map((signal) => (
+                      <li key={signal}>{signal}</li>
+                    ))}
+                  </ul>
+                </div>
 
                 <div className="capability-provenance">
                   <span className="capability-provenance-label">Exercised in</span>

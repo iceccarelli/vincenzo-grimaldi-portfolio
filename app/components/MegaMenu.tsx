@@ -34,6 +34,7 @@ export default function MegaMenu() {
 
   const shipped = projects.filter((project) => project.status === 'shipped');
   const live = projects.filter((project) => project.live);
+  const href = (project: (typeof projects)[number]) => project.repo ?? '#registry';
 
   return (
     <div className="megamenu" ref={containerRef}>
@@ -67,11 +68,11 @@ export default function MegaMenu() {
           </div>
 
           <div className="megamenu-column">
-            <p className="megamenu-heading">Repositories</p>
+            <p className="megamenu-heading">Systems</p>
             <ul>
               {shipped.map((project) => (
                 <li key={project.name}>
-                  <a href={project.repo} target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>
+                  <a href={href(project)} onClick={() => setOpen(false)}>
                     <span>{project.name}</span>
                     <small>{project.stack[0]}</small>
                   </a>

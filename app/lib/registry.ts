@@ -1,10 +1,14 @@
 /**
  * registry.ts — single source of truth for capabilities and shipped work.
  *
- * Rule for this file: every capability carries a `provenance` entry naming the
- * place it was actually exercised (an employer, the thesis, or a public repo).
- * A capability with no provenance does not belong here. Nothing in this file
- * is aspirational.
+ * Two rules for this file.
+ *
+ * 1. Every capability carries a `provenance` entry naming the place it was
+ *    actually exercised. A capability with no provenance does not belong here.
+ * 2. Nothing links to a surface a visitor cannot open. All six repositories are
+ *    currently private, so no `repo` is set and no provenance entry links to
+ *    GitHub. When a repository is made public, add its `repo` URL back and the
+ *    card, the mega menu and the command palette will all start linking to it.
  */
 
 export type Provenance = {
@@ -25,9 +29,10 @@ export type Project = {
   name: string;
   domain: CapabilityDomain;
   summary: string;
-  repo: string;
+  /** Only set when the source is actually browsable by a visitor. */
+  repo?: string;
+  /** A deployment anyone can open right now. */
   live?: string;
-  /** Published to a package index / has a public deployment. */
   status: 'shipped' | 'in-development';
   stack: string[];
 };
@@ -62,8 +67,8 @@ export const capabilities: Capability[] = [
     provenance: [
       DB_INFRAGO,
       THESIS,
-      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
-      { label: 'DERIM', href: 'https://github.com/iceccarelli/derim-middleware' },
+      { label: 'GridOS' },
+      { label: 'DERIM' },
     ],
   },
   {
@@ -80,7 +85,7 @@ export const capabilities: Capability[] = [
     ],
     provenance: [
       DB_INFRAGO,
-      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
+      { label: 'GridOS' },
     ],
   },
   {
@@ -96,10 +101,7 @@ export const capabilities: Capability[] = [
     ],
     provenance: [
       THESIS,
-      {
-        label: 'physics-informed',
-        href: 'https://github.com/iceccarelli/physics-informed',
-      },
+      { label: 'physics-informed' },
     ],
   },
   {
@@ -114,10 +116,7 @@ export const capabilities: Capability[] = [
       'URDF-driven kinematic simulation',
     ],
     provenance: [
-      {
-        label: 'robot-lidar-fusion',
-        href: 'https://github.com/iceccarelli/robot-lidar-fusion',
-      },
+      { label: 'robot-lidar-fusion' },
     ],
   },
   {
@@ -132,8 +131,8 @@ export const capabilities: Capability[] = [
       'Hash-chained audit logs',
     ],
     provenance: [
-      { label: 'mcp-foundry', href: 'https://github.com/iceccarelli/mcp-foundry' },
-      { label: 'NeuralBridge', href: 'https://github.com/iceccarelli/neuralbridge' },
+      { label: 'mcp-foundry' },
+      { label: 'NeuralBridge' },
     ],
   },
   {
@@ -150,11 +149,8 @@ export const capabilities: Capability[] = [
     ],
     provenance: [
       DB_INFRAGO,
-      { label: 'GridOS', href: 'https://github.com/iceccarelli/GridOS' },
-      {
-        label: 'robot-lidar-fusion',
-        href: 'https://github.com/iceccarelli/robot-lidar-fusion',
-      },
+      { label: 'GridOS' },
+      { label: 'robot-lidar-fusion' },
     ],
   },
 ];
@@ -165,7 +161,6 @@ export const projects: Project[] = [
     domain: 'Physics-Informed Learning',
     summary:
       'Interactive simulator for the cross-domain CIM + ThreMA ontology, PINN solvers, RL security agents and IEEE 9-bus cyber-physical validation.',
-    repo: 'https://github.com/iceccarelli/physics-informed',
     live: 'https://physics-informed.vercel.app/',
     status: 'shipped',
     stack: ['Python', 'PINNs', 'RL', 'CIM'],
@@ -175,7 +170,6 @@ export const projects: Project[] = [
     domain: 'Grid & Power Systems',
     summary:
       'DER middleware and control surface: protocol ingest, MILP dispatch, anomaly detection, and an MPC forecast loop.',
-    repo: 'https://github.com/iceccarelli/GridOS',
     status: 'shipped',
     stack: ['FastAPI', 'Modbus', 'OPC-UA', 'MILP'],
   },
@@ -184,7 +178,6 @@ export const projects: Project[] = [
     domain: 'Grid & Power Systems',
     summary:
       'Distributed energy resource integration middleware focused on verifiable coordination and grid-aware execution.',
-    repo: 'https://github.com/iceccarelli/derim-middleware',
     status: 'in-development',
     stack: ['Python', 'FastAPI', 'DER'],
   },
@@ -193,7 +186,6 @@ export const projects: Project[] = [
     domain: 'Agentic Middleware',
     summary:
       'Governance layer for AI agents acting on financial systems: deterministic policy engine, signed action tokens, hash-chained audit log.',
-    repo: 'https://github.com/iceccarelli/mcp-foundry',
     status: 'shipped',
     stack: ['MCP', 'JSON-RPC', 'HMAC'],
   },
@@ -202,7 +194,6 @@ export const projects: Project[] = [
     domain: 'Robotics & Perception',
     summary:
       'LiDAR-to-camera projection with SE(3) extrinsics, pinhole intrinsics, z-buffer occlusion handling and a KITTI calibration loader.',
-    repo: 'https://github.com/iceccarelli/robot-lidar-fusion',
     status: 'shipped',
     stack: ['Python', 'SE(3)', 'KITTI'],
   },
@@ -211,7 +202,6 @@ export const projects: Project[] = [
     domain: 'Agentic Middleware',
     summary:
       'AI-native middleware for human-to-model orchestration in safety-critical, physics-informed environments.',
-    repo: 'https://github.com/iceccarelli/neuralbridge',
     status: 'in-development',
     stack: ['Python', 'Orchestration'],
   },

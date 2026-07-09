@@ -119,13 +119,17 @@ export default function CapabilitySystem() {
                 ))}
               </ul>
               <div className="registry-links">
-                <a href={project.repo} target="_blank" rel="noreferrer">
-                  Source
-                </a>
                 {project.live && (
                   <a href={project.live} target="_blank" rel="noreferrer">
-                    Live demo
+                    Open live demo
                   </a>
+                )}
+                {project.repo ? (
+                  <a href={project.repo} target="_blank" rel="noreferrer">
+                    Source
+                  </a>
+                ) : (
+                  <a href="#connect">Private — request access</a>
                 )}
               </div>
             </article>

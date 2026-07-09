@@ -7,7 +7,7 @@ import { capabilities, projects } from '../lib/registry';
 type Command = {
   id: string;
   label: string;
-  group: 'Sections' | 'Capabilities' | 'Repositories' | 'Elsewhere';
+  group: 'Sections' | 'Capabilities' | 'Systems' | 'Elsewhere';
   hint?: string;
   href: string;
   external?: boolean;
@@ -16,14 +16,11 @@ type Command = {
 const sectionCommands: Command[] = [
   { id: 'top', label: 'Top', group: 'Sections', href: '#top' },
   { id: 'about', label: 'About', group: 'Sections', href: '#about' },
-  { id: 'architecture', label: 'Architecture', group: 'Sections', href: '#architecture' },
   { id: 'capabilities', label: 'Capability register', group: 'Sections', href: '#capabilities' },
   { id: 'registry', label: 'Work registry', group: 'Sections', href: '#registry' },
+  { id: 'experience', label: 'Experience', group: 'Sections', href: '#experience' },
   { id: 'physics-informed', label: 'Physics-informed', group: 'Sections', href: '#physics-informed' },
   { id: 'thesis-simulator', label: 'Thesis simulator', group: 'Sections', href: '#thesis-simulator' },
-  { id: 'flagship-systems', label: 'Flagship systems', group: 'Sections', href: '#flagship-systems' },
-  { id: 'live-intelligence', label: 'Live intelligence', group: 'Sections', href: '#live-intelligence' },
-  { id: 'ecosystem', label: 'Trusted ecosystem', group: 'Sections', href: '#ecosystem' },
   { id: 'connect', label: 'Connect', group: 'Sections', href: '#connect' },
 ];
 
@@ -39,18 +36,11 @@ const commands: Command[] = [
   ...projects.map((project) => ({
     id: `repo-${project.name}`,
     label: project.name,
-    group: 'Repositories' as const,
+    group: 'Systems' as const,
     hint: project.stack.join(' · '),
-    href: project.repo,
-    external: true,
+    href: project.live ?? '#registry',
+    external: Boolean(project.live),
   })),
-  {
-    id: 'gh',
-    label: 'GitHub profile',
-    group: 'Elsewhere',
-    href: 'https://github.com/iceccarelli',
-    external: true,
-  },
   {
     id: 'sim',
     label: 'Live thesis simulator',

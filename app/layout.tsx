@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Header from './components/Header';
 import ScrollProgress from './components/ScrollProgress';
-import SocialBar from './components/SocialBar';
 import FeedbackBanner from './components/FeedbackBanner';
+import SiteFooter from './components/SiteFooter';
 import { Analytics } from '@vercel/analytics/react';
 import { LanguageProvider } from './lib/i18n';
 import './globals.css';
@@ -126,78 +126,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
             <FeedbackBanner />
 
-            <footer className="site-footer">
-              <div className="section-shell">
-                {/* Topline — CTA + language, AWS-footer style */}
-                <div className="footer-topline">
-                  <a className="footer-cta" href="#connect">
-                    Start a conversation
-                  </a>
-                </div>
-
-                <div className="footer-content">
-                  {/* Column 1 – Entity */}
-                  <div className="footer-column">
-                    <div className="brand-lockup" style={{ marginBottom: '1rem' }}>
-                      <span className="brand-monogram" style={{ background: '#ffffff', color: 'var(--ink)' }}>VG</span>
-                      <span className="brand-copy"><strong style={{ color: '#ffffff' }}>Vincenzo Grimaldi</strong></span>
-                    </div>
-                    <p style={{ lineHeight: 1.6, fontSize: '0.9rem' }}>
-                      Physics-Informed Cyber-Physical Systems Engineer.<br />
-                      Deterministic control • Grid intelligence • AI orchestration.
-                    </p>
-                  </div>
-
-                  {/* Column 2 – Platform */}
-                  <div className="footer-column">
-                    <h4>Platform</h4>
-                    <div className="footer-links">
-                      <a className="footer-link" href="#capabilities">Capabilities</a>
-                      <a className="footer-link" href="#registry">Work registry</a>
-                      <a className="footer-link" href="#physics-informed">Physics-informed</a>
-                      <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">Live simulator</a>
-                      <a className="footer-link" href="#payments">Payments</a>
-                      <a className="footer-link" href="#connect">Connect</a>
-                    </div>
-                  </div>
-
-                  {/* Column 3 – The Grimaldi Network */}
-                  <div className="footer-column">
-                    <h4>Network</h4>
-                    <div className="footer-links">
-                      <a className="footer-link" href="https://igrimaldi.engineering">igrimaldi.engineering — Software &amp; AI</a>
-                      <a className="footer-link" href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer">engineeringgrimaldi.com — Hardware &amp; EE</a>
-                      <a className="footer-link" href="https://grimaldi.ca" target="_blank" rel="noopener noreferrer">grimaldi.ca — Personal blog</a>
-                      <a className="footer-link" href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer">GitHub — iceccarelli</a>
-                    </div>
-                  </div>
-
-                  {/* Column 4 – Status */}
-                  <div className="footer-column">
-                    <h4>Status</h4>
-                    <div className="footer-status" style={{ marginBottom: '1rem' }}>
-                      <span className="live-dot" />
-                      <span>Available for consultation</span>
-                    </div>
-                    <p style={{ fontSize: '0.88rem', lineHeight: 1.55 }}>
-                      Europe-based • Open to high-impact CPS, grid intelligence, and autonomous systems opportunities.
-                    </p>
-                    <a className="footer-link" href="mailto:vincenzo@igrimaldi.engineering" style={{ marginTop: '0.75rem', display: 'inline-block' }}>
-                      vincenzo@igrimaldi.engineering →
-                    </a>
-                  </div>
-                </div>
-
-                <div className="footer-backtotop">
-                  <a href="#top">Back to top ↑</a>
-                </div>
-
-                <div className="footer-legal">
-                  <span>© 2026 Vincenzo Grimaldi. All rights reserved.</span>
-                  <SocialBar />
-                </div>
-              </div>
-            </footer>
+            <SiteFooter />
           </div>
         </LanguageProvider>
 

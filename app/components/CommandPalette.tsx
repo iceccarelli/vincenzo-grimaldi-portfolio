@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { capabilities, projects } from '../lib/registry';
+import { useLanguage } from '../lib/i18n';
 
 type Command = {
   id: string;
@@ -73,6 +74,7 @@ function matches(haystack: string, needle: string) {
 }
 
 export default function CommandPalette() {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
@@ -158,7 +160,7 @@ export default function CommandPalette() {
 
   const trigger = (
     <button type="button" className="palette-trigger" onClick={() => setOpen(true)}>
-      <span>Search</span>
+      <span>{t.palette.label}</span>
       <kbd>⌘K</kbd>
     </button>
   );
@@ -183,7 +185,7 @@ export default function CommandPalette() {
           className="palette-input"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Jump to a section, capability or repository…"
+          placeholder={t.palette.placeholder}
           aria-label="Search"
           autoComplete="off"
           spellCheck={false}
@@ -192,7 +194,7 @@ export default function CommandPalette() {
         <div className="palette-results" ref={listRef}>
           {results.length === 0 && (
             <p className="palette-empty">
-              Nothing matches “{query}”. Try a domain name, or a repository like <code>GridOS</code>.
+              {t.palette.emptyPrefix} “{query}”. {t.palette.emptySuffix}
             </p>
           )}
           {results.map((command, index) => {
@@ -200,7 +202,7 @@ export default function CommandPalette() {
             lastGroup = command.group;
             return (
               <div key={command.id}>
-                {showGroup && <p className="palette-group">{command.group}</p>}
+                {showGroup && <p className="palette-group">{t.palette.groups[command.group] ?? command.group}</p>}
                 <button
                   type="button"
                   className="palette-item"

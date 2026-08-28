@@ -102,6 +102,99 @@ export type Dictionary = {
     no: string;
     thanks: string;
   };
+  capability: {
+    kicker: string;
+    title: string;
+    intro: string;
+    filterHint: string;
+    filterHintActive: string;
+    exercisedIn: string;
+  };
+  registryUi: {
+    kicker: string;
+    titleAll: string;
+    /** '{count}' and '{domain}' are replaced at render time. */
+    titleFiltered: string;
+    clearFilter: string;
+    shipped: string;
+    inDevelopment: string;
+    openLive: string;
+    source: string;
+    privateAccess: string;
+  };
+  /** Display names for capability domains. Keys are the canonical registry
+   *  domain strings — filtering logic always uses the canonical key. */
+  domainLabels: Record<string, string>;
+  /** Localised overrides for capability summaries, keyed by domain.
+   *  Missing key → registry's canonical English summary. */
+  capabilitySummaries: Record<string, string>;
+  /** Localised overrides for project summaries, keyed by project name.
+   *  Missing key → registry's canonical English summary. */
+  projectSummaries: Record<string, string>;
+  payments: {
+    kicker: string;
+    title: string;
+    intro: string;
+    badge: string;
+    accepted: string;
+    secure: string;
+    tiers: {
+      title: string;
+      price: string;
+      sub: string;
+      desc: string;
+      points: string[];
+      cta: string;
+    }[];
+  };
+  contact: {
+    name: string;
+    email: string;
+    company: string;
+    message: string;
+    send: string;
+    sending: string;
+    success: string;
+    error: string;
+  };
+  footer: {
+    cta: string;
+    platform: string;
+    network: string;
+    status: string;
+    role: string;
+    roleSub: string;
+    workRegistry: string;
+    physicsInformed: string;
+    liveSimulator: string;
+    available: string;
+    europe: string;
+    backToTop: string;
+    rights: string;
+    netSoftware: string;
+    netHardware: string;
+    netPersonal: string;
+  };
+  megamenu: {
+    trigger: string;
+    capabilities: string;
+    systems: string;
+    openNow: string;
+    fullRegistry: string;
+    entries: string;
+    signals: string;
+    live: string;
+    contactTag: string;
+    contactTitle: string;
+    contactBody: string;
+  };
+  palette: {
+    label: string;
+    placeholder: string;
+    emptyPrefix: string;
+    emptySuffix: string;
+    groups: Record<string, string>;
+  };
 };
 
 const en: Dictionary = {
@@ -198,6 +291,116 @@ const en: Dictionary = {
     yes: 'Yes',
     no: 'No',
     thanks: 'Thank you — noted.',
+  },
+  capability: {
+    kicker: 'Capability Register',
+    title: 'Every competence below names where it was actually exercised.',
+    intro: 'Grouped by domain rather than by tool. Select a domain to filter the work registry underneath it.',
+    filterHint: 'Filter registry',
+    filterHintActive: 'Filtering registry',
+    exercisedIn: 'Exercised in',
+  },
+  registryUi: {
+    kicker: 'Work Registry',
+    titleAll: 'Public repositories, with their status stated plainly.',
+    titleFiltered: '{count} in {domain}',
+    clearFilter: 'Clear filter',
+    shipped: 'Shipped',
+    inDevelopment: 'In development',
+    openLive: 'Open live demo',
+    source: 'Source',
+    privateAccess: 'Private — request access',
+  },
+  domainLabels: {},
+  capabilitySummaries: {},
+  projectSummaries: {},
+  payments: {
+    kicker: 'Engage & Payments',
+    title: 'Work together — settle securely in seconds.',
+    intro:
+      'Consultation deposits, advisory retainers, and invoice payments through encrypted Stripe checkout. Cards, mobile wallets, and SEPA accepted — with an instant receipt.',
+    badge: 'Most popular',
+    accepted: 'Accepted',
+    secure: 'Secure checkout by Stripe — your card details are never seen by Vincenzo.',
+    tiers: [
+      {
+        title: 'Consultation',
+        price: '€280',
+        sub: 'per 60-min session',
+        desc: 'A focused, high-density working session on grid intelligence, cyber-physical systems, or physics-informed AI.',
+        points: ['Live problem-solving', 'Written recap you keep', 'Slot within 48 hours'],
+        cta: 'Book a session',
+      },
+      {
+        title: 'Advisory Retainer',
+        price: '€3,200',
+        sub: 'per month',
+        desc: 'A dedicated advisory and engineering block with priority access and guaranteed turnaround. Cancel anytime.',
+        points: ['Priority direct access', 'Scoped monthly deliverables', 'Senior, hands-on work'],
+        cta: 'Start retainer',
+      },
+      {
+        title: 'Pay Any Amount',
+        price: 'You decide',
+        sub: 'any currency',
+        desc: 'Enter exactly what you owe — from €5 to €5,000 — and pay with the method you prefer.',
+        points: ['Type any amount at checkout', 'Card, Apple / Google Pay, SEPA', 'Instant emailed receipt'],
+        cta: 'Enter an amount',
+      },
+    ],
+  },
+  contact: {
+    name: 'Your name',
+    email: 'Your email',
+    company: 'Company / organisation (optional)',
+    message: 'What would you like to build or discuss?',
+    send: 'Send message',
+    sending: 'Sending…',
+    success: "Thanks — your message is in. I'll reply within one business day.",
+    error: 'Something went wrong. Email vincenzo@igrimaldi.engineering directly.',
+  },
+  footer: {
+    cta: 'Start a conversation',
+    platform: 'Platform',
+    network: 'Network',
+    status: 'Status',
+    role: 'Physics-Informed Cyber-Physical Systems Engineer.',
+    roleSub: 'Deterministic control • Grid intelligence • AI orchestration.',
+    workRegistry: 'Work registry',
+    physicsInformed: 'Physics-informed',
+    liveSimulator: 'Live simulator',
+    available: 'Available for consultation',
+    europe: 'Europe-based • Open to high-impact CPS, grid intelligence, and autonomous systems opportunities.',
+    backToTop: 'Back to top ↑',
+    rights: '© 2026 Vincenzo Grimaldi. All rights reserved.',
+    netSoftware: 'Software & AI',
+    netHardware: 'Hardware & EE',
+    netPersonal: 'Personal blog',
+  },
+  megamenu: {
+    trigger: 'Work',
+    capabilities: 'Capabilities',
+    systems: 'Systems',
+    openNow: 'Open now',
+    fullRegistry: 'Full work registry',
+    entries: 'entries',
+    signals: 'signals',
+    live: 'Live',
+    contactTag: 'Contact',
+    contactTitle: 'Start a conversation',
+    contactBody: 'Grid intelligence, agentic middleware, or research collaboration.',
+  },
+  palette: {
+    label: 'Search',
+    placeholder: 'Jump to a section, capability or repository…',
+    emptyPrefix: 'Nothing matches',
+    emptySuffix: 'Try a domain name, or a repository like GridOS.',
+    groups: {
+      Sections: 'Sections',
+      Capabilities: 'Capabilities',
+      Systems: 'Systems',
+      Elsewhere: 'Elsewhere',
+    },
   },
 };
 
@@ -296,6 +499,153 @@ const es: Dictionary = {
     no: 'No',
     thanks: 'Gracias — anotado.',
   },
+  capability: {
+    kicker: 'Registro de Capacidades',
+    title: 'Cada competencia indica dónde se ejerció realmente.',
+    intro: 'Agrupadas por dominio, no por herramienta. Selecciona un dominio para filtrar el registro de trabajo debajo.',
+    filterHint: 'Filtrar registro',
+    filterHintActive: 'Filtrando registro',
+    exercisedIn: 'Ejercida en',
+  },
+  registryUi: {
+    kicker: 'Registro de Trabajo',
+    titleAll: 'Repositorios públicos, con su estado indicado claramente.',
+    titleFiltered: '{count} en {domain}',
+    clearFilter: 'Quitar filtro',
+    shipped: 'Publicado',
+    inDevelopment: 'En desarrollo',
+    openLive: 'Abrir demo en vivo',
+    source: 'Código fuente',
+    privateAccess: 'Privado — solicitar acceso',
+  },
+  domainLabels: {
+    'Grid & Power Systems': 'Redes y Sistemas de Potencia',
+    'Industrial Protocols & IT/OT': 'Protocolos Industriales e IT/OT',
+    'Physics-Informed Learning': 'Aprendizaje Informado por la Física',
+    'Robotics & Perception': 'Robótica y Percepción',
+    'Agentic Middleware': 'Middleware Agéntico',
+    'Systems Engineering': 'Ingeniería de Sistemas',
+  },
+  capabilitySummaries: {
+    'Grid & Power Systems':
+      'Modelar, coordinar y despachar activos eléctricos — desde subestaciones de tracción hasta recursos energéticos distribuidos.',
+    'Industrial Protocols & IT/OT':
+      'Hacer que los equipos de campo hablen con el software sin perder determinismo, manteniendo defendible la frontera entre ambos.',
+    'Physics-Informed Learning':
+      'Incorporar las ecuaciones gobernantes y los modelos de amenazas en los componentes aprendidos para que sus salidas sigan siendo físicamente admisibles.',
+    'Robotics & Perception':
+      'Convertir retornos de sensores en geometría sobre la que un controlador puede actuar, con la matemática de calibración bien hecha.',
+    'Agentic Middleware':
+      'Permitir que los modelos de lenguaje alcancen actuadores y registros reales sin renunciar a una traza de auditoría ni a un interruptor de emergencia.',
+    'Systems Engineering':
+      'El sustrato de entrega: servicios tipados, extensiones nativas, interfaces en tiempo real y pipelines que publican.',
+  },
+  projectSummaries: {
+    'physics-informed':
+      'Simulador interactivo de la ontología interdominio CIM + ThreMA, solvers PINN, agentes de seguridad RL y validación ciberfísica IEEE de 9 barras.',
+    GridOS:
+      'Middleware y superficie de control DER: ingesta de protocolos, despacho MILP, detección de anomalías y bucle MPC con pronóstico.',
+    DERIM:
+      'Middleware de integración de recursos energéticos distribuidos centrado en coordinación verificable y ejecución consciente de la red.',
+    'mcp-foundry':
+      'Capa de gobernanza para agentes de IA que actúan sobre sistemas financieros: motor de políticas determinista, tokens de acción firmados, registro de auditoría encadenado.',
+    'robot-lidar-fusion':
+      'Proyección LiDAR-a-cámara con extrínsecos SE(3), intrínsecos pinhole, oclusión por z-buffer y cargador de calibración KITTI.',
+    NeuralBridge:
+      'Middleware nativo de IA para orquestación humano-modelo en entornos de seguridad crítica informados por la física.',
+    'Bahn Project Manager':
+      'Plataforma empresarial para proyectos de infraestructura y estaciones de Deutsche Bahn en 14 departamentos técnicos, basada en un dataset de 1.298 proyectos.',
+    'Palletizer OS':
+      'Base de software determinista y agnóstica al hardware para paletizado de fin de línea: control, seguridad, planificación multi-SKU y telemetría de flota, con optimizador en vivo.',
+  },
+  payments: {
+    kicker: 'Colaboración y Pagos',
+    title: 'Trabajemos juntos — pago seguro en segundos.',
+    intro:
+      'Depósitos de consultoría, retainers de asesoría y pagos de facturas mediante checkout cifrado de Stripe. Se aceptan tarjetas, monederos móviles y SEPA — con recibo instantáneo.',
+    badge: 'Más popular',
+    accepted: 'Se acepta',
+    secure: 'Pago seguro con Stripe — Vincenzo nunca ve los datos de tu tarjeta.',
+    tiers: [
+      {
+        title: 'Consultoría',
+        price: '280 €',
+        sub: 'por sesión de 60 min',
+        desc: 'Una sesión de trabajo enfocada y de alta densidad sobre inteligencia de red, sistemas ciberfísicos o IA informada por la física.',
+        points: ['Resolución de problemas en vivo', 'Resumen escrito para ti', 'Cita en menos de 48 horas'],
+        cta: 'Reservar sesión',
+      },
+      {
+        title: 'Retainer de Asesoría',
+        price: '3.200 €',
+        sub: 'al mes',
+        desc: 'Un bloque dedicado de asesoría e ingeniería con acceso prioritario y plazos garantizados. Cancela cuando quieras.',
+        points: ['Acceso directo prioritario', 'Entregables mensuales definidos', 'Trabajo senior y práctico'],
+        cta: 'Iniciar retainer',
+      },
+      {
+        title: 'Paga Cualquier Importe',
+        price: 'Tú decides',
+        sub: 'cualquier divisa',
+        desc: 'Introduce exactamente lo que debes — de 5 € a 5.000 € — y paga con el método que prefieras.',
+        points: ['Importe libre en el checkout', 'Tarjeta, Apple / Google Pay, SEPA', 'Recibo instantáneo por email'],
+        cta: 'Introducir importe',
+      },
+    ],
+  },
+  contact: {
+    name: 'Tu nombre',
+    email: 'Tu email',
+    company: 'Empresa / organización (opcional)',
+    message: '¿Qué te gustaría construir o discutir?',
+    send: 'Enviar mensaje',
+    sending: 'Enviando…',
+    success: 'Gracias — tu mensaje ha llegado. Respondo en un día laborable.',
+    error: 'Algo salió mal. Escribe directamente a vincenzo@igrimaldi.engineering.',
+  },
+  footer: {
+    cta: 'Iniciar una conversación',
+    platform: 'Plataforma',
+    network: 'Red',
+    status: 'Estado',
+    role: 'Ingeniero de Sistemas Ciberfísicos Informados por la Física.',
+    roleSub: 'Control determinista • Inteligencia de red • Orquestación de IA.',
+    workRegistry: 'Registro de trabajo',
+    physicsInformed: 'Informado por la física',
+    liveSimulator: 'Simulador en vivo',
+    available: 'Disponible para consultoría',
+    europe: 'Con base en Europa • Abierto a oportunidades de alto impacto en CPS, inteligencia de red y sistemas autónomos.',
+    backToTop: 'Volver arriba ↑',
+    rights: '© 2026 Vincenzo Grimaldi. Todos los derechos reservados.',
+    netSoftware: 'Software e IA',
+    netHardware: 'Hardware e Ing. Eléctrica',
+    netPersonal: 'Blog personal',
+  },
+  megamenu: {
+    trigger: 'Trabajo',
+    capabilities: 'Capacidades',
+    systems: 'Sistemas',
+    openNow: 'Abrir ahora',
+    fullRegistry: 'Registro completo',
+    entries: 'entradas',
+    signals: 'señales',
+    live: 'En vivo',
+    contactTag: 'Contacto',
+    contactTitle: 'Iniciar una conversación',
+    contactBody: 'Inteligencia de red, middleware agéntico o colaboración en investigación.',
+  },
+  palette: {
+    label: 'Buscar',
+    placeholder: 'Salta a una sección, capacidad o repositorio…',
+    emptyPrefix: 'Nada coincide con',
+    emptySuffix: 'Prueba un dominio o un repositorio como GridOS.',
+    groups: {
+      Sections: 'Secciones',
+      Capabilities: 'Capacidades',
+      Systems: 'Sistemas',
+      Elsewhere: 'Otros sitios',
+    },
+  },
 };
 
 const de: Dictionary = {
@@ -393,6 +743,153 @@ const de: Dictionary = {
     no: 'Nein',
     thanks: 'Danke — notiert.',
   },
+  capability: {
+    kicker: 'Kompetenzregister',
+    title: 'Jede Kompetenz benennt, wo sie tatsächlich ausgeübt wurde.',
+    intro: 'Gruppiert nach Domäne statt nach Werkzeug. Wählen Sie eine Domäne, um das Arbeitsregister darunter zu filtern.',
+    filterHint: 'Register filtern',
+    filterHintActive: 'Register gefiltert',
+    exercisedIn: 'Ausgeübt bei',
+  },
+  registryUi: {
+    kicker: 'Arbeitsregister',
+    titleAll: 'Öffentliche Repositories, mit klar benanntem Status.',
+    titleFiltered: '{count} in {domain}',
+    clearFilter: 'Filter aufheben',
+    shipped: 'Veröffentlicht',
+    inDevelopment: 'In Entwicklung',
+    openLive: 'Live-Demo öffnen',
+    source: 'Quellcode',
+    privateAccess: 'Privat — Zugriff anfragen',
+  },
+  domainLabels: {
+    'Grid & Power Systems': 'Netz- & Energiesysteme',
+    'Industrial Protocols & IT/OT': 'Industrieprotokolle & IT/OT',
+    'Physics-Informed Learning': 'Physikinformiertes Lernen',
+    'Robotics & Perception': 'Robotik & Wahrnehmung',
+    'Agentic Middleware': 'Agentische Middleware',
+    'Systems Engineering': 'Systems Engineering',
+  },
+  capabilitySummaries: {
+    'Grid & Power Systems':
+      'Elektrische Anlagen modellieren, koordinieren und disponieren — von Traktionsunterwerken bis zu dezentralen Energieressourcen.',
+    'Industrial Protocols & IT/OT':
+      'Feldgeräte mit Software sprechen lassen, ohne Determinismus zu verlieren — und die Grenze zwischen beiden verteidigbar halten.',
+    'Physics-Informed Learning':
+      'Maßgebende Gleichungen und Bedrohungsmodelle in gelernte Komponenten einbetten, damit deren Ausgaben physikalisch zulässig bleiben.',
+    'Robotics & Perception':
+      'Rohe Sensordaten in Geometrie verwandeln, auf die ein Regler wirken kann — mit sauber gerechneter Kalibriermathematik.',
+    'Agentic Middleware':
+      'Sprachmodellen Zugriff auf echte Aktoren und echte Konten geben, ohne Audit-Trail und Not-Aus aufzugeben.',
+    'Systems Engineering':
+      'Das Liefersubstrat: typisierte Services, native Erweiterungen, Echtzeit-Browseroberflächen und Pipelines, die veröffentlichen.',
+  },
+  projectSummaries: {
+    'physics-informed':
+      'Interaktiver Simulator für die domänenübergreifende CIM+ThreMA-Ontologie, PINN-Solver, RL-Sicherheitsagenten und IEEE-9-Bus-Validierung.',
+    GridOS:
+      'DER-Middleware und Leitoberfläche: Protokoll-Ingest, MILP-Dispatch, Anomalieerkennung und ein prognosegetriebener MPC-Regelkreis.',
+    DERIM:
+      'Integrations-Middleware für dezentrale Energieressourcen mit Fokus auf verifizierbare Koordination und netzbewusste Ausführung.',
+    'mcp-foundry':
+      'Governance-Schicht für KI-Agenten auf Finanzsystemen: deterministische Policy-Engine, signierte Aktions-Token, hash-verkettetes Auditlog.',
+    'robot-lidar-fusion':
+      'LiDAR-zu-Kamera-Projektion mit SE(3)-Extrinsik, Pinhole-Intrinsik, Z-Buffer-Verdeckung und KITTI-Kalibrierlader.',
+    NeuralBridge:
+      'KI-native Middleware für Mensch-Modell-Orchestrierung in sicherheitskritischen, physikinformierten Umgebungen.',
+    'Bahn Project Manager':
+      'Enterprise-Plattform für DB-Infrastruktur- und Bahnhofsprojekte über 14 Fachbereiche, datengetrieben aus 1.298 Projekten.',
+    'Palletizer OS':
+      'Hardware-agnostische, deterministische Software-Basis für End-of-Line-Palettierung: Regelung, Sicherheit, Misch-SKU-Planung und Flottentelemetrie, mit Live-Optimierer.',
+  },
+  payments: {
+    kicker: 'Zusammenarbeit & Zahlungen',
+    title: 'Zusammenarbeiten — sicher bezahlt in Sekunden.',
+    intro:
+      'Beratungsanzahlungen, Advisory-Retainer und Rechnungszahlungen über verschlüsselten Stripe-Checkout. Karten, mobile Wallets und SEPA — mit sofortiger Quittung.',
+    badge: 'Am beliebtesten',
+    accepted: 'Akzeptiert',
+    secure: 'Sicherer Checkout über Stripe — Ihre Kartendaten sieht Vincenzo nie.',
+    tiers: [
+      {
+        title: 'Beratung',
+        price: '280 €',
+        sub: 'pro 60-Min.-Session',
+        desc: 'Eine fokussierte, dichte Arbeitssession zu Netzintelligenz, cyber-physischen Systemen oder physikinformierter KI.',
+        points: ['Live-Problemlösung', 'Schriftliche Zusammenfassung', 'Termin innerhalb von 48 Stunden'],
+        cta: 'Session buchen',
+      },
+      {
+        title: 'Advisory-Retainer',
+        price: '3.200 €',
+        sub: 'pro Monat',
+        desc: 'Ein dediziertes Beratungs- und Engineering-Kontingent mit Prioritätszugang und garantierter Bearbeitung. Jederzeit kündbar.',
+        points: ['Priorisierter Direktzugang', 'Definierte monatliche Ergebnisse', 'Senior-Arbeit, hands-on'],
+        cta: 'Retainer starten',
+      },
+      {
+        title: 'Beliebiger Betrag',
+        price: 'Sie entscheiden',
+        sub: 'jede Währung',
+        desc: 'Geben Sie genau den geschuldeten Betrag ein — von 5 € bis 5.000 € — und zahlen Sie mit Ihrer bevorzugten Methode.',
+        points: ['Freier Betrag im Checkout', 'Karte, Apple / Google Pay, SEPA', 'Sofortige Quittung per E-Mail'],
+        cta: 'Betrag eingeben',
+      },
+    ],
+  },
+  contact: {
+    name: 'Ihr Name',
+    email: 'Ihre E-Mail',
+    company: 'Unternehmen / Organisation (optional)',
+    message: 'Was möchten Sie bauen oder besprechen?',
+    send: 'Nachricht senden',
+    sending: 'Wird gesendet…',
+    success: 'Danke — Ihre Nachricht ist da. Antwort innerhalb eines Werktags.',
+    error: 'Etwas ist schiefgelaufen. Schreiben Sie direkt an vincenzo@igrimaldi.engineering.',
+  },
+  footer: {
+    cta: 'Gespräch beginnen',
+    platform: 'Plattform',
+    network: 'Netzwerk',
+    status: 'Status',
+    role: 'Ingenieur für physikinformierte cyber-physische Systeme.',
+    roleSub: 'Deterministische Regelung • Netzintelligenz • KI-Orchestrierung.',
+    workRegistry: 'Arbeitsregister',
+    physicsInformed: 'Physikinformiert',
+    liveSimulator: 'Live-Simulator',
+    available: 'Verfügbar für Beratung',
+    europe: 'In Europa ansässig • Offen für wirkungsvolle Projekte in CPS, Netzintelligenz und autonomen Systemen.',
+    backToTop: 'Nach oben ↑',
+    rights: '© 2026 Vincenzo Grimaldi. Alle Rechte vorbehalten.',
+    netSoftware: 'Software & KI',
+    netHardware: 'Hardware & Elektrotechnik',
+    netPersonal: 'Persönlicher Blog',
+  },
+  megamenu: {
+    trigger: 'Arbeit',
+    capabilities: 'Kompetenzen',
+    systems: 'Systeme',
+    openNow: 'Jetzt öffnen',
+    fullRegistry: 'Vollständiges Register',
+    entries: 'Einträge',
+    signals: 'Signale',
+    live: 'Live',
+    contactTag: 'Kontakt',
+    contactTitle: 'Gespräch beginnen',
+    contactBody: 'Netzintelligenz, agentische Middleware oder Forschungskooperation.',
+  },
+  palette: {
+    label: 'Suche',
+    placeholder: 'Zu Abschnitt, Kompetenz oder Repository springen…',
+    emptyPrefix: 'Nichts passt zu',
+    emptySuffix: 'Versuchen Sie eine Domäne oder ein Repository wie GridOS.',
+    groups: {
+      Sections: 'Abschnitte',
+      Capabilities: 'Kompetenzen',
+      Systems: 'Systeme',
+      Elsewhere: 'Anderswo',
+    },
+  },
 };
 
 const zh: Dictionary = {
@@ -481,6 +978,138 @@ const zh: Dictionary = {
     yes: '找到了',
     no: '没有',
     thanks: '谢谢 — 已记录。',
+  },
+  capability: {
+    kicker: '能力清单',
+    title: '以下每项能力都注明了它实际应用的场景。',
+    intro: '按领域而非工具分组。选择一个领域即可筛选下方的工作台账。',
+    filterHint: '筛选台账',
+    filterHintActive: '正在筛选',
+    exercisedIn: '应用于',
+  },
+  registryUi: {
+    kicker: '工作台账',
+    titleAll: '公开仓库，状态如实标注。',
+    titleFiltered: '{domain}：{count} 个',
+    clearFilter: '清除筛选',
+    shipped: '已发布',
+    inDevelopment: '开发中',
+    openLive: '打开在线演示',
+    source: '源码',
+    privateAccess: '私有 — 申请访问',
+  },
+  domainLabels: {
+    'Grid & Power Systems': '电网与电力系统',
+    'Industrial Protocols & IT/OT': '工业协议与 IT/OT',
+    'Physics-Informed Learning': '物理信息学习',
+    'Robotics & Perception': '机器人与感知',
+    'Agentic Middleware': '智能体中间件',
+    'Systems Engineering': '系统工程',
+  },
+  capabilitySummaries: {
+    'Grid & Power Systems': '对电力资产进行建模、协调与调度 — 从牵引变电站到分布式能源资源。',
+    'Industrial Protocols & IT/OT': '让现场设备与软件对话而不失确定性，并让两者之间的边界始终可防御。',
+    'Physics-Informed Learning': '将控制方程与威胁模型嵌入学习组件，使其输出始终保持物理可行。',
+    'Robotics & Perception': '把原始传感器回波转化为控制器可以作用的几何信息，并把标定数学做扎实。',
+    'Agentic Middleware': '让语言模型触达真实执行器与真实账本，同时不放弃审计链与紧急停止开关。',
+    'Systems Engineering': '交付基座：类型化服务、原生扩展、实时浏览器界面，以及能够发布的流水线。',
+  },
+  projectSummaries: {
+    'physics-informed': '跨域 CIM + ThreMA 本体、PINN 求解器、强化学习安全智能体与 IEEE 9 节点网络物理验证的交互式模拟器。',
+    GridOS: 'DER 中间件与控制界面：协议接入、MILP 调度、异常检测与预测驱动的 MPC 控制回路。',
+    DERIM: '面向可验证协调与电网感知执行的分布式能源资源集成中间件。',
+    'mcp-foundry': '面向金融系统 AI 智能体的治理层：确定性策略引擎、签名操作令牌、哈希链审计日志。',
+    'robot-lidar-fusion': '基于 SE(3) 外参、针孔内参、z-buffer 遮挡处理与 KITTI 标定加载器的 LiDAR 到相机投影。',
+    NeuralBridge: '面向安全关键、物理信息环境的人机模型编排 AI 原生中间件。',
+    'Bahn Project Manager': '覆盖德国铁路 14 个技术部门的基础设施与车站项目企业平台，基于 1,298 个项目的数据集。',
+    'Palletizer OS': '硬件无关、确定性的码垛软件基座：控制、安全、混合 SKU 规划与机群遥测，附带在线优化器。',
+  },
+  payments: {
+    kicker: '合作与支付',
+    title: '一起工作 — 数秒内安全结算。',
+    intro: '咨询定金、顾问月费与账单支付均通过加密的 Stripe 结账完成。支持银行卡、移动钱包与 SEPA — 即时开具收据。',
+    badge: '最受欢迎',
+    accepted: '支持',
+    secure: '由 Stripe 提供安全结账 — Vincenzo 永远不会看到您的卡片信息。',
+    tiers: [
+      {
+        title: '咨询',
+        price: '€280',
+        sub: '每 60 分钟',
+        desc: '一场聚焦、高密度的工作会谈，主题涵盖电网智能、网络物理系统或物理信息 AI。',
+        points: ['现场解决问题', '书面纪要归您所有', '48 小时内安排'],
+        cta: '预约会谈',
+      },
+      {
+        title: '顾问月费',
+        price: '€3,200',
+        sub: '每月',
+        desc: '专属的顾问与工程时间块，享有优先响应与交付保障。可随时取消。',
+        points: ['优先直达沟通', '明确的每月交付物', '资深且亲力亲为'],
+        cta: '开始合作',
+      },
+      {
+        title: '任意金额',
+        price: '您决定',
+        sub: '任意币种',
+        desc: '输入确切应付金额 — 从 €5 到 €5,000 — 并用您偏好的方式支付。',
+        points: ['结账时自由输入金额', '银行卡、Apple / Google Pay、SEPA', '收据即时发送至邮箱'],
+        cta: '输入金额',
+      },
+    ],
+  },
+  contact: {
+    name: '您的姓名',
+    email: '您的邮箱',
+    company: '公司 / 机构（选填）',
+    message: '您想构建或探讨什么？',
+    send: '发送消息',
+    sending: '发送中…',
+    success: '谢谢 — 消息已送达，一个工作日内回复。',
+    error: '出了点问题。请直接发邮件至 vincenzo@igrimaldi.engineering。',
+  },
+  footer: {
+    cta: '开始对话',
+    platform: '平台',
+    network: '站点网络',
+    status: '状态',
+    role: '物理信息网络物理系统工程师。',
+    roleSub: '确定性控制 • 电网智能 • AI 编排。',
+    workRegistry: '工作台账',
+    physicsInformed: '物理信息',
+    liveSimulator: '在线模拟器',
+    available: '可接受咨询',
+    europe: '常驻欧洲 • 欢迎高影响力的 CPS、电网智能与自主系统机会。',
+    backToTop: '返回顶部 ↑',
+    rights: '© 2026 Vincenzo Grimaldi 版权所有。',
+    netSoftware: '软件与 AI',
+    netHardware: '硬件与电气工程',
+    netPersonal: '个人博客',
+  },
+  megamenu: {
+    trigger: '作品',
+    capabilities: '能力',
+    systems: '系统',
+    openNow: '立即打开',
+    fullRegistry: '完整台账',
+    entries: '条',
+    signals: '项',
+    live: '在线',
+    contactTag: '联系',
+    contactTitle: '开始对话',
+    contactBody: '电网智能、智能体中间件或研究合作。',
+  },
+  palette: {
+    label: '搜索',
+    placeholder: '跳转到版块、能力或仓库…',
+    emptyPrefix: '没有匹配',
+    emptySuffix: '试试某个领域，或 GridOS 这样的仓库名。',
+    groups: {
+      Sections: '版块',
+      Capabilities: '能力',
+      Systems: '系统',
+      Elsewhere: '其他站点',
+    },
   },
 };
 

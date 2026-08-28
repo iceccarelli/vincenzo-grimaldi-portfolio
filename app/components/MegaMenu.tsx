@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { capabilities, projects } from '../lib/registry';
+import { useLanguage } from '../lib/i18n';
 
 /**
  * Labelled "Work" trigger that opens a three-column panel: what the work is
@@ -11,6 +12,7 @@ import { capabilities, projects } from '../lib/registry';
  */
 export default function MegaMenu() {
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function MegaMenu() {
         aria-haspopup="true"
         onClick={() => setOpen((current) => !current)}
       >
-        Work
+        {t.megamenu.trigger}
         <span className={`megamenu-caret${open ? ' is-open' : ''}`} aria-hidden="true">
           ▾
         </span>
@@ -54,13 +56,13 @@ export default function MegaMenu() {
       {open && (
         <div className="megamenu-panel" role="menu">
           <div className="megamenu-column">
-            <p className="megamenu-heading">Capabilities</p>
+            <p className="megamenu-heading">{t.megamenu.capabilities}</p>
             <ul>
               {capabilities.map((capability) => (
                 <li key={capability.domain}>
                   <a href="#capabilities" onClick={() => setOpen(false)}>
-                    <span>{capability.domain}</span>
-                    <small>{capability.signals.length} signals</small>
+                    <span>{t.domainLabels[capability.domain] ?? capability.domain}</span>
+                    <small>{capability.signals.length} {t.megamenu.signals}</small>
                   </a>
                 </li>
               ))}
@@ -68,7 +70,7 @@ export default function MegaMenu() {
           </div>
 
           <div className="megamenu-column">
-            <p className="megamenu-heading">Systems</p>
+            <p className="megamenu-heading">{t.megamenu.systems}</p>
             <ul>
               {shipped.map((project) => (
                 <li key={project.name}>
@@ -80,15 +82,15 @@ export default function MegaMenu() {
               ))}
               <li>
                 <a href="#registry" onClick={() => setOpen(false)}>
-                  <span>Full work registry</span>
-                  <small>{projects.length} entries</small>
+                  <span>{t.megamenu.fullRegistry}</span>
+                  <small>{projects.length} {t.megamenu.entries}</small>
                 </a>
               </li>
             </ul>
           </div>
 
           <div className="megamenu-column megamenu-column--feature">
-            <p className="megamenu-heading">Open now</p>
+            <p className="megamenu-heading">{t.megamenu.openNow}</p>
             {live.map((project) => (
               <a
                 className="megamenu-feature"
@@ -98,15 +100,15 @@ export default function MegaMenu() {
                 rel="noreferrer"
                 onClick={() => setOpen(false)}
               >
-                <span className="megamenu-feature-tag">Live</span>
+                <span className="megamenu-feature-tag">{t.megamenu.live}</span>
                 <strong>{project.name}</strong>
-                <p>{project.summary}</p>
+                <p>{t.projectSummaries[project.name] ?? project.summary}</p>
               </a>
             ))}
             <a className="megamenu-feature" href="#connect" onClick={() => setOpen(false)}>
-              <span className="megamenu-feature-tag">Contact</span>
-              <strong>Start a conversation</strong>
-              <p>Grid intelligence, agentic middleware, or research collaboration.</p>
+              <span className="megamenu-feature-tag">{t.megamenu.contactTag}</span>
+              <strong>{t.megamenu.contactTitle}</strong>
+              <p>{t.megamenu.contactBody}</p>
             </a>
           </div>
         </div>

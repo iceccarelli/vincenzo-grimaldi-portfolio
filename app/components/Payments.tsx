@@ -1,6 +1,7 @@
 'use client';
 
 import { CalendarClock, Briefcase, ReceiptText, ShieldCheck, Check, ArrowRight } from 'lucide-react';
+import { useLanguage } from '../lib/i18n';
 
 const RAW_STRIPE = {
   deposit: 'https://buy.stripe.com/REPLACE_CONSULTATION_DEPOSIT',
@@ -24,48 +25,52 @@ const STRIPE = {
 
 const methods = ['Visa', 'Mastercard', 'Amex', 'Apple Pay', 'Google Pay', 'SEPA', 'Link'];
 
-const tiers = [
-  { icon: CalendarClock, title: 'Consultation', price: '€280', sub: 'per 60-min session',
-    desc: 'A focused, high-density working session on grid intelligence, cyber-physical systems, or physics-informed AI.',
-    points: ['Live problem-solving', 'Written recap you keep', 'Slot within 48 hours'],
-    cta: 'Book a session', href: STRIPE.deposit, featured: false },
-  { icon: Briefcase, title: 'Advisory Retainer', price: '€3,200', sub: 'per month',
-    desc: 'A dedicated advisory and engineering block with priority access and guaranteed turnaround. Cancel anytime.',
-    points: ['Priority direct access', 'Scoped monthly deliverables', 'Senior, hands-on work'],
-    cta: 'Start retainer', href: STRIPE.retainer, featured: true },
-  { icon: ReceiptText, title: 'Pay Any Amount', price: 'You decide', sub: 'any currency',
-    desc: 'Enter exactly what you owe — from €5 to €5,000 — and pay with the method you prefer.',
-    points: ['Type any amount at checkout', 'Card, Apple / Google Pay, SEPA', 'Instant emailed receipt'],
-    cta: 'Enter an amount', href: STRIPE.invoice, featured: false },
+/** Static, locale-independent tier facts; copy comes from the dictionary. */
+const TIER_META = [
+  { icon: CalendarClock, href: STRIPE.deposit, featured: false },
+  { icon: Briefcase, href: STRIPE.retainer, featured: true },
+  { icon: ReceiptText, href: STRIPE.invoice, featured: false },
 ];
 
 export default function Payments() {
+  const { t } = useLanguage();
+
   return (
     <section className="section-shell content-section" id="payments">
       <div style={{ maxWidth: '680px' }}>
-        <span className="pay-eyebrow">Engage &amp; Payments</span>
-        <h2 style={{ marginTop: '0.6rem' }}>Work together — settle securely in seconds.</h2>
+        <span className="pay-eyebrow">{t.payments.kicker}</span>
+        <h2 style={{ marginTop: '0.6rem' }}>{t.payments.title}</h2>
         <p style={{ color: 'var(--muted-strong)', lineHeight: 1.65, marginTop: '0.75rem' }}>
-          Consultation deposits, advisory retainers, and invoice payments through encrypted Stripe
-          checkout. Cards, mobile wallets, and SEPA accepted — with an instant receipt.
+          {t.payments.intro}
         </p>
       </div>
 
       <div className="pay-grid">
-        {tiers.map((t) => {
-          const Icon = t.icon;
+        {t.payments.tiers.map((tier, index) => {
+          const meta = TIER_META[index];
+          const Icon = meta.icon;
           return (
-            <div key={t.title} className={`pay-card glass-panel spotlight-border${t.featured ? ' pay-card--featured' : ''}`}>
-              {t.featured && <span className="pay-badge">Most popular</span>}
+            <div
+              key={tier.title}
+              className={`pay-card glass-panel spotlight-border${meta.featured ? ' pay-card--featured' : ''}`}
+            >
+              {meta.featured && <span className="pay-badge">{t.payments.badge}</span>}
               <span className="pay-icon"><Icon size={22} strokeWidth={1.75} /></span>
-              <h3 className="pay-title">{t.title}</h3>
-              <div className="pay-price">{t.price}<span>{t.sub}</span></div>
-              <p className="pay-desc">{t.desc}</p>
+              <h3 className="pay-title">{tier.title}</h3>
+              <div className="pay-price">{tier.price}<span>{tier.sub}</span></div>
+              <p className="pay-desc">{tier.desc}</p>
               <ul className="pay-points">
-                {t.points.map((p) => (<li key={p}><Check size={15} strokeWidth={2.5} /> {p}</li>))}
+                {tier.points.map((point) => (
+                  <li key={point}><Check size={15} strokeWidth={2.5} /> {point}</li>
+                ))}
               </ul>
-              <a className={t.featured ? 'primary-button pay-cta' : 'secondary-button pay-cta'} href={t.href} target="_blank" rel="noopener noreferrer">
-                {t.cta} <ArrowRight size={16} />
+              <a
+                className={meta.featured ? 'primary-button pay-cta' : 'secondary-button pay-cta'}
+                href={meta.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {tier.cta} <ArrowRight size={16} />
               </a>
             </div>
           );
@@ -74,11 +79,11 @@ export default function Payments() {
 
       <div className="pay-footer">
         <div className="pay-methods">
-          <span className="pay-methods-label">Accepted</span>
+          <span className="pay-methods-label">{t.payments.accepted}</span>
           {methods.map((m) => <span key={m} className="pay-chip">{m}</span>)}
         </div>
         <div className="pay-secure">
-          <ShieldCheck size={16} /> Secure checkout by Stripe — your card details are never seen by Vincenzo.
+          <ShieldCheck size={16} /> {t.payments.secure}
         </div>
       </div>
     </section>

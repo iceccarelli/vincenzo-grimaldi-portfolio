@@ -2,14 +2,20 @@
 
 import { useMemo, useState } from 'react';
 import { capabilities, projects, type CapabilityDomain } from '../lib/registry';
+import { useLanguage } from '../lib/i18n';
 
 /**
  * Two sections that share one piece of state: the selected domain.
  * Selecting a capability domain filters the registry below it, so the
  * claim and the evidence for the claim stay in the same field of view.
+ *
+ * Filtering always uses the canonical registry domain key; the active
+ * dictionary only changes what is DISPLAYED (labels + summaries), so
+ * switching language never breaks the filter.
  */
 export default function CapabilitySystem() {
   const [selected, setSelected] = useState<CapabilityDomain | null>(null);
+  const { t } = useLanguage();
 
   const visibleProjects = useMemo(
     () => (selected ? projects.filter((project) => project.domain === selected) : projects),
@@ -19,17 +25,22 @@ export default function CapabilitySystem() {
   const toggle = (domain: string) =>
     setSelected((current) => (current === domain ? null : (domain as CapabilityDomain)));
 
+  const domainLabel = (domain: string) => t.domainLabels[domain] ?? domain;
+
+  const filteredTitle = selected
+    ? t.registryUi.titleFiltered
+        .replace('{count}', String(visibleProjects.length))
+        .replace('{domain}', domainLabel(selected))
+    : t.registryUi.titleAll;
+
   return (
     <>
       <section className="section-shell content-section" id="capabilities">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
-            <span className="section-kicker">Capability Register</span>
-            <h2>Every competence below names where it was actually exercised.</h2>
-            <p>
-              Grouped by domain rather than by tool. Select a domain to filter the work
-              registry underneath it.
-            </p>
+            <span className="section-kicker">{t.capability.kicker}</span>
+            <h2>{t.capability.title}</h2>
+            <p>{t.capability.intro}</p>
           </div>
         </div>
 
@@ -47,14 +58,16 @@ export default function CapabilitySystem() {
                   aria-pressed={active}
                   onClick={() => toggle(capability.domain)}
                 >
-                  <span className="capability-domain-name">{capability.domain}</span>
+                  <span className="capability-domain-name">{domainLabel(capability.domain)}</span>
                   <span className="capability-filter-hint">
-                    {active ? 'Filtering registry' : 'Filter registry'}
+                    {active ? t.capability.filterHintActive : t.capability.filterHint}
                   </span>
                 </button>
 
                 <div className="capability-body">
-                  <p className="capability-summary">{capability.summary}</p>
+                  <p className="capability-summary">
+                    {t.capabilitySummaries[capability.domain] ?? capability.summary}
+                  </p>
 
                   <ul className="capability-signals">
                     {capability.signals.map((signal) => (
@@ -64,7 +77,7 @@ export default function CapabilitySystem() {
                 </div>
 
                 <div className="capability-provenance">
-                  <span className="capability-provenance-label">Exercised in</span>
+                  <span className="capability-provenance-label">{t.capability.exercisedIn}</span>
                   <div className="capability-provenance-items">
                     {capability.provenance.map((entry) =>
                       entry.href ? (
@@ -86,22 +99,13 @@ export default function CapabilitySystem() {
       <section className="section-shell content-section" id="registry">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
-            <span className="section-kicker">Work Registry</span>
-            <h2>
-              {selected ? (
-                <>
-                  {visibleProjects.length} repositor{visibleProjects.length === 1 ? 'y' : 'ies'} under{' '}
-                  <span className="gradient-text">{selected}</span>
-                </>
-              ) : (
-                'Public repositories, with their status stated plainly.'
-              )}
-            </h2>
+            <span className="section-kicker">{t.registryUi.kicker}</span>
+            <h2>{filteredTitle}</h2>
           </div>
           {selected && (
             <div className="hero-actions">
               <button type="button" className="secondary-button" onClick={() => setSelected(null)}>
-                Clear filter
+                {t.registryUi.clearFilter}
               </button>
             </div>
           )}
@@ -111,10 +115,10 @@ export default function CapabilitySystem() {
           {visibleProjects.map((project) => (
             <article className="glass-panel glow-card registry-card" key={project.name}>
               <span className={`registry-status registry-status--${project.status}`}>
-                {project.status === 'shipped' ? 'Shipped' : 'In development'}
+                {project.status === 'shipped' ? t.registryUi.shipped : t.registryUi.inDevelopment}
               </span>
               <h3>{project.name}</h3>
-              <p>{project.summary}</p>
+              <p>{t.projectSummaries[project.name] ?? project.summary}</p>
               <ul className="registry-stack">
                 {project.stack.map((item) => (
                   <li key={item}>{item}</li>
@@ -123,15 +127,15 @@ export default function CapabilitySystem() {
               <div className="registry-links">
                 {project.live && (
                   <a href={project.live} target="_blank" rel="noreferrer">
-                    Open live demo
+                    {t.registryUi.openLive}
                   </a>
                 )}
                 {project.repo ? (
                   <a href={project.repo} target="_blank" rel="noreferrer">
-                    Source
+                    {t.registryUi.source}
                   </a>
                 ) : (
-                  <a href="#connect">Private — request access</a>
+                  <a href="#connect">{t.registryUi.privateAccess}</a>
                 )}
               </div>
             </article>

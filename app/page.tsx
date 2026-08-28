@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Payments from './components/Payments';
 import ContactForm from './components/ContactForm';
 import CapabilitySystem from './components/CapabilitySystem';
+import DomainNetwork from './components/DomainNetwork';
+import { useLanguage } from './lib/i18n';
 import Image from 'next/image';
 
 // ====================== ORIGINAL 7 VISUALIZERS (PRESERVED) ======================
@@ -835,6 +837,8 @@ function SystemInsightVisualizerRotator() {
 
 // ====================== MAIN PAGE COMPONENT ======================
 export default function Home() {
+  const { t } = useLanguage();
+
   return (
     <main>
       {/* HERO */}
@@ -842,22 +846,18 @@ export default function Home() {
         <div className="hero-grid">
           <div className="hero-copy">
             <div>
-              <span className="section-kicker">Physics-Informed Systems • Deterministic Control • Grid Intelligence</span>
+              <span className="section-kicker">{t.hero.kicker}</span>
               <h1>
-                <span className="gradient-text">Designing deterministic, physics-informed intelligence for safety-critical control and grid systems.</span>
+                <span className="gradient-text">{t.hero.title}</span>
               </h1>
             </div>
-            <p className="hero-lead">
-              At the intersection of embedded logic, real-time operating systems, AI orchestration, and grid-scale
-              infrastructure. My work translates high-stakes technical complexity into systems that are predictable,
-              legible, and deployable in safety-critical environments.
-            </p>
+            <p className="hero-lead">{t.hero.lead}</p>
             <div className="hero-actions">
               <a className="primary-button" href="#thesis-simulator">
-                Launch the thesis simulator
+                {t.hero.ctaSimulator}
               </a>
               <a className="secondary-button" href="#capabilities">
-                See what I build
+                {t.hero.ctaWork}
               </a>
             </div>
           </div>
@@ -880,13 +880,14 @@ export default function Home() {
 
             <div className="panel-topline" style={{ marginTop: '1.5rem' }}>
               <span className="live-dot" />
-              <span>Grid Networks Engineer, DB InfraGO AG</span>
+              <span>{t.hero.role}</span>
             </div>
             <div className="metric-pills">
-              <span className="metric-pill">Embedded Control</span>
-              <span className="metric-pill">Grid Intelligence</span>
-              <span className="metric-pill">AI Orchestration</span>
-              <span className="metric-pill">RTOS &amp; V&amp;V</span>
+              {t.hero.pills.map((pill) => (
+                <span key={pill} className="metric-pill">
+                  {pill}
+                </span>
+              ))}
             </div>
           </aside>
         </div>
@@ -896,36 +897,27 @@ export default function Home() {
       <section className="section-shell content-section" id="about">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
-            <span className="section-kicker">About the work</span>
-            <h2>I integrate AI, software, energy and robotics into systems where every layer is verifiable.</h2>
-            <p>
-              I do not treat them as isolated domains. From RTOS scheduling to AI orchestration, each layer has to be
-              checkable before the one above it is allowed to depend on it.
-            </p>
+            <span className="section-kicker">{t.about.kicker}</span>
+            <h2>{t.about.title}</h2>
+            <p>{t.about.body}</p>
           </div>
 
           <div className="experience-block" id="experience">
-            <span className="capability-provenance-label">Currently</span>
+            <span className="capability-provenance-label">{t.about.currently}</span>
             <p>
-              <strong>ITk Fachspezialist — Digitisation of high-voltage assets</strong>
+              <strong>{t.about.currentRole}</strong>
               <br />
-              DB InfraGO AG · Aug 2024 – present · Frankfurt
+              {t.about.currentOrg}
             </p>
-            <p className="experience-detail">
-              Digitalisation of railway traction HV grids, IT/OT convergence, and KRITIS-aligned cybersecurity
-              governance for mission-critical rail infrastructure.
-            </p>
+            <p className="experience-detail">{t.about.currentDetail}</p>
 
-            <span className="capability-provenance-label">Previously</span>
+            <span className="capability-provenance-label">{t.about.previously}</span>
             <p>
-              <strong>Industrial Engineering Intern — High-voltage maintenance</strong>
+              <strong>{t.about.previousRole}</strong>
               <br />
-              DB Fahrzeuginstandhaltung GmbH &amp; DB Netz AG · Jun 2022 – Sep 2024
+              {t.about.previousOrg}
             </p>
-            <p className="experience-detail">
-              Lifecycle management of traction power substations, asset condition monitoring, and predictive
-              maintenance.
-            </p>
+            <p className="experience-detail">{t.about.previousDetail}</p>
           </div>
         </div>
       </section>
@@ -937,24 +929,19 @@ export default function Home() {
       <section className="section-shell content-section" id="physics-informed">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
-            <span className="section-kicker">Physics-informed intelligence</span>
-            <h2>Where the laws of physics meet deterministic AI</h2>
+            <span className="section-kicker">{t.physics.kicker}</span>
+            <h2>{t.physics.title}</h2>
           </div>
           <div className="two-column-layout">
             <div>
-              <p className="section-intro">
-                Physics-informed intelligence does not stop at pattern recognition. It constrains learning with the
-                same governing equations that define the physical system.
-              </p>
+              <p className="section-intro">{t.physics.intro}</p>
 
               <div className="math-block" style={{ display: 'grid', gap: '1rem' }}>
                 <div style={{ fontSize: '1.2rem', lineHeight: 1.7, fontWeight: 700 }}>
                   <span style={{ color: 'var(--accent-strong)' }}>Total objective</span> = Data fidelity +{' '}
                   <span style={{ color: 'var(--success)' }}>Physics penalty</span>
                 </div>
-                <div style={{ color: 'var(--muted-strong)' }}>
-                  The model is penalised whenever its predictions violate the governing dynamics of the system.
-                </div>
+                <div style={{ color: 'var(--muted-strong)' }}>{t.physics.penaltyNote}</div>
                 <div
                   style={{
                     padding: '1rem 1.1rem',
@@ -971,11 +958,8 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <h3>Where this is heading</h3>
-              <p>
-                Real-time surrogate models for optimal power flow and inverter control — systems that are not merely
-                intelligent, but operationally trustworthy under physical constraints.
-              </p>
+              <h3>{t.physics.futureHeading}</h3>
+              <p>{t.physics.future}</p>
             </div>
           </div>
         </div>
@@ -985,13 +969,9 @@ export default function Home() {
       <section className="section-shell content-section" id="thesis-simulator">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
-            <span className="section-kicker">RWTH Aachen M.Sc. thesis · June 2025</span>
-            <h2>Data modelling in a cross-domain ontology for cyber intelligence in smart grids using reinforcement learning</h2>
-            <p className="section-intro">
-              The first systematic integration of the Common Information Model (CIM) with the ThreMA cybersecurity
-              framework: unified semantic representations connecting physical power components with vulnerabilities and
-              protective measures. Validated on an enhanced IEEE 9-bus system.
-            </p>
+            <span className="section-kicker">{t.thesis.kicker}</span>
+            <h2>{t.thesis.title}</h2>
+            <p className="section-intro">{t.thesis.intro}</p>
           </div>
 
           <div className="thesis-tags">
@@ -1009,11 +989,14 @@ export default function Home() {
 
           <div className="hero-actions">
             <a className="primary-button" href="https://physics-informed.vercel.app/" target="_blank" rel="noreferrer">
-              Open the simulator
+              {t.thesis.cta}
             </a>
           </div>
         </div>
       </section>
+
+      {/* THE GRIMALDI NETWORK — three domains, one practice */}
+      <DomainNetwork />
 
       <Payments />
 
@@ -1021,12 +1004,9 @@ export default function Home() {
       <section className="section-shell content-section" id="connect">
         <div className="glass-panel cta-panel spotlight-border">
           <div>
-            <span className="section-kicker">Connect</span>
-            <h2>If this systems-level thinking resonates, the next step should be immediate.</h2>
-            <p>
-              AI-native middleware, smart-grid operating systems, embedded control platforms, robotics, or research
-              collaboration. The repositories are private; access is granted on request.
-            </p>
+            <span className="section-kicker">{t.connect.kicker}</span>
+            <h2>{t.connect.title}</h2>
+            <p>{t.connect.body}</p>
           </div>
           <div className="hero-actions">
             <a className="secondary-button" href="mailto:vincenzo@igrimaldi.engineering">

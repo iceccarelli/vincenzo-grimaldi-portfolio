@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import MegaMenu from './MegaMenu';
 import CommandPalette from './CommandPalette';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useLanguage } from '../lib/i18n';
 
 function useScrollDirection() {
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
@@ -43,12 +45,15 @@ export default function Header() {
     if (mobileMenuOpen && window.scrollY > 300) setMobileMenuOpen(false);
   }, [mobileMenuOpen]);
 
-  // Navigation aligned with all major sections + NEW flagship simulator
+  const { t } = useLanguage();
+
+  // Navigation aligned with all major sections + flagship simulator + network
   const navigation = [
-    { label: 'Capabilities', href: '#capabilities' },
-    { label: 'Simulator', href: '#thesis-simulator' },
-    { label: 'Payments', href: '#payments' },
-    { label: 'Connect', href: '#connect' },
+    { label: t.nav.capabilities, href: '#capabilities' },
+    { label: t.nav.simulator, href: '#thesis-simulator' },
+    { label: t.nav.network, href: '#network' },
+    { label: t.nav.payments, href: '#payments' },
+    { label: t.nav.connect, href: '#connect' },
   ];
 
   return (
@@ -74,6 +79,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
+          <LanguageSwitcher />
           <CommandPalette />
 
           {/* GitHub — Now clearly labeled as the Developer Surface */}
@@ -116,6 +122,7 @@ export default function Header() {
         >
           GitHub Profile →
         </a>
+        <LanguageSwitcher />
       </div>
     </header>
   );

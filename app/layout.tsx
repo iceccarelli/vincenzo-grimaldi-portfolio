@@ -4,6 +4,7 @@ import Header from './components/Header';
 import ScrollProgress from './components/ScrollProgress';
 import SocialBar from './components/SocialBar';
 import { Analytics } from '@vercel/analytics/react';
+import { LanguageProvider } from './lib/i18n';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -40,7 +41,16 @@ export const metadata: Metadata = {
   authors: [{ name: 'Vincenzo Grimaldi' }],
   creator: 'Vincenzo Grimaldi',
   publisher: 'Vincenzo Grimaldi',
-  alternates: { canonical: '/' },
+  alternates: {
+    canonical: '/',
+    languages: {
+      'x-default': '/',
+      en: '/',
+      es: '/?lang=es',
+      de: '/?lang=de',
+      'zh-Hans': '/?lang=zh',
+    },
+  },
   openGraph: {
     title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
     description:
@@ -69,7 +79,12 @@ const structuredData = {
   '@type': 'Person',
   name: 'Vincenzo Grimaldi',
   url: 'https://igrimaldi.engineering/',
-  sameAs: ['https://github.com/iceccarelli', 'https://physics-informed.vercel.app/'],
+  sameAs: [
+    'https://github.com/iceccarelli',
+    'https://physics-informed.vercel.app/',
+    'https://engineeringgrimaldi.com/',
+    'https://grimaldi.ca/',
+  ],
   jobTitle: 'Physics-Informed Cyber-Physical Systems Engineer • Grid Networks Engineer at Deutsche Bahn',
   knowsAbout: [
     'Physics-Informed Neural Networks',
@@ -100,6 +115,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
+        <LanguageProvider>
         <div className="site-chrome">
           <div className="background-orb orb-one" />
           <div className="background-orb orb-two" />
@@ -142,6 +158,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">Live Simulator</a>
                     <a className="footer-link" href="#payments">Payments</a>
                     <a className="footer-link" href="#connect">Connect</a>
+                  </div>
+                </div>
+
+                {/* Column 2b – The Grimaldi Network */}
+                <div className="footer-column">
+                  <h4>Network</h4>
+                  <div className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <a className="footer-link" href="https://igrimaldi.engineering">igrimaldi.engineering — Software &amp; AI</a>
+                    <a className="footer-link" href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer">engineeringgrimaldi.com — Hardware &amp; EE</a>
+                    <a className="footer-link" href="https://grimaldi.ca" target="_blank" rel="noopener noreferrer">grimaldi.ca — Personal blog</a>
                   </div>
                 </div>
 
@@ -188,6 +214,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </div>
           </footer>
         </div>
+        </LanguageProvider>
 
         <Analytics />
 

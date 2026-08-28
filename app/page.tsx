@@ -865,7 +865,7 @@ export default function Home() {
           <aside className="glass-panel spotlight-border hero-panel">
             <div className="hero-portrait-shell">
               <Image
-                src="/Vincenzo_Grimaldi_footer_picture_website.jpg"
+                src="/vincenzo_grimaldi_headshot.jpg"
                 alt="Vincenzo Grimaldi"
                 fill
                 priority
@@ -892,6 +892,9 @@ export default function Home() {
           </aside>
         </div>
       </section>
+
+      {/* WHITE CONTENT SHEET — everything below the hero, AWS-style */}
+      <div className="content-sheet">
 
       {/* ABOUT + EXPERIENCE — merged: the claim and the job that backs it */}
       <section className="section-shell content-section" id="about">
@@ -1017,6 +1020,8 @@ export default function Home() {
           <ContactForm />
         </div>
       </section>
+
+      </div>
     </main>
   );
 }

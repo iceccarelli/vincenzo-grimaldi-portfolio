@@ -95,6 +95,13 @@ export type Dictionary = {
     title: string;
     body: string;
   };
+  feedback: {
+    title: string;
+    body: string;
+    yes: string;
+    no: string;
+    thanks: string;
+  };
 };
 
 const en: Dictionary = {
@@ -184,6 +191,13 @@ const en: Dictionary = {
     kicker: 'Connect',
     title: 'If this systems-level thinking resonates, the next step should be immediate.',
     body: 'AI-native middleware, smart-grid operating systems, embedded control platforms, robotics, or research collaboration. The repositories are private; access is granted on request.',
+  },
+  feedback: {
+    title: 'Did you find what you were looking for today?',
+    body: 'Your answer directly shapes what gets built and published next.',
+    yes: 'Yes',
+    no: 'No',
+    thanks: 'Thank you — noted.',
   },
 };
 
@@ -275,6 +289,13 @@ const es: Dictionary = {
     title: 'Si este pensamiento a nivel de sistemas resuena contigo, el siguiente paso debería ser inmediato.',
     body: 'Middleware nativo de IA, sistemas operativos para redes inteligentes, plataformas de control embebido, robótica o colaboración en investigación. Los repositorios son privados; el acceso se concede bajo petición.',
   },
+  feedback: {
+    title: '¿Encontraste hoy lo que buscabas?',
+    body: 'Tu respuesta influye directamente en lo próximo que se construye y publica.',
+    yes: 'Sí',
+    no: 'No',
+    thanks: 'Gracias — anotado.',
+  },
 };
 
 const de: Dictionary = {
@@ -365,6 +386,13 @@ const de: Dictionary = {
     title: 'Wenn dieses Denken auf Systemebene ankommt, sollte der nächste Schritt unmittelbar folgen.',
     body: 'KI-native Middleware, Smart-Grid-Betriebssysteme, eingebettete Regelungsplattformen, Robotik oder Forschungskooperation. Die Repositories sind privat; Zugriff wird auf Anfrage gewährt.',
   },
+  feedback: {
+    title: 'Haben Sie heute gefunden, wonach Sie gesucht haben?',
+    body: 'Ihre Antwort bestimmt direkt mit, was als Nächstes gebaut und veröffentlicht wird.',
+    yes: 'Ja',
+    no: 'Nein',
+    thanks: 'Danke — notiert.',
+  },
 };
 
 const zh: Dictionary = {
@@ -446,6 +474,13 @@ const zh: Dictionary = {
     kicker: '联系',
     title: '如果这种系统级思维引起了你的共鸣，下一步就应当立即发生。',
     body: 'AI 原生中间件、智能电网操作系统、嵌入式控制平台、机器人技术或研究合作。代码仓库为私有，可按需申请访问权限。',
+  },
+  feedback: {
+    title: '今天找到您想要的内容了吗？',
+    body: '您的反馈将直接影响接下来构建与发布的内容。',
+    yes: '找到了',
+    no: '没有',
+    thanks: '谢谢 — 已记录。',
   },
 };
 

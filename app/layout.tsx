@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import Header from './components/Header';
 import ScrollProgress from './components/ScrollProgress';
 import SocialBar from './components/SocialBar';
+import FeedbackBanner from './components/FeedbackBanner';
 import { Analytics } from '@vercel/analytics/react';
 import { LanguageProvider } from './lib/i18n';
 import './globals.css';
@@ -111,109 +112,93 @@ const structuredData = {
   },
 };
 
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
         <LanguageProvider>
-        <div className="site-chrome">
-          <div className="background-orb orb-one" />
-          <div className="background-orb orb-two" />
-          <div className="background-orb orb-three" />
+          <div className="site-chrome">
+            <ScrollProgress />
+            <Header />
 
-        <ScrollProgress />
-        <Header />
+            {children}
 
-          {children}
+            <FeedbackBanner />
 
-          <footer className="site-footer">
-            <div className="section-shell">
-              <div className="footer-content">
-                {/* Column 1 – Entity */}
-                <div>
-                  <div className="brand-lockup" style={{ marginBottom: '1rem' }}>
-                    <span className="brand-monogram" style={{ width: '42px', height: '42px', fontSize: '1.25rem' }}>VG</span>
-                    <span className="brand-copy"><strong>Vincenzo Grimaldi</strong></span>
-                  </div>
-                  <p style={{ color: 'var(--muted-strong)', lineHeight: '1.6', fontSize: '0.95rem' }}>
-                    Physics-Informed Cyber-Physical Systems Engineer<br />
-                    Deterministic control • Grid intelligence • AI orchestration<br />
-                    <span style={{ color: '#34d399' }}>Creator of the 2025 RWTH Aachen Cross-Domain Ontology Simulator</span>
-                  </p>
-
-                  <SocialBar />
-
-                  <p style={{ marginTop: '1.75rem', fontSize: '0.85rem', color: 'var(--muted)' }}>
-                    © 2026 Vincenzo Grimaldi. All Rights Reserved.
-                  </p>
-                </div>
-
-                {/* Column 2 – Sitemap */}
-                <div className="footer-column">
-                  <h4>Platform</h4>
-                  <div className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <a className="footer-link" href="#capabilities">Capabilities</a>
-                    <a className="footer-link" href="#registry">Work registry</a>
-                    <a className="footer-link" href="#physics-informed">Physics-Informed</a>
-                    <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">Live Simulator</a>
-                    <a className="footer-link" href="#payments">Payments</a>
-                    <a className="footer-link" href="#connect">Connect</a>
-                  </div>
-                </div>
-
-                {/* Column 2b – The Grimaldi Network */}
-                <div className="footer-column">
-                  <h4>Network</h4>
-                  <div className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <a className="footer-link" href="https://igrimaldi.engineering">igrimaldi.engineering — Software &amp; AI</a>
-                    <a className="footer-link" href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer">engineeringgrimaldi.com — Hardware &amp; EE</a>
-                    <a className="footer-link" href="https://grimaldi.ca" target="_blank" rel="noopener noreferrer">grimaldi.ca — Personal blog</a>
-                  </div>
-                </div>
-
-                {/* Column 3 – Trust & Verification */}
-                <div className="footer-column">
-                  <h4>Proof of Work</h4>
-                  <div className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <a 
-                      className="footer-link" 
-                      href="https://github.com/iceccarelli" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                    >
-                      GitHub — iceccarelli
-                    </a>
-                    <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">Live Thesis Simulator</a>
-                    <span className="footer-link" style={{ opacity: 0.55 }}>ORCID (pending)</span>
-                    <div className="footer-status">
-                      <span className="live-dot" />
-                      <span>Verified Engineering Expertise</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Column 4 – System Status */}
-                <div className="footer-column">
-                  <h4>System Status</h4>
-                  <div className="footer-status" style={{ marginBottom: '1rem' }}>
-                    <span className="live-dot" />
-                    <span style={{ color: 'var(--success)', fontWeight: 600 }}>Available for Consultation</span>
-                  </div>
-                  <p style={{ color: 'var(--muted)', fontSize: '0.9rem', lineHeight: '1.55' }}>
-                    Europe-based • Open to high-impact CPS, grid intelligence,<br />
-                    and autonomous systems opportunities.
-                  </p>
-                  <a 
-                    href="mailto:vincenzo@igrimaldi.engineering" 
-                    style={{ color: 'var(--accent-strong)', marginTop: '1.5rem', display: 'inline-block' }}
-                  >
-                    vincenzo@igrimaldi.engineering →
+            <footer className="site-footer">
+              <div className="section-shell">
+                {/* Topline — CTA + language, AWS-footer style */}
+                <div className="footer-topline">
+                  <a className="footer-cta" href="#connect">
+                    Start a conversation
                   </a>
                 </div>
+
+                <div className="footer-content">
+                  {/* Column 1 – Entity */}
+                  <div className="footer-column">
+                    <div className="brand-lockup" style={{ marginBottom: '1rem' }}>
+                      <span className="brand-monogram" style={{ background: '#ffffff', color: 'var(--ink)' }}>VG</span>
+                      <span className="brand-copy"><strong style={{ color: '#ffffff' }}>Vincenzo Grimaldi</strong></span>
+                    </div>
+                    <p style={{ lineHeight: 1.6, fontSize: '0.9rem' }}>
+                      Physics-Informed Cyber-Physical Systems Engineer.<br />
+                      Deterministic control • Grid intelligence • AI orchestration.
+                    </p>
+                  </div>
+
+                  {/* Column 2 – Platform */}
+                  <div className="footer-column">
+                    <h4>Platform</h4>
+                    <div className="footer-links">
+                      <a className="footer-link" href="#capabilities">Capabilities</a>
+                      <a className="footer-link" href="#registry">Work registry</a>
+                      <a className="footer-link" href="#physics-informed">Physics-informed</a>
+                      <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">Live simulator</a>
+                      <a className="footer-link" href="#payments">Payments</a>
+                      <a className="footer-link" href="#connect">Connect</a>
+                    </div>
+                  </div>
+
+                  {/* Column 3 – The Grimaldi Network */}
+                  <div className="footer-column">
+                    <h4>Network</h4>
+                    <div className="footer-links">
+                      <a className="footer-link" href="https://igrimaldi.engineering">igrimaldi.engineering — Software &amp; AI</a>
+                      <a className="footer-link" href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer">engineeringgrimaldi.com — Hardware &amp; EE</a>
+                      <a className="footer-link" href="https://grimaldi.ca" target="_blank" rel="noopener noreferrer">grimaldi.ca — Personal blog</a>
+                      <a className="footer-link" href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer">GitHub — iceccarelli</a>
+                    </div>
+                  </div>
+
+                  {/* Column 4 – Status */}
+                  <div className="footer-column">
+                    <h4>Status</h4>
+                    <div className="footer-status" style={{ marginBottom: '1rem' }}>
+                      <span className="live-dot" />
+                      <span>Available for consultation</span>
+                    </div>
+                    <p style={{ fontSize: '0.88rem', lineHeight: 1.55 }}>
+                      Europe-based • Open to high-impact CPS, grid intelligence, and autonomous systems opportunities.
+                    </p>
+                    <a className="footer-link" href="mailto:vincenzo@igrimaldi.engineering" style={{ marginTop: '0.75rem', display: 'inline-block' }}>
+                      vincenzo@igrimaldi.engineering →
+                    </a>
+                  </div>
+                </div>
+
+                <div className="footer-backtotop">
+                  <a href="#top">Back to top ↑</a>
+                </div>
+
+                <div className="footer-legal">
+                  <span>© 2026 Vincenzo Grimaldi. All rights reserved.</span>
+                  <SocialBar />
+                </div>
               </div>
-            </div>
-          </footer>
-        </div>
+            </footer>
+          </div>
         </LanguageProvider>
 
         <Analytics />

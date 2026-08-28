@@ -5,10 +5,12 @@
  *
  * 1. Every capability carries a `provenance` entry naming the place it was
  *    actually exercised. A capability with no provenance does not belong here.
- * 2. Nothing links to a surface a visitor cannot open. All six repositories are
- *    currently private, so no `repo` is set and no provenance entry links to
- *    GitHub. When a repository is made public, add its `repo` URL back and the
- *    card, the mega menu and the command palette will all start linking to it.
+ * 2. Nothing links to a surface a visitor cannot open. Most repositories are
+ *    private, so no `repo` is set for them and no provenance entry links to
+ *    GitHub. `bahn-project-manager` and `palletizer` are public, so they carry
+ *    `repo` URLs; when another repository is made public, add its `repo` URL
+ *    back and the card, the mega menu and the command palette will all start
+ *    linking to it.
  */
 
 export type Provenance = {
@@ -204,6 +206,25 @@ export const projects: Project[] = [
       'AI-native middleware for human-to-model orchestration in safety-critical, physics-informed environments.',
     status: 'in-development',
     stack: ['Python', 'Orchestration'],
+  },
+  {
+    name: 'Bahn Project Manager',
+    domain: 'Systems Engineering',
+    summary:
+      'Enterprise platform for Deutsche Bahn infrastructure and station-development projects across 14 technical departments, data-driven from a 1,298-project dataset.',
+    repo: 'https://github.com/iceccarelli/bahn-project-manager',
+    status: 'shipped',
+    stack: ['TypeScript', 'React 19', 'Vite', 'Vitest'],
+  },
+  {
+    name: 'Palletizer OS',
+    domain: 'Robotics & Perception',
+    summary:
+      'Hardware-agnostic, deterministic software foundation for end-of-line palletizing: control loops, safety logic, mixed-SKU planning and fleet telemetry, with a live optimizer.',
+    repo: 'https://github.com/iceccarelli/palletizer',
+    live: 'https://palletizer-app.vercel.app',
+    status: 'shipped',
+    stack: ['Python', 'Robotics', 'Optimization'],
   },
 ];
 

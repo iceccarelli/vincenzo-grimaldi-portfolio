@@ -11,8 +11,20 @@ export default function ContactForm() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus('sending');
     const data = new FormData(e.currentTarget);
+
+    // No Formspree ID configured yet → degrade gracefully to a pre-filled
+    // email instead of a request that is guaranteed to fail.
+    if (FORMSPREE_ID.includes('REPLACE')) {
+      const subject = encodeURIComponent(`Portfolio contact — ${data.get('name') ?? ''}`);
+      const body = encodeURIComponent(
+        `${data.get('message') ?? ''}\n\n— ${data.get('name') ?? ''} (${data.get('email') ?? ''}) ${data.get('company') ?? ''}`,
+      );
+      window.location.href = `mailto:vincenzo@igrimaldi.engineering?subject=${subject}&body=${body}`;
+      return;
+    }
+
+    setStatus('sending');
     try {
       const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
         method: 'POST',

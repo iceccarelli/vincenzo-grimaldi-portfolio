@@ -11,14 +11,18 @@ import type { ReactElement } from 'react';
 export type SocialLink = { id: string; label: string; url: string; brand: string };
 
 export const SOCIAL_LINKS: SocialLink[] = [
-  { id: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/', brand: '#0A66C2' },
+  // Only profiles that actually exist. Platform-homepage placeholders are a
+  // credibility bug on a site whose registry rule is "nothing links to a
+  // surface a visitor cannot open". Add a row back when its profile is real.
+  {
+    id: 'linkedin',
+    label: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0',
+    brand: '#0A66C2',
+  },
   { id: 'github', label: 'GitHub', url: 'https://github.com/iceccarelli', brand: '#ffffff' },
-  { id: 'x', label: 'X (Twitter)', url: 'https://x.com/', brand: '#ffffff' },
-  { id: 'youtube', label: 'YouTube', url: 'https://www.youtube.com/', brand: '#FF0000' },
-  { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/', brand: '#FF0069' },
-  { id: 'mastodon', label: 'Mastodon', url: 'https://mastodon.social/', brand: '#6364FF' },
-  { id: 'bluesky', label: 'Bluesky', url: 'https://bsky.app/', brand: '#1185FE' },
-  { id: 'orcid', label: 'ORCID', url: 'https://orcid.org/', brand: '#A6CE39' },
+  { id: 'x', label: 'X (Twitter)', url: 'https://x.com/Vince87Grimaldi', brand: '#ffffff' },
+  { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/grimaldiengineering/', brand: '#FF0069' },
   { id: 'email', label: 'Email', url: 'mailto:vincenzo@igrimaldi.engineering', brand: '#34d399' },
 ];
 

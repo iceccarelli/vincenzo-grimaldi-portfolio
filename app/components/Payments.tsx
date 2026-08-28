@@ -2,10 +2,24 @@
 
 import { CalendarClock, Briefcase, ReceiptText, ShieldCheck, Check, ArrowRight } from 'lucide-react';
 
-const STRIPE = {
+const RAW_STRIPE = {
   deposit: 'https://buy.stripe.com/REPLACE_CONSULTATION_DEPOSIT',
   retainer: 'https://buy.stripe.com/REPLACE_PROJECT_RETAINER',
   invoice: 'https://buy.stripe.com/REPLACE_PAY_INVOICE',
+};
+
+/**
+ * Until a real Stripe payment link is pasted above, the CTA falls back to a
+ * pre-filled email instead of a dead checkout URL. The moment a link no
+ * longer contains REPLACE, the button switches to Stripe automatically.
+ */
+const fallback = (subject: string) =>
+  `mailto:vincenzo@igrimaldi.engineering?subject=${encodeURIComponent(subject)}`;
+
+const STRIPE = {
+  deposit: RAW_STRIPE.deposit.includes('REPLACE') ? fallback('Consultation booking') : RAW_STRIPE.deposit,
+  retainer: RAW_STRIPE.retainer.includes('REPLACE') ? fallback('Advisory retainer') : RAW_STRIPE.retainer,
+  invoice: RAW_STRIPE.invoice.includes('REPLACE') ? fallback('Invoice payment') : RAW_STRIPE.invoice,
 };
 
 const methods = ['Visa', 'Mastercard', 'Amex', 'Apple Pay', 'Google Pay', 'SEPA', 'Link'];

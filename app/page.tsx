@@ -5,6 +5,7 @@ import Payments from './components/Payments';
 import ContactForm from './components/ContactForm';
 import CapabilitySystem from './components/CapabilitySystem';
 import DomainNetwork from './components/DomainNetwork';
+import Stories from './components/Stories';
 import { useLanguage } from './lib/i18n';
 import Image from 'next/image';
 
@@ -895,6 +896,9 @@ export default function Home() {
 
       {/* WHITE CONTENT SHEET — everything below the hero, AWS-style */}
       <div className="content-sheet">
+
+      {/* FEATURED STORIES + LIVE DEPLOYMENTS — the dynamic layer */}
+      <Stories />
 
       {/* ABOUT + EXPERIENCE — merged: the claim and the job that backs it */}
       <section className="section-shell content-section" id="about">

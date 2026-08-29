@@ -4,6 +4,7 @@ import Header from './components/Header';
 import ScrollProgress from './components/ScrollProgress';
 import FeedbackBanner from './components/FeedbackBanner';
 import SiteFooter from './components/SiteFooter';
+import AskWidget from './components/AskWidget';
 import { Analytics } from '@vercel/analytics/react';
 import { LanguageProvider } from './lib/i18n';
 import './globals.css';
@@ -121,6 +122,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
             <SiteFooter />
           </div>
+
+          <AskWidget />
         </LanguageProvider>
 
         <Analytics />

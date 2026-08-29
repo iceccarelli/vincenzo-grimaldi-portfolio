@@ -1,6 +1,7 @@
 'use client';
 
 import SocialBar from './SocialBar';
+import BrandMark from './BrandMark';
 import { useLanguage } from '../lib/i18n';
 
 /**
@@ -24,7 +25,7 @@ export default function SiteFooter() {
           {/* Column 1 – Entity */}
           <div className="footer-column">
             <div className="brand-lockup" style={{ marginBottom: '1rem' }}>
-              <span className="brand-monogram" style={{ background: '#ffffff', color: 'var(--ink)' }}>VG</span>
+              <BrandMark size={42} />
               <span className="brand-copy"><strong style={{ color: '#ffffff' }}>Vincenzo Grimaldi</strong></span>
             </div>
             <p style={{ lineHeight: 1.6, fontSize: '0.9rem' }}>

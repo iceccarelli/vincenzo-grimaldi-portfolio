@@ -4,6 +4,7 @@ import { useState } from 'react';
 import MegaMenu from './MegaMenu';
 import CommandPalette from './CommandPalette';
 import LanguageSwitcher from './LanguageSwitcher';
+import BrandMark from './BrandMark';
 import { useLanguage } from '../lib/i18n';
 
 /**
@@ -55,7 +56,7 @@ export default function Header() {
       <div className="topbar">
         <div className="topbar-inner">
           <a className="brand-lockup" href="#top">
-            <span className="brand-monogram">VG</span>
+            <BrandMark size={38} />
             <span className="brand-copy">
               <strong>Vincenzo Grimaldi</strong>
               <small>Physics-Informed • Deterministic Control</small>

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '../lib/i18n';
+import BrandMark from '../components/BrandMark';
 
 /**
  * /card — the digital business card of the Grimaldi Network.
@@ -101,6 +102,9 @@ export default function CardPage() {
         </div>
 
         <footer className="bizcard-foot">
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.85rem' }}>
+            <BrandMark size={34} />
+          </div>
           <Link href="/">{t.card.backHome}</Link>
         </footer>
       </article>

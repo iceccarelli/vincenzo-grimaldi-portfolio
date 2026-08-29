@@ -1,0 +1,2106 @@
+From 975713ed15e3785961eee6925fa3fc07a3fc0ad9 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 29 Aug 2026 19:55:36 +0000
+Subject: [PATCH] =?UTF-8?q?feat(v3):=20TypeScript=20React=20warm-editorial?=
+ =?UTF-8?q?=20site=20=E2=80=94=20Next=20static=20export=20with=20a=20gener?=
+ =?UTF-8?q?ative=20sky?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Full rebuild as Next 14 + TypeScript + React, output:'export': every page
+prerenders to plain HTML for crawlers and AI agents.
+
+Identity: paper and evening light. Cream ground, serif display voice,
+terracotta-rose accents — the softest member of the network family, on
+purpose: this surface humanizes; the dashboards live elsewhere.
+
+Signature: a slow generative sky behind the hero — the sun's height follows
+the visitor's local time of day, cloud bands breathe across the gradient
+(honors prefers-reduced-motion). Plus 'The journey so far': a serif timeline
+from Aachen to Frankfurt to the network to the manuscripts.
+
+Four locales sharing the network's vg-locale key, ProfilePage+Person JSON-LD,
+the Grimaldi mark, headshot committed at 280px, vercel.json pinning the
+static build.
+---
+ .gitignore               |   6 +
+ app/globals.css          | 138 +++++++++++
+ app/icon.svg             |  26 ++
+ app/layout.tsx           |  61 +++++
+ app/page.tsx             | 123 ++++++++++
+ components/BrandMark.tsx |  42 ++++
+ components/Chrome.tsx    |  80 +++++++
+ components/SkyCanvas.tsx |  85 +++++++
+ index.html               | 279 ----------------------
+ lib/i18n.tsx             |  63 +++++
+ lib/strings.json         | 294 +++++++++++++++++++++++
+ next-env.d.ts            |   5 +
+ next.config.js           |   3 +
+ package-lock.json        | 498 +++++++++++++++++++++++++++++++++++++++
+ package.json             |  22 ++
+ public/headshot.jpg      | Bin 0 -> 9410 bytes
+ tsconfig.json            |  20 ++
+ vercel.json              |   4 +
+ 18 files changed, 1470 insertions(+), 279 deletions(-)
+ create mode 100644 .gitignore
+ create mode 100644 app/globals.css
+ create mode 100644 app/icon.svg
+ create mode 100644 app/layout.tsx
+ create mode 100644 app/page.tsx
+ create mode 100644 components/BrandMark.tsx
+ create mode 100644 components/Chrome.tsx
+ create mode 100644 components/SkyCanvas.tsx
+ delete mode 100644 index.html
+ create mode 100644 lib/i18n.tsx
+ create mode 100644 lib/strings.json
+ create mode 100644 next-env.d.ts
+ create mode 100644 next.config.js
+ create mode 100644 package-lock.json
+ create mode 100644 package.json
+ create mode 100644 public/headshot.jpg
+ create mode 100644 tsconfig.json
+ create mode 100644 vercel.json
+
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..46d665c
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,6 @@
++node_modules/
++.next/
++out/
++*.tsbuildinfo
++.vercel/
++.DS_Store
+diff --git a/app/globals.css b/app/globals.css
+new file mode 100644
+index 0000000..ccb0391
+--- /dev/null
++++ b/app/globals.css
+@@ -0,0 +1,138 @@
++/* ============================================================================
++   GRIMALDI.CA — warm editorial identity
++   Function: humanize the network. Identity: paper and evening light —
++   cream ground, serif display voice, terracotta-rose accents, generous air.
++   Same geometry family as the network; the softest member of it, on purpose.
++   ========================================================================== */
++
++:root {
++  --paper: #faf6ef;
++  --paper-2: #f3ecdf;
++  --card: #ffffff;
++  --border: #e7ddcc;
++  --border-strong: #d5c7b0;
++  --ink: #2b2420;
++  --text-2: #5c5248;
++  --muted: #8a7d6e;
++  --terra: #c0563a;
++  --rose: #c86b8f;
++  --gold: #b98a2f;
++  --sheet-r: 40px;
++  --r: 16px;
++  --max: 1240px;
++  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
++}
++
++* { box-sizing: border-box; }
++html { scroll-behavior: smooth; }
++body {
++  margin: 0;
++  font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
++  background: var(--paper);
++  color: var(--ink);
++  -webkit-font-smoothing: antialiased;
++}
++a { color: inherit; text-decoration: none; }
++::selection { background: rgba(192, 86, 58, 0.2); }
++
++/* ── Chrome ─────────────────────────────────────────────────────────── */
++.utility { background: var(--ink); color: #f6efe4; height: 40px; display: flex; align-items: center; }
++.utility-in { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: flex-end; align-items: center; gap: 1.2rem; font-size: .78rem; }
++.utility a { opacity: .9; }
++.utility a:hover { opacity: 1; text-decoration: underline; }
++.lang { display: inline-flex; gap: .15rem; padding: .15rem; border: 1px solid rgba(246, 239, 228, 0.4); border-radius: 999px; }
++.lang button { border: 0; background: transparent; color: rgba(246, 239, 228, 0.85); font-size: .72rem; font-weight: 600; padding: .22rem .55rem; border-radius: 999px; cursor: pointer; }
++.lang button.on { background: #f6efe4; color: var(--ink); }
++
++.nav { position: sticky; top: 0; background: rgba(250, 246, 239, 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); min-height: 64px; display: flex; align-items: center; z-index: 9; }
++.nav-in { width: 100%; max-width: var(--max); margin: 0 auto; padding: .6rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
++.brand { display: inline-flex; align-items: center; gap: .65rem; }
++.brand b { font-size: .98rem; font-family: var(--serif); }
++.brand small { display: block; font-size: .72rem; color: var(--muted); }
++.nav-links { display: flex; align-items: center; gap: 1.3rem; font-size: .9rem; font-weight: 500; color: var(--text-2); }
++.nav-links a:hover { color: var(--terra); }
++.pill { padding: .5rem 1.2rem; border-radius: 999px; background: var(--terra); color: #fff8ef; font-weight: 650; font-size: .85rem; white-space: nowrap; }
++.pill:hover { filter: brightness(0.94); }
++
++/* ── Hero: the generative sky ───────────────────────────────────────── */
++.hero { position: relative; padding: 4.5rem 1.5rem 7.5rem; overflow: hidden; }
++.sky { position: absolute; inset: 0; width: 100%; height: 100%; }
++.hero-in { position: relative; max-width: var(--max); margin: 0 auto; display: flex; gap: 2.5rem; align-items: center; }
++.hero-card { background: rgba(255, 253, 248, 0.88); backdrop-filter: blur(6px); border-radius: 20px; padding: 2.5rem; max-width: 640px; box-shadow: 0 8px 30px rgba(43, 36, 32, 0.18); }
++.kicker { font-size: .74rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--terra); }
++h1 { font-family: var(--serif); font-size: clamp(2.1rem, 3.8vw, 3rem); line-height: 1.12; margin: .65rem 0 1rem; font-weight: 600; letter-spacing: -.01em; }
++.lead { color: var(--text-2); line-height: 1.75; margin: 0 0 1.6rem; font-size: 1.02rem; }
++.cta-row { display: flex; flex-wrap: wrap; gap: .85rem; }
++.btn { display: inline-flex; align-items: center; gap: .5rem; padding: .74rem 1.5rem; border-radius: 999px; font-size: .92rem; font-weight: 650; border: 1px solid transparent; }
++.btn-dark { background: var(--ink); color: #f6efe4; }
++.btn-dark:hover { background: #3a322c; }
++.btn-line { background: rgba(255, 253, 248, 0.7); color: var(--ink); border-color: var(--ink); }
++.btn-line:hover { background: #fff; }
++.hero-portrait { flex: none; width: 280px; height: 280px; border-radius: 999px; overflow: hidden; border: 6px solid rgba(255, 253, 248, 0.9); box-shadow: 0 12px 40px rgba(43, 36, 32, 0.3); }
++.hero-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
++
++/* ── Sheet + sections ───────────────────────────────────────────────── */
++.sheet { background: var(--paper); border-radius: var(--sheet-r) var(--sheet-r) 0 0; margin-top: -3.5rem; position: relative; }
++.section { max-width: var(--max); margin: 0 auto; padding: 4rem 1.5rem; }
++h2 { font-family: var(--serif); font-size: clamp(1.55rem, 2.6vw, 2.15rem); font-weight: 600; letter-spacing: -.01em; margin: .4rem 0 .5rem; }
++.intro { color: var(--text-2); line-height: 1.75; max-width: 700px; margin: 0 0 2rem; }
++
++.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
++.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 1.6rem 1.5rem; display: flex; flex-direction: column; gap: .6rem; box-shadow: 0 1px 2px rgba(43, 36, 32, 0.04); }
++.card .tag { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--rose); }
++.card h3 { margin: 0; font-size: 1.08rem; font-family: var(--serif); }
++.card p { margin: 0; color: var(--text-2); font-size: .93rem; line-height: 1.7; flex: 1; }
++.card-link { transition: transform .15s ease, box-shadow .15s ease; }
++.card-link:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(43, 36, 32, 0.12); }
++.card .cta { font-size: .88rem; font-weight: 650; color: var(--terra); }
++.status { display: inline-flex; align-items: center; gap: .5rem; font-size: .84rem; font-weight: 600; color: var(--text-2); }
++.dot { width: 8px; height: 8px; border-radius: 999px; background: var(--gold); flex: none; }
++
++/* ── Journey timeline ───────────────────────────────────────────────── */
++.journey { list-style: none; margin: 0; padding: 0; position: relative; max-width: 760px; }
++.journey::before { content: ''; position: absolute; left: 56px; top: 12px; bottom: 12px; width: 2px; background: linear-gradient(180deg, var(--rose), var(--terra), var(--gold)); border-radius: 2px; }
++.journey-item { display: flex; gap: 2rem; padding: 1.1rem 0; position: relative; }
++.journey-year { flex: none; width: 112px; text-align: right; padding-right: 2rem; font-family: var(--serif); font-weight: 700; color: var(--terra); font-size: 1.02rem; position: relative; }
++.journey-year::after { content: ''; position: absolute; right: -6px; top: .35rem; width: 12px; height: 12px; border-radius: 999px; background: var(--paper); border: 3px solid var(--terra); }
++.journey-item h3 { margin: 0 0 .3rem; font-family: var(--serif); font-size: 1.12rem; }
++.journey-item p { margin: 0; color: var(--text-2); line-height: 1.7; font-size: .94rem; }
++
++/* ── Now steps ──────────────────────────────────────────────────────── */
++.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; counter-reset: step; }
++.step { background: var(--paper-2); border: 1px solid var(--border); border-radius: var(--r); padding: 1.6rem 1.5rem; }
++.step::before { counter-increment: step; content: counter(step, decimal-leading-zero); display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--rose); margin-bottom: .6rem; }
++.step h3 { margin: 0 0 .4rem; font-size: 1.05rem; font-family: var(--serif); }
++.step p { margin: 0; color: var(--text-2); font-size: .92rem; line-height: 1.7; }
++
++/* ── Banner + footer ────────────────────────────────────────────────── */
++.banner { background: linear-gradient(95deg, #f6cfae, #f3b98b); border-radius: var(--r); padding: 2rem 2.25rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem; }
++.banner h2 { font-size: 1.25rem; margin: 0 0 .25rem; }
++.banner p { margin: 0; color: #6b4a33; font-size: .9rem; }
++
++footer { background: var(--ink); color: #f6efe4; border-radius: var(--sheet-r) var(--sheet-r) 0 0; margin-top: 3rem; }
++.foot { max-width: var(--max); margin: 0 auto; padding: 3rem 1.5rem 2rem; }
++.foot-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; margin-bottom: 2.5rem; }
++.foot h4 { margin: 0 0 1rem; font-size: .95rem; font-family: var(--serif); }
++.foot a { display: block; color: rgba(246, 239, 228, 0.78); font-size: .88rem; margin-bottom: .7rem; }
++.foot a:hover { color: #fff; text-decoration: underline; }
++.foot p { color: rgba(246, 239, 228, 0.78); font-size: .9rem; line-height: 1.65; }
++.foot-brand { display: flex; align-items: center; gap: .7rem; margin-bottom: 1rem; }
++.foot-brand b { font-family: var(--serif); }
++.legal { border-top: 1px solid rgba(246, 239, 228, 0.2); padding-top: 1.25rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; color: rgba(246, 239, 228, 0.6); font-size: .82rem; }
++
++@media (max-width: 980px) {
++  .utility-in { justify-content: center; flex-wrap: wrap; row-gap: .3rem; }
++  .nav-links { display: none; }
++  .hero-in { flex-direction: column-reverse; align-items: flex-start; }
++  .hero-portrait { width: 200px; height: 200px; }
++  .grid, .steps, .foot-grid { grid-template-columns: 1fr; }
++  .journey::before { left: 12px; }
++  .journey-item { flex-direction: column; gap: .4rem; padding-left: 2.4rem; }
++  .journey-year { width: auto; text-align: left; padding-right: 0; }
++  .journey-year::after { left: -2.05rem; right: auto; }
++  .sheet, footer { border-radius: 28px 28px 0 0; }
++  .hero { padding: 2.5rem 1.25rem 6rem; }
++}
++@media (prefers-reduced-motion: reduce) {
++  html { scroll-behavior: auto; }
++}
+diff --git a/app/icon.svg b/app/icon.svg
+new file mode 100644
+index 0000000..7dfee79
+--- /dev/null
++++ b/app/icon.svg
+@@ -0,0 +1,26 @@
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
++  <defs>
++    <linearGradient id="vgFlow" x1="0" y1="0" x2="1" y2="0">
++      <stop offset="0" stop-color="#7a52f4"/>
++      <stop offset="0.5" stop-color="#38bdf8"/>
++      <stop offset="1" stop-color="#34d399"/>
++    </linearGradient>
++    <linearGradient id="vgSheen" x1="0" y1="0" x2="0" y2="1">
++      <stop offset="0" stop-color="#232f3e"/>
++      <stop offset="1" stop-color="#12192a"/>
++    </linearGradient>
++  </defs>
++
++  <!-- Ink tile with subtle vertical sheen -->
++  <rect x="2" y="2" width="92" height="92" rx="22" fill="url(#vgSheen)"/>
++  <rect x="2" y="2" width="92" height="92" rx="22" fill="none" stroke="#3b465c" stroke-width="1.5" opacity="0.55"/>
++
++  <!-- V — two round-capped strokes -->
++  <path d="M 24 28 L 37 58 L 50 28" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
++
++  <!-- G — open geometric ring with inward crossbar -->
++  <path d="M 77.3 34.7 A 16 16 0 1 0 82 46 L 69 46" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
++
++  <!-- The signature: a grid-frequency waveform in the network gradient -->
++  <path d="M 22 76 q 6.5 -9 13 0 t 13 0 t 13 0 t 13 0" fill="none" stroke="url(#vgFlow)" stroke-width="4.5" stroke-linecap="round"/>
++</svg>
+diff --git a/app/layout.tsx b/app/layout.tsx
+new file mode 100644
+index 0000000..cadfc62
+--- /dev/null
++++ b/app/layout.tsx
+@@ -0,0 +1,61 @@
++import type { Metadata } from 'next';
++import type { ReactNode } from 'react';
++import { LanguageProvider } from '@/lib/i18n';
++import Chrome from '@/components/Chrome';
++import './globals.css';
++
++const SITE_URL = 'https://grimaldi.ca';
++
++export const metadata: Metadata = {
++  metadataBase: new globalThis.URL(SITE_URL),
++  title: 'Vincenzo Grimaldi — Personal',
++  description:
++    'The personal surface of the Grimaldi Network: the engineer behind igrimaldi.engineering — life, travel, two book manuscripts in progress, and the long arc of the work.',
++  alternates: { canonical: '/' },
++  openGraph: {
++    title: 'Vincenzo Grimaldi — Personal',
++    description:
++      'Life, travel and the long arc of the work — the person behind the Grimaldi Network.',
++    url: `${SITE_URL}/`,
++    type: 'profile',
++    images: [{ url: `${SITE_URL}/headshot.jpg`, width: 280, height: 280 }],
++  },
++};
++
++const jsonld = {
++  '@context': 'https://schema.org',
++  '@type': 'ProfilePage',
++  '@id': `${SITE_URL}/#profile`,
++  url: `${SITE_URL}/`,
++  name: 'Vincenzo Grimaldi — Personal',
++  inLanguage: 'en',
++  mainEntity: {
++    '@type': 'Person',
++    '@id': 'https://igrimaldi.engineering/#person',
++    name: 'Vincenzo Grimaldi',
++    url: 'https://igrimaldi.engineering/',
++    image: `${SITE_URL}/headshot.jpg`,
++    jobTitle: 'Physics-Informed Cyber-Physical Systems Engineer',
++    sameAs: [
++      'https://github.com/iceccarelli',
++      'https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0',
++      'https://x.com/Vince87Grimaldi',
++      'https://www.instagram.com/grimaldiengineering/',
++      'https://igrimaldi.engineering/',
++      'https://engineeringgrimaldi.com/',
++    ],
++  },
++};
++
++export default function RootLayout({ children }: { children: ReactNode }) {
++  return (
++    <html lang="en" id="top">
++      <body>
++        <LanguageProvider>
++          <Chrome>{children}</Chrome>
++        </LanguageProvider>
++        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonld) }} />
++      </body>
++    </html>
++  );
++}
+diff --git a/app/page.tsx b/app/page.tsx
+new file mode 100644
+index 0000000..9083838
+--- /dev/null
++++ b/app/page.tsx
+@@ -0,0 +1,123 @@
++'use client';
++
++import Image from 'next/image';
++import SkyCanvas from '@/components/SkyCanvas';
++import { useI18n } from '@/lib/i18n';
++
++export default function Home() {
++  const { t } = useI18n();
++
++  return (
++    <main>
++      {/* HERO — generative sky, portrait, plain words */}
++      <section className="hero">
++        <SkyCanvas />
++        <div className="hero-in">
++          <div className="hero-card">
++            <span className="kicker">{t('kicker')}</span>
++            <h1>{t('title')}</h1>
++            <p className="lead">{t('lead')}</p>
++            <div className="cta-row">
++              <a className="btn btn-dark" href="#now">{t('ctaNow')}</a>
++              <a className="btn btn-line" href="https://igrimaldi.engineering/card">{t('ctaCard')}</a>
++            </div>
++          </div>
++          <div className="hero-portrait">
++            <Image src="/headshot.jpg" alt="Vincenzo Grimaldi" width={280} height={280} priority unoptimized />
++          </div>
++        </div>
++      </section>
++
++      <div className="sheet">
++        {/* ABOUT */}
++        <div className="section" id="about">
++          <span className="kicker">{t('a_kicker')}</span>
++          <h2>{t('a_title')}</h2>
++          <p className="intro">{t('a_intro')}</p>
++          <div className="grid">
++            {(['ab1', 'ab2', 'ab3'] as const).map((c, i) => (
++              <div className="card" key={c}>
++                <span className="tag">{t(`${c}tag`)}</span>
++                <h3>{t(`${c}title`)}</h3>
++                <p>{t(`${c}body`)}</p>
++                <span className="status">
++                  <span className="dot" /> {t(i === 0 ? 'writing' : i === 1 ? 'drafting' : 'growing')}
++                </span>
++              </div>
++            ))}
++          </div>
++        </div>
++
++        {/* JOURNEY — the arc, told as a timeline */}
++        <div className="section" id="journey">
++          <span className="kicker">{t('jKicker')}</span>
++          <h2>{t('jTitle')}</h2>
++          <ol className="journey">
++            {(['j1', 'j2', 'j3', 'j4'] as const).map((j) => (
++              <li className="journey-item" key={j}>
++                <span className="journey-year">{t(`${j}y`)}</span>
++                <div>
++                  <h3>{t(`${j}t`)}</h3>
++                  <p>{t(`${j}b`)}</p>
++                </div>
++              </li>
++            ))}
++          </ol>
++        </div>
++
++        {/* NOW */}
++        <div className="section" id="now">
++          <span className="kicker">{t('w_kicker')}</span>
++          <h2>{t('w_title')}</h2>
++          <div className="steps">
++            {(['w1', 'w2', 'w3'] as const).map((s) => (
++              <div className="step" key={s}>
++                <h3>{t(`${s}title`)}</h3>
++                <p>{t(`${s}body`)}</p>
++              </div>
++            ))}
++          </div>
++        </div>
++
++        {/* NETWORK */}
++        <div className="section" id="network">
++          <span className="kicker">{t('n_kicker')}</span>
++          <h2>{t('n_title')}</h2>
++          <div className="grid">
++            <a className="card card-link" href="https://igrimaldi.engineering">
++              <span className="tag">igrimaldi.engineering</span>
++              <h3>{t('n1title')}</h3>
++              <p>{t('n1body')}</p>
++              <span className="cta">{t('open')}</span>
++            </a>
++            <a className="card card-link" href="https://engineeringgrimaldi.com">
++              <span className="tag">engineeringgrimaldi.com</span>
++              <h3>{t('n2title')}</h3>
++              <p>{t('n2body')}</p>
++              <span className="cta">{t('open2')}</span>
++            </a>
++            <a className="card card-link" href="https://igrimaldi.engineering/card">
++              <span className="tag">{t('n3tag')}</span>
++              <h3>{t('n3title')}</h3>
++              <p>{t('n3body')}</p>
++              <span className="cta">{t('open3')}</span>
++            </a>
++          </div>
++        </div>
++
++        {/* NOTIFY */}
++        <div className="section">
++          <div className="banner">
++            <div>
++              <h2>{t('bannerTitle')}</h2>
++              <p>{t('bannerBody')}</p>
++            </div>
++            <a className="btn btn-dark" href="mailto:vincenzo@igrimaldi.engineering?subject=Notify%20me%20—%20grimaldi.ca">
++              {t('bannerCta')}
++            </a>
++          </div>
++        </div>
++      </div>
++    </main>
++  );
++}
+diff --git a/components/BrandMark.tsx b/components/BrandMark.tsx
+new file mode 100644
+index 0000000..1bff234
+--- /dev/null
++++ b/components/BrandMark.tsx
+@@ -0,0 +1,42 @@
++/**
++ * BrandMark — the Grimaldi mark, as inline SVG.
++ *
++ * Geometric V+G drawn in round-capped strokes on the ink tile, signed with a
++ * grid-frequency waveform in the network gradient (violet → sky → emerald):
++ * software, hardware and energy in one line. The same artwork ships as the
++ * favicon (app/icon.svg) and on every domain of the network, so the identity
++ * is a single drawing, not a font choice.
++ *
++ * Server component — no state, no handlers — so it renders in RSC and client
++ * trees alike.
++ */
++
++export default function BrandMark({ size = 38 }: { size?: number }) {
++  return (
++    <svg
++      width={size}
++      height={size}
++      viewBox="0 0 96 96"
++      role="img"
++      aria-label="Vincenzo Grimaldi"
++      style={{ display: 'block', flexShrink: 0 }}
++    >
++      <defs>
++        <linearGradient id="vgFlow" x1="0" y1="0" x2="1" y2="0">
++          <stop offset="0" stopColor="#7a52f4" />
++          <stop offset="0.5" stopColor="#38bdf8" />
++          <stop offset="1" stopColor="#34d399" />
++        </linearGradient>
++        <linearGradient id="vgSheen" x1="0" y1="0" x2="0" y2="1">
++          <stop offset="0" stopColor="#232f3e" />
++          <stop offset="1" stopColor="#12192a" />
++        </linearGradient>
++      </defs>
++      <rect x="2" y="2" width="92" height="92" rx="22" fill="url(#vgSheen)" />
++      <rect x="2" y="2" width="92" height="92" rx="22" fill="none" stroke="#3b465c" strokeWidth="1.5" opacity="0.55" />
++      <path d="M 24 28 L 37 58 L 50 28" fill="none" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
++      <path d="M 77.3 34.7 A 16 16 0 1 0 82 46 L 69 46" fill="none" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
++      <path d="M 22 76 q 6.5 -9 13 0 t 13 0 t 13 0 t 13 0" fill="none" stroke="url(#vgFlow)" strokeWidth="4.5" strokeLinecap="round" />
++    </svg>
++  );
++}
+diff --git a/components/Chrome.tsx b/components/Chrome.tsx
+new file mode 100644
+index 0000000..a6853b5
+--- /dev/null
++++ b/components/Chrome.tsx
+@@ -0,0 +1,80 @@
++'use client';
++
++import { type ReactNode } from 'react';
++import BrandMark from './BrandMark';
++import { locales, useI18n } from '@/lib/i18n';
++
++export default function Chrome({ children }: { children: ReactNode }) {
++  const { locale, setLocale, t } = useI18n();
++
++  return (
++    <>
++      <div className="utility">
++        <div className="utility-in">
++          <span className="lang" role="group" aria-label="Language">
++            {locales.map(({ code, native }) => (
++              <button key={code} type="button" className={locale === code ? 'on' : ''} onClick={() => setLocale(code)}>
++                {native}
++              </button>
++            ))}
++          </span>
++          <a href="https://igrimaldi.engineering">igrimaldi.engineering</a>
++          <a href="https://engineeringgrimaldi.com">engineeringgrimaldi.com</a>
++          <a href="https://igrimaldi.engineering/card">{t('netCard')}</a>
++          <a href="https://github.com/iceccarelli" rel="noopener noreferrer">GitHub</a>
++        </div>
++      </div>
++
++      <div className="nav">
++        <div className="nav-in">
++          <a className="brand" href="/">
++            <BrandMark size={38} />
++            <span>
++              <b>Vincenzo Grimaldi</b>
++              <small>{t('brandTag')}</small>
++            </span>
++          </a>
++          <div className="nav-links">
++            <a href="#about">{t('navA')}</a>
++            <a href="#journey">{t('jKicker')}</a>
++            <a href="#now">{t('navW')}</a>
++            <a href="#network">{t('navN')}</a>
++          </div>
++          <a className="pill" href="mailto:vincenzo@igrimaldi.engineering">{t('connect')}</a>
++        </div>
++      </div>
++
++      {children}
++
++      <footer>
++        <div className="foot">
++          <div className="foot-grid">
++            <div>
++              <div className="foot-brand"><BrandMark size={42} /><b>Vincenzo Grimaldi</b></div>
++              <p>{t('footAbout')}</p>
++            </div>
++            <div>
++              <h4>{t('footNet')}</h4>
++              <a href="https://igrimaldi.engineering">igrimaldi.engineering — {t('netSoftware')}</a>
++              <a href="https://engineeringgrimaldi.com">engineeringgrimaldi.com — {t('netHardware')}</a>
++              <a href="https://grimaldi.ca">grimaldi.ca — {t('netPersonal')}</a>
++              <a href="https://igrimaldi.engineering/card">{t('netCard')}</a>
++              <a href="https://github.com/iceccarelli" rel="noopener noreferrer">GitHub — iceccarelli</a>
++            </div>
++            <div>
++              <h4>{t('footContact')}</h4>
++              <a href="mailto:vincenzo@igrimaldi.engineering">vincenzo@igrimaldi.engineering →</a>
++              <a href="https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0" rel="noopener noreferrer">LinkedIn</a>
++              <a href="https://x.com/Vince87Grimaldi" rel="noopener noreferrer">X</a>
++              <a href="https://www.instagram.com/grimaldiengineering/" rel="noopener noreferrer">Instagram</a>
++            </div>
++          </div>
++          <div className="legal">
++            <span>{t('rights')}</span>
++            <a href="#top">{t('top')}</a>
++          </div>
++        </div>
++      </footer>
++    </>
++  );
++}
+diff --git a/components/SkyCanvas.tsx b/components/SkyCanvas.tsx
+new file mode 100644
+index 0000000..1d33267
+--- /dev/null
++++ b/components/SkyCanvas.tsx
+@@ -0,0 +1,85 @@
++'use client';
++
++import { useEffect, useRef } from 'react';
++
++/**
++ * The signature of the personal surface: a slow, warm generative sky.
++ * A sun disc drifts with the visitor's local time of day, soft cloud bands
++ * breathe across the gradient — quiet motion, no data, no dashboards.
++ * The engineering lives elsewhere; this page is the person.
++ */
++export default function SkyCanvas() {
++  const ref = useRef<HTMLCanvasElement>(null);
++
++  useEffect(() => {
++    const canvas = ref.current;
++    if (!canvas) return;
++    const ctx = canvas.getContext('2d');
++    if (!ctx) return;
++
++    let raf = 0;
++    const resize = () => {
++      canvas.width = canvas.offsetWidth * 2;
++      canvas.height = canvas.offsetHeight * 2;
++    };
++    resize();
++    window.addEventListener('resize', resize);
++
++    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
++
++    const draw = (now: number) => {
++      const w = canvas.width;
++      const h = canvas.height;
++      const tm = reduced ? 0 : now / 1000;
++
++      // Sun height follows local time: high at noon, low at the edges of day.
++      const hours = new Date().getHours() + new Date().getMinutes() / 60;
++      const daylight = Math.max(0, Math.sin(((hours - 6) / 12) * Math.PI)); // 0 night … 1 noon
++      const sunY = h * (0.72 - 0.42 * daylight);
++      const sunX = w * (0.18 + 0.64 * Math.min(1, Math.max(0, (hours - 6) / 12)));
++
++      // Sky gradient, warmer near the horizon.
++      const sky = ctx.createLinearGradient(0, 0, 0, h);
++      sky.addColorStop(0, `rgba(246, 227, 197, 1)`);
++      sky.addColorStop(0.55, `rgba(240, 191, 174, 1)`);
++      sky.addColorStop(1, `rgba(200, 107, 143, 1)`);
++      ctx.fillStyle = sky;
++      ctx.fillRect(0, 0, w, h);
++
++      // Sun with soft bloom.
++      const bloom = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, h * 0.5);
++      bloom.addColorStop(0, 'rgba(255, 243, 214, 0.95)');
++      bloom.addColorStop(0.18, 'rgba(255, 214, 156, 0.55)');
++      bloom.addColorStop(1, 'rgba(255, 214, 156, 0)');
++      ctx.fillStyle = bloom;
++      ctx.fillRect(0, 0, w, h);
++      ctx.beginPath();
++      ctx.arc(sunX, sunY, h * 0.055, 0, Math.PI * 2);
++      ctx.fillStyle = 'rgba(255, 248, 231, 0.98)';
++      ctx.fill();
++
++      // Breathing cloud bands.
++      for (let i = 0; i < 4; i++) {
++        const y = h * (0.3 + i * 0.16) + Math.sin(tm * 0.12 + i * 1.7) * h * 0.012;
++        const drift = ((tm * (6 + i * 2.5)) % (w * 1.4)) - w * 0.2;
++        const grad = ctx.createLinearGradient(0, y - 30, 0, y + 30);
++        grad.addColorStop(0, 'rgba(255,255,255,0)');
++        grad.addColorStop(0.5, `rgba(255, 250, 243, ${0.16 - i * 0.025})`);
++        grad.addColorStop(1, 'rgba(255,255,255,0)');
++        ctx.fillStyle = grad;
++        ctx.beginPath();
++        ctx.ellipse(drift, y, w * 0.32, h * 0.045, 0, 0, Math.PI * 2);
++        ctx.fill();
++      }
++
++      if (!reduced) raf = requestAnimationFrame(draw);
++    };
++    raf = requestAnimationFrame(draw);
++    return () => {
++      cancelAnimationFrame(raf);
++      window.removeEventListener('resize', resize);
++    };
++  }, []);
++
++  return <canvas ref={ref} className="sky" aria-hidden="true" />;
++}
+diff --git a/index.html b/index.html
+deleted file mode 100644
+index 489d0f9..0000000
+--- a/index.html
++++ /dev/null
+@@ -1,279 +0,0 @@
+-<!doctype html>
+-<html lang="en">
+-<head>
+-<meta charset="utf-8" />
+-<meta name="viewport" content="width=device-width, initial-scale=1" />
+-<title>Vincenzo Grimaldi — Personal</title>
+-<meta name="description" content="The personal surface of the Grimaldi Network: the engineer behind igrimaldi.engineering — life, travel, two book manuscripts in progress, and the long arc of the work." />
+-<link rel="canonical" href="https://grimaldi.ca/" />
+-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+-<meta property="og:title" content="Vincenzo Grimaldi — Personal" />
+-<meta property="og:description" content="The personal surface of the Grimaldi Network: the engineer behind igrimaldi.engineering — life, travel, two book manuscripts in progress, and the long arc of the work." />
+-<meta property="og:url" content="https://grimaldi.ca/" />
+-<meta property="og:type" content="website" />
+-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfilePage", "@id": "https://grimaldi.ca/#profile", "url": "https://grimaldi.ca/", "name": "Vincenzo Grimaldi — Personal", "inLanguage": "en", "mainEntity": {"@type": "Person", "@id": "https://igrimaldi.engineering/#person", "name": "Vincenzo Grimaldi", "url": "https://igrimaldi.engineering/", "jobTitle": "Physics-Informed Cyber-Physical Systems Engineer", "sameAs": ["https://github.com/iceccarelli", "https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0", "https://x.com/Vince87Grimaldi", "https://www.instagram.com/grimaldiengineering/", "https://igrimaldi.engineering/", "https://engineeringgrimaldi.com/", "https://grimaldi.ca/"]}}</script>
+-<style>
+-  :root{
+-    --ink:#161e2d;--ink-soft:#232f3e;--text:#16191f;--text-2:#414d5c;--muted:#5f6b7a;
+-    --card:#f2f3f3;--card-alt:#f8f8f8;--border:#e9ebed;--link:#0972d3;--violet:#6b46f2;--success:#037f0c;
+-    --hero:linear-gradient(155deg,#f6e3c5 0%,#f0bfae 45%,#c86b8f 100%);
+-    --sheet-r:40px;--r:16px;--max:1240px;
+-  }
+-  *{box-sizing:border-box}
+-  html{scroll-behavior:smooth}
+-  body{margin:0;font-family:'Amazon Ember',Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;background:#fff;color:var(--text);-webkit-font-smoothing:antialiased}
+-  a{color:inherit;text-decoration:none}
+-  .utility{background:var(--ink);color:#fff;height:40px;display:flex;align-items:center}
+-  .utility-in{width:100%;max-width:var(--max);margin:0 auto;padding:0 1.5rem;display:flex;justify-content:flex-end;align-items:center;gap:1.2rem;font-size:.78rem}
+-  .utility a{opacity:.92}.utility a:hover{opacity:1;text-decoration:underline}
+-  .lang{display:inline-flex;gap:.15rem;padding:.15rem;border:1px solid rgba(255,255,255,.35);border-radius:999px}
+-  .lang button{border:0;background:transparent;color:rgba(255,255,255,.85);font-size:.72rem;font-weight:600;padding:.22rem .55rem;border-radius:999px;cursor:pointer}
+-  .lang button.on{background:#fff;color:var(--ink)}
+-  .nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);min-height:64px;display:flex;align-items:center;z-index:9}
+-  .nav-in{width:100%;max-width:var(--max);margin:0 auto;padding:.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+-  .brand{display:inline-flex;align-items:center;gap:.65rem}
+-  .brand svg{width:38px;height:38px;flex-shrink:0}
+-  .brand b{font-size:.98rem}.brand small{display:block;font-size:.72rem;color:var(--muted)}
+-  .nav-links{display:flex;align-items:center;gap:1.3rem;font-size:.9rem;font-weight:500}
+-  .nav-links a:hover{color:var(--link)}
+-  .pill{padding:.5rem 1.2rem;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;font-size:.85rem;white-space:nowrap}
+-  .pill:hover{background:var(--ink-soft)}
+-  .hero{background:var(--hero);padding:4.5rem 1.5rem 7.5rem}
+-  .hero-in{max-width:var(--max);margin:0 auto;display:flex;gap:2.5rem;align-items:center}
+-  .hero-card{background:rgba(255,255,255,.9);backdrop-filter:blur(6px);border-radius:20px;padding:2.5rem;max-width:640px;box-shadow:0 8px 30px rgba(22,25,31,.16)}
+-  .kicker{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+-  h1{font-size:clamp(1.9rem,3.4vw,2.6rem);line-height:1.18;margin:.65rem 0 1rem;font-weight:600;letter-spacing:-.015em}
+-  .lead{color:var(--text-2);line-height:1.65;margin:0 0 1.5rem}
+-  .cta-row{display:flex;flex-wrap:wrap;gap:.85rem}
+-  .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.72rem 1.5rem;border-radius:999px;font-size:.92rem;font-weight:600;border:1px solid transparent}
+-  .btn-dark{background:var(--ink);color:#fff}.btn-dark:hover{background:var(--ink-soft)}
+-  .btn-light{background:#fff;color:var(--text);border-color:var(--ink)}.btn-light:hover{background:var(--card)}
+-  .hero-portrait{flex:none;width:280px;height:280px;border-radius:999px;overflow:hidden;border:6px solid rgba(255,255,255,.85);box-shadow:0 8px 30px rgba(22,25,31,.25)}
+-  .hero-portrait img{width:100%;height:100%;object-fit:cover;display:block}
+-  .sheet{background:#fff;border-radius:var(--sheet-r) var(--sheet-r) 0 0;margin-top:-3.5rem;position:relative}
+-  .section{max-width:var(--max);margin:0 auto;padding:4rem 1.5rem}
+-  h2{font-size:clamp(1.45rem,2.4vw,2rem);font-weight:600;letter-spacing:-.01em;margin:0 0 .5rem}
+-  .intro{color:var(--text-2);line-height:1.65;max-width:680px;margin:0 0 2rem}
+-  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}
+-  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem 1.5rem;display:flex;flex-direction:column;gap:.6rem}
+-  .card .tag{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+-  .card h3{margin:0;font-size:1.05rem}
+-  .card p{margin:0;color:var(--text-2);font-size:.92rem;line-height:1.6;flex:1}
+-  a.card{transition:transform .15s ease,box-shadow .15s ease}
+-  a.card:hover{transform:translateY(-3px);box-shadow:0 1px 2px rgba(22,25,31,.06),0 4px 16px rgba(22,25,31,.08)}
+-  .card .cta{font-size:.88rem;font-weight:600;color:var(--link)}
+-  .status{display:inline-flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600;color:var(--text-2)}
+-  .dot{width:8px;height:8px;border-radius:999px;background:var(--success);flex:none}
+-  .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem;counter-reset:step}
+-  .step{background:var(--card-alt);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem 1.5rem}
+-  .step::before{counter-increment:step;content:counter(step,decimal-leading-zero);display:block;font-size:1.6rem;font-weight:800;color:var(--violet);margin-bottom:.6rem}
+-  .step h3{margin:0 0 .4rem;font-size:1.02rem}
+-  .step p{margin:0;color:var(--text-2);font-size:.9rem;line-height:1.6}
+-  .banner{background:linear-gradient(95deg,#f6cfae,#f3b98b);border-radius:var(--r);padding:2rem 2.25rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.25rem}
+-  .banner h2{font-size:1.15rem;margin:0 0 .25rem}.banner p{margin:0;color:var(--ink-soft);font-size:.9rem}
+-  footer{background:var(--ink);color:#fff;border-radius:var(--sheet-r) var(--sheet-r) 0 0;margin-top:3rem}
+-  .foot{max-width:var(--max);margin:0 auto;padding:3rem 1.5rem 2rem}
+-  .foot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.5rem;margin-bottom:2.5rem}
+-  .foot h4{margin:0 0 1rem;font-size:.95rem}
+-  .foot a{display:block;color:rgba(255,255,255,.78);font-size:.88rem;margin-bottom:.7rem}
+-  .foot a:hover{color:#fff;text-decoration:underline}
+-  .foot p{color:rgba(255,255,255,.78);font-size:.9rem;line-height:1.6}
+-  .foot-brand{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
+-  .foot-brand svg{width:42px;height:42px}
+-  .legal{border-top:1px solid rgba(255,255,255,.16);padding-top:1.25rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;color:rgba(255,255,255,.6);font-size:.82rem}
+-  @media(max-width:980px){
+-    .utility-in{justify-content:center;flex-wrap:wrap;row-gap:.3rem}
+-    .nav-links{display:none}
+-    .hero-in{flex-direction:column-reverse;align-items:flex-start}
+-    .hero-portrait{width:200px;height:200px}
+-    .grid,.steps,.foot-grid{grid-template-columns:1fr}
+-    .sheet,footer{border-radius:28px 28px 0 0}
+-    .hero{padding:2.5rem 1.25rem 6rem}
+-  }
+-</style>
+-</head>
+-<body>
+-<div class="utility">
+-  <div class="utility-in">
+-    <span class="lang" id="lang"></span>
+-    <a href="https://igrimaldi.engineering" target=_blank rel=noopener>igrimaldi.engineering</a>
+-    <a href="https://engineeringgrimaldi.com" target=_blank rel=noopener>engineeringgrimaldi.com</a>
+-    <a href="https://igrimaldi.engineering/card" target=_blank rel=noopener>Business card</a>
+-    <a href="https://github.com/iceccarelli" target=_blank rel=noopener>GitHub</a>
+-  </div>
+-</div>
+-
+-<div class="nav">
+-  <div class="nav-in">
+-    <a class="brand" href="/">
+-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+-  <defs>
+-    <linearGradient id="vgFlow" x1="0" y1="0" x2="1" y2="0">
+-      <stop offset="0" stop-color="#7a52f4"/>
+-      <stop offset="0.5" stop-color="#38bdf8"/>
+-      <stop offset="1" stop-color="#34d399"/>
+-    </linearGradient>
+-    <linearGradient id="vgSheen" x1="0" y1="0" x2="0" y2="1">
+-      <stop offset="0" stop-color="#232f3e"/>
+-      <stop offset="1" stop-color="#12192a"/>
+-    </linearGradient>
+-  </defs>
+-
+-  <!-- Ink tile with subtle vertical sheen -->
+-  <rect x="2" y="2" width="92" height="92" rx="22" fill="url(#vgSheen)"/>
+-  <rect x="2" y="2" width="92" height="92" rx="22" fill="none" stroke="#3b465c" stroke-width="1.5" opacity="0.55"/>
+-
+-  <!-- V — two round-capped strokes -->
+-  <path d="M 24 28 L 37 58 L 50 28" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+-
+-  <!-- G — open geometric ring with inward crossbar -->
+-  <path d="M 77.3 34.7 A 16 16 0 1 0 82 46 L 69 46" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+-
+-  <!-- The signature: a grid-frequency waveform in the network gradient -->
+-  <path d="M 22 76 q 6.5 -9 13 0 t 13 0 t 13 0 t 13 0" fill="none" stroke="url(#vgFlow)" stroke-width="4.5" stroke-linecap="round"/>
+-</svg>
+-      <span><b>Vincenzo Grimaldi</b><small data-i18n="brandTag">Personal • Blog • Life</small></span>
+-    </a>
+-    <div class="nav-links">
+-      <a href="#about" data-i18n="navA">About</a>
+-      <a href="#now" data-i18n="navW">Now</a>
+-      <a href="#network" data-i18n="navN">Network</a>
+-    </div>
+-    <a class="pill" href="mailto:vincenzo@igrimaldi.engineering" data-i18n="connect">Connect</a>
+-  </div>
+-</div>
+-
+-<div class="hero">
+-  <div class="hero-in">
+-    <div class="hero-card">
+-      <span class="kicker" data-i18n="kicker">The Grimaldi Network · Personal Surface</span>
+-      <h1 data-i18n="title">The person behind the engineering.</h1>
+-      <p class="lead" data-i18n="lead">I'm Vincenzo Grimaldi — an electrical engineer in Frankfurt working on the digitalisation of high-voltage rail infrastructure, and the builder of the Grimaldi Network. This is the personal surface: life, travel, and the long arc of the work, in plain words rather than datasheets.</p>
+-      <div class="cta-row">
+-        <a class="btn btn-dark" href="#now" data-i18n="ctaNow">What I'm doing now</a>
+-        <a class="btn btn-light" href="https://igrimaldi.engineering/card" data-i18n="ctaCard">My business card</a>
+-      </div>
+-    </div>
+-    <div class="hero-portrait"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAEYARgDASIAAhEBAxEB/8QAHQABAAEFAQEBAAAAAAAAAAAAAAQCAwUGBwgBCf/EAEEQAAEDAgQDBQUFBgUEAwAAAAEAAgMEEQUSITEGQVETImFxgQcUMpGhCEJSscEVIzNictFDgpLh8BYkJbI0U6L/xAAaAQEAAwEBAQAAAAAAAAAAAAAAAQIDBAUG/8QAJhEBAQACAgIBBAMAAwAAAAAAAAECEQMhEjEEEyIyQQUzURRhcf/aAAwDAQACEQMRAD8A8qIiICIiAiIgIiICIiAiIgIikUlDNWPDY26E2zHQBBHRZafBOyLQ2QyDmW2SlwyOTvSPLramNjNh5qNjFAFxsASVefRzxx9o+MtZfLc9VmGUraY544srSe7fXn1XyXFXyDsyALAguy6O81Gxgi0jdfFmGsgn7ksRaX826a+Ciz4VLGXujIfGNQb628lOxBRVFjhfQ6b+CpUgiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAqmi5v0F19ZHnBJIaBuSs3huGxMnGSVj35Mxc8FoA6Add1Foh4dRPz9vKS2w7rbXcT5KZUTOhneIzqBa7QAAelle7dnavcy7S3UC24HJQ20ss8jA0XJN/AeN1GhJomyYkZCA0GNpJc0ZSAPzViSpkjkDomvyi7bjopBrW4a0xgmVzdL5QG/76nmorQZ43TQvcTGbujd8QHXxCCTDNHUtbGZixm9n6W5FK+BjLRsgytt3Zgbh3RWoW2DopAC0uuLfd5n0Uimd2tLJSAnIHEsceQteyCA176c5JDq0j0upsVR2uVoHaNBFwHbdNFCMkga875mgkEX1B/JfIs+cTMIjsb6aIJU8LQ6WnldMztCNCbgWN1Anw3KbxOcWkEjMLfVXaueSYsdmLzpdw3I8VJpHRFp7YOIIsbG1k9DDz00lO7LI23iDcK0s5WMYWviDmlpAcw5r28PNYRzS1xaRYg2KmXY+IiKQREQEREBERAREQEREBERAREQEREBERARFeponSvc1mrg0kAc7IJ9NQZaMzSm3ZyXDQR+8GmikGWSWVz4YjG6Qg5Rq0C3JfIHiKmZ2tg7+Zux2KmxzNoqaoeWlr3giK1r/3sqj5G2GnhyuaZJS3OWX/AIY6kqM3FnNcOyfKxw5O7zD5j9Vajp6uWF0tnkbknS56qXhOHftCdrHh3w2IPXwUXLS0xt6i1UAYi9uYaOaTe2rCNCD6qTFRCjdTvcy5ectwdHNtr+q2WfhCeiqxLCLRvjDgLbO+8CPkg4fqpoYmvaW9n3XE7gclT6kvbT6VnTWzhj/dmWs0FoDjfW3XzKpgibBm0OQAga+CzE+DVLZHxtYb/ELHS391Bnw2r7PszGWhxv5jokziLhWK7K8AYxpu7TMeeuwHmoksM1M86ObbQ3WY9wqjO6UBwc0ZRYWyjw6aKEMOnb2rX/Dva+qtMpVLhYjwxe9NLmuAkZqBtdUmUyZS8Xtuef8ASkThT1DLggXs7xCs1NhVyZXWbmuFZVkaaOJ0JmZJZzRexG3VRMRposplYbEEC42cPxfopD5Wtpn2s1rrNH83X8ijYnOL4RlDXRm+Zw1abatHXbRQlhSCDYr4rtRC6F+RxBI5jYjkVaV0CIiAiIgIiICIiAiIgIiICIiAiIgIiICyeExmJ3vItmFw3XbqVjFkaCU+7vyx3LLXPgSooyGRk+Rr47xut3gfhVda5rqxjKZtzG0Rkj75HNfcOewMJc10ZaQWm1+fNbfhXsyx2vLJ4YmiOdwc65AuL7aahZ55zGdtOPjud1Ik8L8IVHEQpY5ItZ+80W0jZ1XaeHfZFg2HxMc2Br5RbVzQVluDeGI8GpWOla01LgA8j7oGwC3mljaGry8uXLky69PYx4cePH1217/onD5Iw10LSG/dcNPS2xWLr/Z1RBpMEQa0i21yFvhbYaaeatueLEEq86iupa5LP7OqeJ+d4JHLr6qxPwTSPYIzGCW7Gy6RXtDiRa6x08LQL2XPnyZb9ujHjx16czq+CaNgLhHkPSw1Wn4zwxFHmys22IC7DiDA5pAWm4rCDJZu+6nj5ctq8vDjpwXG8EkoZyS0BpO9tAsE8d4l1wea7JjuBR10Ejbd3lpstLm4XfAHjNnaR98Alenx80s7eTy8Fl6aiHdqQHXDW9Ap7ZHTzsMTmgxZWhzhceH1UWtp3wSFlrBpslPUCnAda7i4aeAXQ5V7EqRrqaSpaDdkuVwAOl+X/PFYhbBjs2SkDG5R20hcSwg3FgdT1ufzWvqYCIikEREBERAREQEREBERAREQEREBERAUuje1rJBncHG2g2IURX6QjtC07uFh4m4Qblw3Gap8DHDODUtDh4NC9S4JTRsoKYMYGgNFh0XlXhKpbT23EkcuYj+Uj816q4bnE+F00g2yD00Xm/P9R6n8frtskDcoBFtlkIZCAAoEBuwMHmp0Efd1K4uP307s9E0xA0JuowqWkCx1O91JqaYSR2BJKxTqZweegWmXlDGY1fl7zSGgarHzfEW8gD81koWFrSbbbqFiBDXEDdZ2XW18femq4o90ZJ5XWtVZa9ziRpdbPib2nMbA21sStQrpHOkOXUc1GMqeTpjaljQwssLE3WBxGjzxOcBss9Utc0Bzm6FWY6U1Ac3Le40XXxuHkcexuLJM9uQ97l4rF0cTHSsfN/DB5g/kN1sfEoNNWylws4OuWnlZa5IOzmLGMeGAXAd9F6OHp5WftMxaISYYZC0NyPBaPA6LX1msYBOG0rtRZzg4X5rCq8UERFIIiICIiAiIgIiICIiAiIgIiICIiAvoNiCOS+Ig2Wkc6KUTAEB7C+zW2FwPr5r1RwLUCXhvCy138SGPX/LqvLWG1MU9BA5v8SOQMkABNgdPqOi7fRVOKw+zvDW4VI2OoDTHvqW5iNCuL5eHlI7/AIWfjb/46w7iPDKJ7o5KlkYYbFz9BfwvuolR7TeHaN5Y7EoXuBsQ07Lg2JQ4u2O+KVjYmm5/eOu4+m5C1GRx/fSUj6yqZBGZZHxRZWMjGhdc8uSphwY/prn8nKe49WU3tGwOvc2OGsY58hsOnzU5uLslnyRjMTqF5e4Tr39qxsbakBzgbuJ0Nr/8svQvBsc9XEySR13WAvZc/N9t6dXBl5TdZqoxR7ZdXZRtZapjnGVLhskhnk2veyl8bCfDc0zXAFoJ2XB+IsUqMSmeJZHuu6wa3dxVOOeV7acvJ4T7W54z7UsKDHAF7rdG7LAR+0/DTcGJ56A6XWls4dqTEa11OwwdqITJLN2cLXEHQvOnLW2ix4qaKdrb4Po5zgJIpSS4jc6rvnDhr08vL5PJb3XR4ONaSuk7ORtmu+CxvbwK2vD2RNEcocHCRnLWxXG6LDaCu/8AhyyteRqxztVvfBFZUiQ4fO57gwXaXWtpyVfHGXpbzyy9tX9pOGmkxxrAQ1tQ3tGk6gf81WkShxkDXZg9hAuTtrsup+1xrIqrDZnsLm5C0i22+q0ODAJquZ3ZB72yC4LLbb/kunC9OTkn3MTjBLKSBjnkl7i8N6C26w62Di10eahibFHGYoSy7W2LhmNiTzO619Xxu5uKZY3G6oiIrKiIiAiIgIiICIiAiIgIiICIiAiIgIiINi4MkjNVWU8j8rpKcviH4pGuDgP9OZem+BqTLwjQMdGx57K9ibXJJN9l5h4DwKfibjDCcHppOylq6gRh/wCEakn5Ar17wtQvgwynpZm5ZadjY3jxAAP1XB826kkej8DHdtrTcY9lkWPVrq7EKiRvaEARNOjWjkbD6KvGPZ3gtTTshr3RTMhj7KPMezLW72NtxfVdThpGPFnDdfP2DQF+f3WMuvu4XP1XJhyZye3dlxYW9xy/hfgbDGTd2ObsWm4c0mxOwOq6hhVFHSuayJuUFSjSxQR5gwNPkvkMnZPHVUytt7aY4yTpqftG79BUWJ0Ftlw+lwqKonzysLmasfY2IBXYvaLVPfTPY0Eg7lcyo2GJwcPhce9dWwut2K8uO7JWaiwygGGihdTTCmIF2ZyWWGo7u26wMnDeF0eYwMYL3FmxgH6LoeGQR1VO2zRa17KQyipXxdq1oBB5t581P18j/jz/AByWn4QD6szRs7IuNxZtvzWQoKd2GV8JLy4B1tD+i3+uihyNs1putQqYmy1gaBazrDzV8OS5XtlycMxiD7U8HfWYVTVjS57InZT67LA8I1eHwVdJFNNLDkc0yuDb6DS31K6tW4VDj2BTYYZGxipiy5wwEsPJ1ut1yPiWggwaqidTEBzZHUzm835bWd8j9F126xcOOG89tH49pjQ48+jNrwAs06Z3WPqLLW1nONaiWq4lq5JfjtGCPJjQsGunjmsY5ea7ztERFdmIiICIiAiIgIiICIiAiIgIiICIiAiIgz/AWMTYBxnguJU72Rvgq4+88d0NLsrr+FiV7RgAgxKriDswEhs7qLBeEGkggjcL2pwxxHR8R4bQYtQyMfHU00b3hpvkkAs9p6EHkuD52PrJ6X8fn3cW6Uwvz5CwPJSm90cljKadpZqNVZrsSkA7Onu55XHM5I9PxuVTayfMOzY4F2/kFdoKd1QTa2jblYKrlrMMw+SqhpzV1LRmMWYBzvK6xeG8fSy0wlmpJqBzrhzZdx6hMO7upzmpqLfH9EZaWVjTZwvquYw4TJNh8sjZ8kjHG3TRZT2ge0JrY3iGpaG3s936ea56zjmtLmxRRD3cnVxd3j6ALXDjutxhycuO9V1HhTFY6mnyuIZKw5Xt8QtldM0wkDmdvBcf4Zq6t2JSTAOjY61r810eOuk7HNJYADksOTHxrp4s949rWKSgZzew5LV3ntagm+5JU/E8QaWvsc177HZYumeXHMORW3Di5vkZt3wKVs74gBoxo1308VzakhjrceqKisjimhb2oax40a7vG9/P8lv2E/8AZ00kw1DY3Sb9Bey5LxLxRh1DwxVMhlacSrrMYxh1Y0/E7w0uPVdfjvUefMvHeTmmNV37SxasrL3E0zng+BOn0UJEXZJpw277EREQIiICIiAiIgIiICIiAiIgIiICIiAiIgLsn2bcRdHjOLYf2rgJYGThoPNrrH6PC42tz9kONtwLj7DJZHZYqhxpZD4PFh/+sqy5sfLCxrwZePJK9dw1R7PKDysrrSIRnIzSX1PRQYXNygi1jY2WL4l4kbg9KXCGWWR1iGsYSV43HN5dvezz1j02J84ec5JcRqBZQqyKm7J8szQRk1PVYKm4ypaSjiq6+hxGDtBmEbqdw/uFTNx3Q1ELh7m8wu1OhB/JdUsnqKTHLP3Ws13B2H47FJVilba7nRnn0Wn1HDseHzuIYG201F9V0+Tjzh/BKRrRH273NLWxi2h8Sue41xpQT1D3S0rmnNduTvAK+OdZZ8Ou6pjc3DWueRd176LYIMXb7owykWdy9Fzis4kZUPcIO3e8nQdmbrOYFPVYjRF8sboy3Szm29VGfHLN1njzZS6jJ185c4hxY4PPdsLaKjCYi+plD3XaNNFYfmZFT5unPcAHRXMNn7Izym5LibDmnHNK8uXlWX4kxj9j8D41UAhshpXRRnoXnKP/AGXmtdc9rGIyN4ZpKaNzw2eovJruGgkD5m/ouRLu4vTz+W/cIiLRkIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICqY90b2vY4tc03BBsQeqpRB6v9nPG8fF3DMFU54NXGBFUsG4kG59dx5+C2xsMVbUtc4ZmgjdeSuAeM6jgvG2VbMz6WWzKmIH429R4jceo5r1Tw9iVPX00dVTSsmgnaHxvYbhwPReVz8XhluenrfH5vqY6vuNlnhhMTWPbdoHd8FD/7amDnOeHNts4XACuukuCGm/IHxWKxXDXVMLsgLSfw9Vjjlqu6ZWTpBrq3B2hxPuoc7QP7HX8lpmPyYfI915cwHJrct1MxLAKx5ALZhl2AadQCsLUcOSGQOla8uuRYjcre697ZXmzvWmHihinqLwRNaBubLORSMZSGOMDK22cqFJRmmJDRkGgOnNWK6UxUxijcCXHVt+afl6c+WWvaNilfGai0Zuxgt6pDIYqdoubvN7LFiG0hzkBrdXEnQK42qNXUMhZ3Wu0v0b1WvqMN+VV8fcPVOM8Hx1lO4ukoO0q5IwPiiOVpd6aHyv0XHF694AwuGuhqKmoga+kmgNG2NwuJIzfP6G9vILzFxfw3+wOI8XwyIlzaCofGD1jv3XfIhdnFjfCOPms87pr6IiuzEREBERAREQEREBERAREQEREBERAREQEREBERAXp32TYHiGB+zvCK2oGlYJKyOO2oiLyGnz7pPk4LzGF7tkw8UXDXCdPHHlhZgtOxjbWsWxtuPrdc3yv69un4n9mkKKtZPD2kB6m45rIUlTFLHd2htfXqtUrWT4RK407O0jecxjvz8FjZuLImvd2hdFIBfvd0+oXDjN9x6Fy8bqtxqvdnFz5Xltthbe3NabjOIRxySOY3KW63vb1KxU3GjXGQ5nEt2J1J8VqeNY7U4jJII2OJ5WGnmtJx5W9xXLnxk6qfW4q2V+dpvYZyPHqsHU1zZS+Z7w2Nu55KBXVwiaTUzWNhdjHXc7w00CwNXXy17u9aKBuzRsPHzWsxkc1yuTJT17qp3cB7MHRp3cepWz8FcOTY1MXyBzaYH97J+M/hb+pWP4N4MqcaeyoqmvgouQOjpB4dB4rtGG4bDh9LHFDG2ONgs1rRay34uHyu8mHJzTGax9slRujwuiGRoZFE2zWheXuMsQFdx7itS0gh8xaehsACu/8AGvEDMF4drKt5sIozlH4nHQD5ry7FK6Spkmkdme8lzj1JK7ZNOP2sYph/uzzLELwuP+g9Fj1mnVJu4EBzSLEHYhQqzDzE3t4bvhO/Vngf7qmWP7i+N/1CREVFhERAREQEREBERAREQEREBERAREQEVyOCSX4WE+PJTIcLJ1kd6D+6mY2+kWyILWuebNBJ6BS6bDJZ3AHS/IalZSmowLNY0NHM2WRhjbECG+p6rfHh/wBUuf8AiPRYHTwtJc0SPtu4XAXvDiLCpZ+EaSWmjdJU4ayOVsbd5GBlnt9W3t4gLw6JgyHOdGlwufC+q/Qihs6lgkZ8Lo2n0sq8/HLj4p4s7jl5T9OPV9OKiljmidmBs5rhqHDqtaxbCosRYW5QXt2zNvZdK4pwL9iVDpYWf+NqX3BA0ppCdQejSdR0Jt0WpVdF7vIX5rHn0Xg+N48vGve8py4zKOXYhwxNRtL3TSWOwBsB8lgavDZHRkuc8tv1K6TjrDUhrXuzf0rL8Oey2sxkMqathoaC1xI9t5ZB/I07eZ+q2wuWd1O3PnhjhN3pxbD+EqvFqsU9JSyTSu+6BoB1J5DxK37BPZJTYe5k+IZaqpGrYx/Dj9OZ8Su2UfC1DhNKKXDaVsEQ3O7nnq47kr5NhTIWlzh6r0OLgk7y9vP5ee3rH00ikwZtO0XaAByUoxDbkFmpaftHloGi1zjTF4eGcHqa2R1hEwu8SeQHmdF0yOVxX25cRievhwOnfdkP72ax+8fhH6/JcozWU7Fq6fE66esqXZpp3l7z4lQSNUyi0L35K/FO6LQHQq0Gq41hskhVDqeCoF3sLHH7zP1CjTYbPGMzB2rOrd/kp8DM0TT4K80Fuxt5K30pTy019FnpqaGp/jM73426O/3UGpwaeFpkiInjHNvxDzCxy47F5lKx6IiosIiICIiAiIgIiICqYx0jg1jS5x2AXwAuIAFydAFmKelFPHk/xD8bv0Vscdot0hNw5335Gg8wNVJipI4yMrQT1dqpbYLm35q+2IC1lvjxyM7lVmOAO1dyV5kYaQORVZ0FgqSC61uS0k0qlhoa2w0CjvlMkgjZtzPVUPlL2nk3krtBHmeXnZqn2jTO4JgT8er4aGJpLRbNpvc2A+dl71wuPsKKKnJv2LRHc87Cy8x+wHhQ1lbDWTR3DntmNxyB7o/Veisf4gpOFMGxLGK5xFPSRmZwG7jyaPEmw9Vjyd3S+PSbj2JYVhWFzVGMVEFPR2LXGbZ3gBu4+AuuY4dLgnEjHy4LilO6ja5zGx1sggmjI5Br9XMPI7rkmMcbYzx3XOxKsm7wJ7GFvwQt/C0fruVEDKuQ/vKeORvPMBqui/xWPJjPO9scP5LLjy+ydPSXDvs8oKKVmIVzY6motmjYbOZH4/zH6LaZYA/U6rSfZHxY3GMBbhVTI337D2BoF9Xw7NPp8J9Oq3aoqGxNJuuK8H0bcJHVee80mdqJURsjatcxGoDnFoOiyFfVvlJDdlAbh75nagq8jO1iJpCO6xuZx2XBvb7xBI/EKfAGSd+NgnqmjkT8DT6d71C9I4oaLhzB63F64htNRQOnkPUAbeZNgPErxLjuK1WP4zW4tWuLqismdM/wJ5eQFh6LTDtW9MBLESdQrRZZZOWIPFxuokkZaDcKbiSo7W3KkZcrQbKiFtypEre5pdJCrdM20ZHNriPqrhYqKR3flad7h1vT/ZSsqtPRVjLqqmOLHXFxbmFXluVSWqyCooaTEBeRvZTH/EYN/Mc1iKrBaumu5rRMwfej1+m6y9yFU2VzToSs8uKVMzsavay+LZqilgrQe2YA/wDGBY/7rEVmET0wL2DtYvxNGo8wsMuO4tZnKgIiLNYREQEREE/CIO0nMh2jF/XksvBGS3Md3aqNhsXZ4W5/3pCf7BZMtDbN6aLq48dRjle1rIOiqtlCqsh2Oi0VW3HXzXx5yNtzO6NtmJVDjmciVLhsOqyVJB3Yov8A7XBv1WPjYZZmtHVbZwbhn7b4ywfDALiWpjaR4XufoEt1Nk7unrj2U8LMwLh2llLMsszGvI6C2g+SxPt+vLwc2jBOWpqGtcBzABP52XSoYxT07I426MaAAFpXF+FScXcQ0GGMjL6Sgd2tS/lndazfO35rl321082cIxk4exrhYtu0nyKzGK4rFhdNmdYPI0C+UrYaXF8VjiAEEddUNYQNMolcAtK4hrX4ri8kbTaNhta6+g89YSvG8N5WMpw1x7inD/FdHjtJme2mk/eRA2E0R0cw+Y+tl66jxKmxnD6euoZRNS1UbZoZB95rhcf863Xj3h7hnEOK8TiwbB4nEXBqJ7aMHS69W8A8ODhjAocGaXPgpgRGTrqdXehNyvL+VZbv9vQ+PLJ/0zUFFnIuFOjpWxiwFyqx3BfTcAq3iVfFhdC+qeWu07oJsCbX35AAEk8gCuPe3Rpwz7UXF/uWGUPCdJJaSrIq6ux/w2mzGnzdc/5QvNJ3utk464nn4v4mxDGJ5C/3iU9mTpaMaNFuQsAtcXVjjqaZ27oAFblhzDZXgLAKh2um/krKse90cEmUkk8mgXJ9FUIaqo+L9xH0Grj/AGUp8WVwfs8Cwd4dFcjeH6EZXW26qmk7WYaVkDbMG+5OpKulqrPzXwNv6Kwoy3Cpc1Xsq+OYgjlqotZScmip7O91AskkBXIJnl3d0A3K+GPM7LsNyegVuombG3K2wA2TaHyuwmmrhmhtDNfU/dd5jl5orNPO4vOUnwRZ3DG9r+VjAIiLlbCIvoQbKxuWgpmgfg/RSjqVYk7rKdvIFo+SvgXK7pHPVVhZUOIVw6C1lak0aSpFknulUgWBK+72ASTutsoF/D2990nJoXYfszcO/tnjiXFpW3iw6IuH9btB9FyKIdjRHkXaL1P9mDAhhvB89e5tpK2cuv8AygWH6qnLdTS+Hvbs8rniNxjtntpfYFYbirFG8K8J4riUNmyU1M98ZIvmmIsy/Ul5as2TyXL/AG4Y9HDSYXgTZAHVEj62Zt9eziHdv4F7h/pWfFh55zFPLl4Y3JwCpYcf44dUVjvejRRCF8j7HtZn3Li7qd1ruJQRRYtM2nDoGh3wsNltOA0clIIp5Ll888lTI4jlYhv5krXMWY44jJJycV7WeMkeVjluvTPsN4docM4Pgr4WtMtS3O953LibLp0Ia0BkY0Gl1yf2E4qazg2GiLu9DVBtv5dXLrjQI2WHLdeLydZWPVw7m1uogE0RaJMlje4F7Lj/ALbuL24NwI9kEru0xUuw+hue92I/jzf5vhHgfFdXdB78yaF75GslGU5HWNvNeSvb5xZFxJx3PS0bh+zsGYMPpw34bt/iEebrjyaFHHjvLacr05lM4F2i+NvuqT3nHqqxtZdTIJa062VLr+qrcL+FlRcA6j0/siAnu7bKPUSNijLtbnRoG+bkr5/Co1O33uf3g/w4zaIdTzcoqYlRh2VoebusL26q4Ggcl9DSqgOSSChzRZfSBYZuiqI05KlxAIBUofMgVEtomFxV1ve6b2VmW8k/IMi7x8TyUCzI7smWPxO1PgsZUPLiVIq6nM42KhF1zcrPO/pMhTSZJm3KK5NTFrY5oxdrjY25FFGO50n2xCIi5W4r1HH21VEy17uF/JWVOwdmatafwgn9P1VsZuyIvpm6jeH+pSWqNN3nQj+ZSBtzXbHPX02KtznuEKq+qom1A03KC2wKl4zSAeKu8lTTjtKjwCJSZGl0kEI5le3/AGVYWMI4Kwymy5S2FpPmRcrxjw5Q/tPiilpwCRnaD8wvdeBRCnwqniaLWYAPkseW9tMPTJAjUkgDqdgvJPGXGMvE/HmJ41ERJSBxpKcHUCFp0+ep9V6C9sXEjuFvZ5itVE/JUTsFHCb65pNCR5NzH0Xl7huIPoxnFr6rp+Fh3cnN8rLrxZ+jmbNTiONmQed7LA4nh5bMSRfXktjpWe7tJsBfmolVDnlzO3K9PKb9uCdOj/Z1Dh73Bv3jKfADuj8iu5VD8rLdVx/7OOHOZh2MYg4d11QIGeYuT+YXW5T2koC8Lm/OvY4p9sa57RuK28DcDYnjIcG1LY+xpQec7+6z5au/yrw/UyOJOZxc4m5c7cnqV3X7UHF/vmN0PC1PJeHDme81IB3meO6D/Sz/AN1wOR2Z+i048dY7Vyu6+tCvctlbYNbWVzY7rRVTyXy5JVZ+qtzStgjL3mwAuSiEasLpntpWGzpNXEfdbzP6KZExsbQxgAa0WA6BWKKBzWumkFpJbEj8I5N9FKIson+pfdPFfRYEq0XWVYcS7wUxFfSbEqy8i6rebc1EkktJoUouibI1ziPh1VqpcYqdrT8Tu87zSP8AeyBhOnxO8lDr5jLKeirbqEiJIdVbcbBVSK07U2WFaSMhhVWxrjDNYsdtfkUWMBLTcIrY8mppFw2ioiLmbCyWCaTyO6Nt9VjVlcFZ+7ld1IH/AD5rTj/KK5emVcB2jPNXwdLXsrDXBzm6q8DzXWwr7zVDx3mqseKpm+NqkUvNgVVQt7xdyVqT5qRTgNge63JBtvsjh974zpgW5nOmaB6XP9l7Zoo+zp2NP3WgLyP9mfBX4txwahzbw0cRlcfEmwXrxxyssFy53dbSdOF/aYxn3mXB8AjdcRsfWSgHmTkZ9A/5rleDxdhCwW2Gqz3tPxM4z7Q8ZnzZo4JRSR/0xgN/9syxFKALBpN17HxsPHjjy+fPedZmJoEenPqrJYGse87AEm6qjJGipxJwbQzEaHIdfGy6axd09hlIKP2b4c7LZ1S+aod4lzzb6ALasRxamwPDa7GK52WloYXzyHwaL28zoPVYr2cw+58BYVGBbJTgfVc2+0nxd+zOGaLhmCS0+KSe8VAG4gYdAf6n2/0FfP2eWT2p1HnfiPG6nH8WrsXrXZqmtmfPIehcb28gLD0WGGpvzVyokzG3JUxjMfJdDJejB22VWwt80B5bINlZD4dBdRMvvlVlOsUJu7+Z/IeiuVkpY0MiAdLIcrB49fRXaeFtPE2NvIak7uPMqt7ukxcvcKiR/Lqq72HJRZZNSpo+5tVdYet1Dz3O6lMPdUQJnhrSdVjpJLu1UipkACxc0pJsNSdAq5ZJkZOiBbTSTHd5sPJQZ3NzFZCdwpqNkQFiGrDvcXKMupoil5uqLWVbWW1K+O3WViyghEKKqUNERZNBZzCG5KZp/ESf0/REWvD+SmfpNLC2VpGxOqv8yERdUYqx81bl1e3yRFItuHVXi7JQvIREHo/7JuECHAsUxRze9PKI2nwaP7ldwxXEY8Mw+qr5iBHSwvmcT0a0u/REXLrdbW9PIjHvqnSVU5vLO50r/wCpxzH6lXIXWfvoERfQR4rLQvBbob35qLjMpiw2bTW1gOuqInJdY1OH5R6iwKjOGcM4bRyENMVNGJCdgcoLifqvHftS4v8A+suM8RxZjyaYv7ClB5Qs0b89Xf5kReHxfuvYzaQQXP0UiJhI8ERaxmuDeype7KDciw1JPJEVkI1GDO91W8Gzhlivyb19VKJuiKMfSb7WpJMotmCgvkzHwRFWkVMI2V7MGtuiKYmoFXOo1C33iujbuAcx9ERY3vKLT0m17i+Ujeyi9mBqURWvtVQ7S6tEoipVooKIiol//9k=" alt="Vincenzo Grimaldi" width="280" height="280"></div>
+-  </div>
+-</div>
+-
+-<div class="sheet">
+-  <div class="section" id="about">
+-    <span class="kicker" data-i18n="a_kicker">About</span>
+-    <h2 data-i18n="a_title">One life, three surfaces</h2>
+-    <p class="intro" data-i18n="a_intro">By day I digitise high-voltage traction assets for German rail. Around that sits everything else: software and AI systems, hardware builds, two book manuscripts in progress, and the places in between. Each surface of the network holds one part of it — this one holds the person.</p>
+-    <div class="grid">
+-      <div class="card"><span class="tag" data-i18n="ab1tag">Blog</span><h3 data-i18n="ab1title">Life &amp; travel</h3><p data-i18n="ab1body">Frankfurt, the places in between, and what an engineer notices when the laptop is closed.</p><span class="status"><span class="dot"></span><span data-i18n="writing">First posts being written</span></span></div>
+-      <div class="card"><span class="tag" data-i18n="ab2tag">Books</span><h3 data-i18n="ab2title">Two manuscripts in progress</h3><p data-i18n="ab2body">Long-form work on energy systems and the future of compute — the ideas behind the engineering, argued at book length.</p><span class="status"><span class="dot"></span><span data-i18n="drafting">In revision</span></span></div>
+-      <div class="card"><span class="tag" data-i18n="ab3tag">Archive</span><h3 data-i18n="ab3title">The long arc</h3><p data-i18n="ab3body">How the projects, the books and the network came to be — the record, kept honestly, over the years.</p><span class="status"><span class="dot"></span><span data-i18n="growing">Growing with the work</span></span></div>
+-    </div>
+-  </div>
+-
+-  <div class="section" id="now">
+-    <span class="kicker" data-i18n="w_kicker">Now</span>
+-    <h2 data-i18n="w_title">What I'm doing now</h2>
+-    <div class="steps">
+-      <div class="step"><h3 data-i18n="w1title">Engineering the grid</h3><p data-i18n="w1body">Digitalisation of high-voltage railway traction assets in Frankfurt — IT/OT convergence and security governance for critical infrastructure.</p></div>
+-      <div class="step"><h3 data-i18n="w2title">Building the network</h3><p data-i18n="w2body">Three domains, one identity, four languages — the portfolio, the hardware lab and this page, kept consistent and continuously shipped.</p></div>
+-      <div class="step"><h3 data-i18n="w3title">Writing the books</h3><p data-i18n="w3body">Two manuscripts in revision, on energy sovereignty and on where compute goes next — being rewritten the hard way: claim by claim.</p></div>
+-    </div>
+-  </div>
+-
+-  <div class="section" id="network">
+-    <span class="kicker" data-i18n="n_kicker">The network</span>
+-    <h2 data-i18n="n_title">Where the work lives</h2>
+-    <div class="grid">
+-      <a class="card" href="https://igrimaldi.engineering"><span class="tag">igrimaldi.engineering</span><h3 data-i18n="n1title">Software &amp; AI</h3><p data-i18n="n1body">The engineering portfolio: capability register, work registry, live thesis simulator.</p><span class="cta" data-i18n="open">Open →</span></a>
+-      <a class="card" href="https://engineeringgrimaldi.com"><span class="tag">engineeringgrimaldi.com</span><h3 data-i18n="n2title">Hardware &amp; EE</h3><p data-i18n="n2body">The physical layer: high-voltage systems, embedded boards, power electronics build logs.</p><span class="cta" data-i18n="open2">Open →</span></a>
+-      <a class="card" href="https://igrimaldi.engineering/card"><span class="tag" data-i18n="n3tag">Business card</span><h3 data-i18n="n3title">The digital card</h3><p data-i18n="n3body">Contact channels, vCard download and a shareable QR — one URL for the whole identity.</p><span class="cta" data-i18n="open3">Open →</span></a>
+-    </div>
+-  </div>
+-
+-  <div class="section">
+-    <div class="banner">
+-      <div><h2 data-i18n="bannerTitle">Want to know when the first post lands?</h2><p data-i18n="bannerBody">One email, once. No list, no noise.</p></div>
+-      <a class="btn btn-dark" href="mailto:vincenzo@igrimaldi.engineering?subject=Notify%20me%20—%20grimaldi.ca" data-i18n="bannerCta">Tell me</a>
+-    </div>
+-  </div>
+-</div>
+-
+-<footer>
+-  <div class="foot">
+-    <div class="foot-grid">
+-      <div>
+-        <div class="foot-brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+-  <defs>
+-    <linearGradient id="vgFlow" x1="0" y1="0" x2="1" y2="0">
+-      <stop offset="0" stop-color="#7a52f4"/>
+-      <stop offset="0.5" stop-color="#38bdf8"/>
+-      <stop offset="1" stop-color="#34d399"/>
+-    </linearGradient>
+-    <linearGradient id="vgSheen" x1="0" y1="0" x2="0" y2="1">
+-      <stop offset="0" stop-color="#232f3e"/>
+-      <stop offset="1" stop-color="#12192a"/>
+-    </linearGradient>
+-  </defs>
+-
+-  <!-- Ink tile with subtle vertical sheen -->
+-  <rect x="2" y="2" width="92" height="92" rx="22" fill="url(#vgSheen)"/>
+-  <rect x="2" y="2" width="92" height="92" rx="22" fill="none" stroke="#3b465c" stroke-width="1.5" opacity="0.55"/>
+-
+-  <!-- V — two round-capped strokes -->
+-  <path d="M 24 28 L 37 58 L 50 28" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+-
+-  <!-- G — open geometric ring with inward crossbar -->
+-  <path d="M 77.3 34.7 A 16 16 0 1 0 82 46 L 69 46" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+-
+-  <!-- The signature: a grid-frequency waveform in the network gradient -->
+-  <path d="M 22 76 q 6.5 -9 13 0 t 13 0 t 13 0 t 13 0" fill="none" stroke="url(#vgFlow)" stroke-width="4.5" stroke-linecap="round"/>
+-</svg><b>Vincenzo Grimaldi</b></div>
+-        <p data-i18n="footAbout">The personal all-in-one blog of the Grimaldi Network.</p>
+-      </div>
+-      <div><h4 data-i18n="footNet">The Grimaldi Network</h4>
+-        <a href="https://igrimaldi.engineering">igrimaldi.engineering — <span data-i18n="netSoftware">Software &amp; AI</span></a>
+-        <a href="https://engineeringgrimaldi.com">engineeringgrimaldi.com — <span data-i18n="netHardware">Hardware &amp; EE</span></a>
+-        <a href="https://grimaldi.ca">grimaldi.ca — <span data-i18n="netPersonal">Personal</span></a>
+-        <a href="https://igrimaldi.engineering/card" data-i18n="netCard">Digital business card</a>
+-        <a href="https://github.com/iceccarelli" rel="noopener">GitHub — iceccarelli</a>
+-      </div>
+-      <div><h4 data-i18n="footContact">Contact</h4>
+-        <a href="mailto:vincenzo@igrimaldi.engineering">vincenzo@igrimaldi.engineering →</a>
+-        <a href="https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0" rel="noopener">LinkedIn</a>
+-        <a href="https://x.com/Vince87Grimaldi" rel="noopener">X</a>
+-        <a href="https://www.instagram.com/grimaldiengineering/" rel="noopener">Instagram</a>
+-      </div>
+-    </div>
+-    <div class="legal">
+-      <span data-i18n="rights">© 2026 Vincenzo Grimaldi. All rights reserved.</span>
+-      <a href="#" onclick="window.scrollTo({top:0});return false" data-i18n="top">Back to top ↑</a>
+-    </div>
+-  </div>
+-</footer>
+-
+-<script>
+-const I18N = {"es": {"brandTag": "Personal • Blog • Vida", "connect": "Saluda", "kicker": "La Red Grimaldi · Superficie Personal", "title": "La persona detrás de la ingeniería.", "lead": "Soy Vincenzo Grimaldi — ingeniero eléctrico en Fráncfort, trabajo en la digitalización de la infraestructura ferroviaria de alta tensión y construyo la Red Grimaldi. Esta es la superficie personal: vida, viajes y el arco largo del trabajo, en palabras llanas y no en hojas de datos.", "ctaNow": "Qué hago ahora", "ctaCard": "Mi tarjeta de presentación", "a_kicker": "Acerca de", "a_title": "Una vida, tres superficies", "a_intro": "De día digitalizo activos de tracción de alta tensión para el ferrocarril alemán. Alrededor está todo lo demás: sistemas de software e IA, construcciones de hardware, dos manuscritos de libro en curso y los lugares intermedios. Cada superficie de la red guarda una parte — esta guarda a la persona.", "ab1tag": "Blog", "ab1title": "Vida y viajes", "ab1body": "Fráncfort, los lugares intermedios y lo que un ingeniero nota cuando cierra el portátil.", "ab2tag": "Libros", "ab2title": "Dos manuscritos en curso", "ab2body": "Trabajo de largo aliento sobre sistemas de energía y el futuro del cómputo — las ideas detrás de la ingeniería, argumentadas a escala de libro.", "ab3tag": "Archivo", "ab3title": "El arco largo", "ab3body": "Cómo nacieron los proyectos, los libros y la red — el registro, llevado con honestidad, a lo largo de los años.", "writing": "Primeras entradas en escritura", "drafting": "En revisión", "growing": "Crece con el trabajo", "w_kicker": "Ahora", "w_title": "Qué hago ahora", "w1title": "Ingeniería de la red eléctrica", "w1body": "Digitalización de activos de tracción de alta tensión en Fráncfort — convergencia IT/OT y gobernanza de seguridad para infraestructura crítica.", "w2title": "Construyendo la red", "w2body": "Tres dominios, una identidad, cuatro idiomas — el portafolio, el laboratorio de hardware y esta página, coherentes y publicados continuamente.", "w3title": "Escribiendo los libros", "w3body": "Dos manuscritos en revisión, sobre soberanía energética y sobre el futuro del cómputo — reescritos como debe ser: afirmación por afirmación.", "n_kicker": "La red", "n_title": "Dónde vive el trabajo", "n1title": "Software e IA", "n1body": "El portafolio de ingeniería: registro de capacidades, registro de trabajo, simulador en vivo.", "n2title": "Hardware e Ing. Eléctrica", "n2body": "La capa física: sistemas de alta tensión, placas embebidas, bitácoras de electrónica de potencia.", "n3tag": "Tarjeta digital", "n3title": "La tarjeta digital", "n3body": "Canales de contacto, vCard descargable y QR para compartir — una URL para toda la identidad.", "open": "Abrir →", "open2": "Abrir →", "open3": "Abrir →", "bannerTitle": "¿Quieres saber cuándo llega la primera entrada?", "bannerBody": "Un email, una vez. Sin listas, sin ruido.", "bannerCta": "Avísame", "footAbout": "El blog personal todo-en-uno de la Red Grimaldi.", "footNet": "La Red Grimaldi", "netSoftware": "Software e IA", "netHardware": "Hardware e Ing. Eléctrica", "netPersonal": "Personal", "netCard": "Tarjeta de presentación digital", "footContact": "Contacto", "rights": "© 2026 Vincenzo Grimaldi. Todos los derechos reservados.", "top": "Volver arriba ↑", "navA": "Acerca de", "navW": "Ahora", "navN": "Red"}, "de": {"brandTag": "Persönlich • Blog • Leben", "connect": "Hallo sagen", "kicker": "Das Grimaldi-Netzwerk · Persönliche Oberfläche", "title": "Der Mensch hinter der Technik.", "lead": "Ich bin Vincenzo Grimaldi — Elektroingenieur in Frankfurt, arbeite an der Digitalisierung der Hochspannungs-Bahninfrastruktur und baue das Grimaldi-Netzwerk. Dies ist die persönliche Oberfläche: Leben, Reisen und der lange Bogen der Arbeit, in klaren Worten statt in Datenblättern.", "ctaNow": "Was ich gerade tue", "ctaCard": "Meine Visitenkarte", "a_kicker": "Über mich", "a_title": "Ein Leben, drei Oberflächen", "a_intro": "Tagsüber digitalisiere ich Hochspannungs-Traktionsanlagen für die deutsche Bahn. Drumherum liegt alles andere: Software- und KI-Systeme, Hardware-Aufbauten, zwei Buchmanuskripte in Arbeit und die Orte dazwischen. Jede Oberfläche des Netzwerks trägt einen Teil — diese trägt den Menschen.", "ab1tag": "Blog", "ab1title": "Leben & Reisen", "ab1body": "Frankfurt, die Orte dazwischen, und was ein Ingenieur bemerkt, wenn der Laptop zu ist.", "ab2tag": "Bücher", "ab2title": "Zwei Manuskripte in Arbeit", "ab2body": "Langform-Arbeit über Energiesysteme und die Zukunft des Rechnens — die Ideen hinter der Technik, in Buchlänge argumentiert.", "ab3tag": "Archiv", "ab3title": "Der lange Bogen", "ab3body": "Wie Projekte, Bücher und das Netzwerk entstanden sind — das Protokoll, ehrlich geführt, über die Jahre.", "writing": "Erste Beiträge entstehen", "drafting": "In Überarbeitung", "growing": "Wächst mit der Arbeit", "w_kicker": "Jetzt", "w_title": "Was ich gerade tue", "w1title": "Das Netz digitalisieren", "w1body": "Digitalisierung von Hochspannungs-Traktionsanlagen in Frankfurt — IT/OT-Konvergenz und Sicherheits-Governance für kritische Infrastruktur.", "w2title": "Das Netzwerk bauen", "w2body": "Drei Domains, eine Identität, vier Sprachen — Portfolio, Hardware-Labor und diese Seite, konsistent und kontinuierlich veröffentlicht.", "w3title": "Die Bücher schreiben", "w3body": "Zwei Manuskripte in Überarbeitung, über Energiesouveränität und die Zukunft des Rechnens — neu geschrieben, wie es sein muss: Behauptung für Behauptung.", "n_kicker": "Das Netzwerk", "n_title": "Wo die Arbeit lebt", "n1title": "Software & KI", "n1body": "Das Engineering-Portfolio: Kompetenzregister, Arbeitsregister, Live-Simulator.", "n2title": "Hardware & Elektrotechnik", "n2body": "Die physische Schicht: Hochspannungssysteme, eingebettete Platinen, Leistungselektronik-Baujournale.", "n3tag": "Visitenkarte", "n3title": "Die digitale Karte", "n3body": "Kontaktkanäle, vCard-Download und teilbarer QR — eine URL für die ganze Identität.", "open": "Öffnen →", "open2": "Öffnen →", "open3": "Öffnen →", "bannerTitle": "Wissen, wann der erste Beitrag erscheint?", "bannerBody": "Eine E-Mail, einmal. Keine Liste, kein Lärm.", "bannerCta": "Sag mir Bescheid", "footAbout": "Der persönliche All-in-One-Blog des Grimaldi-Netzwerks.", "footNet": "Das Grimaldi-Netzwerk", "netSoftware": "Software & KI", "netHardware": "Hardware & Elektrotechnik", "netPersonal": "Persönlich", "netCard": "Digitale Visitenkarte", "footContact": "Kontakt", "rights": "© 2026 Vincenzo Grimaldi. Alle Rechte vorbehalten.", "top": "Nach oben ↑", "navA": "Über mich", "navW": "Jetzt", "navN": "Netzwerk"}, "zh": {"brandTag": "个人 • 博客 • 生活", "connect": "打个招呼", "kicker": "Grimaldi 站点网络 · 个人界面", "title": "工程背后的那个人。", "lead": "我是 Vincenzo Grimaldi — 法兰克福的电气工程师，从事高压铁路基础设施数字化，同时构建 Grimaldi 站点网络。这里是个人界面：生活、旅行，以及工作的长线脉络 — 用平实的语言，而非数据手册。", "ctaNow": "我现在在做什么", "ctaCard": "我的名片", "a_kicker": "关于", "a_title": "一段人生，三个界面", "a_intro": "白天我为德国铁路数字化高压牵引资产。围绕它的是其余一切：软件与 AI 系统、硬件搭建、两部写作中的书稿，以及途中的地方。网络的每个界面承载一部分 — 这里承载的是人。", "ab1tag": "博客", "ab1title": "生活与旅行", "ab1body": "法兰克福、途中的地方，以及一位工程师合上电脑后所注意到的一切。", "ab2tag": "书", "ab2title": "两部写作中的书稿", "ab2body": "关于能源系统与计算未来的长篇写作 — 工程背后的思想，以一本书的篇幅展开论证。", "ab3tag": "档案", "ab3title": "长线脉络", "ab3body": "项目、书与网络如何一步步成形 — 多年来诚实保存的记录。", "writing": "首批文章撰写中", "drafting": "修订中", "growing": "随工作生长", "w_kicker": "当下", "w_title": "我现在在做什么", "w1title": "数字化电网", "w1body": "在法兰克福数字化高压牵引资产 — 关键基础设施的 IT/OT 融合与安全治理。", "w2title": "构建网络", "w2body": "三个域名、一个身份、四种语言 — 作品集、硬件实验室与这个页面，保持一致并持续发布。", "w3title": "写书", "w3body": "两部书稿在修订中，关于能源主权与计算的未来 — 用最扎实的方式重写：逐条论证。", "n_kicker": "站点网络", "n_title": "工作在哪里", "n1title": "软件与 AI", "n1body": "工程作品集：能力清单、工作台账、在线论文模拟器。", "n2title": "硬件与电气工程", "n2body": "物理层：高压系统、嵌入式电路板、电力电子搭建日志。", "n3tag": "数字名片", "n3title": "数字名片", "n3body": "联系渠道、vCard 下载与可分享的二维码 — 一个 URL 承载完整身份。", "open": "打开 →", "open2": "打开 →", "open3": "打开 →", "bannerTitle": "想知道第一篇文章何时发布吗？", "bannerBody": "只发一封邮件。没有列表，没有噪音。", "bannerCta": "告诉我", "footAbout": "Grimaldi 网络的个人一站式博客。", "footNet": "Grimaldi 站点网络", "netSoftware": "软件与 AI", "netHardware": "硬件与电气工程", "netPersonal": "个人", "netCard": "数字名片", "footContact": "联系", "rights": "© 2026 Vincenzo Grimaldi 版权所有。", "top": "返回顶部 ↑", "navA": "关于", "navW": "当下", "navN": "网络"}};
+-
+-function apply(loc){
+-  const d=I18N[loc]||null;
+-  document.querySelectorAll('[data-i18n]').forEach(el=>{
+-    const k=el.getAttribute('data-i18n');
+-    if(!el.dataset.en) el.dataset.en=el.innerHTML;
+-    if(d&&d[k]) el.textContent=d[k]; else el.innerHTML=el.dataset.en;
+-  });
+-  document.documentElement.lang=loc==='zh'?'zh-Hans':loc;
+-  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.loc===loc));
+-  try{localStorage.setItem('vg-locale',loc);}catch(e){}
+-}
+-(function(){
+-  const LOCALES=[['en','English'],['es','Español'],['de','Deutsch'],['zh','中文']];
+-  const holder=document.getElementById('lang');
+-  LOCALES.forEach(([code,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.loc=code;b.onclick=()=>apply(code);holder.appendChild(b);});
+-  let loc='en';
+-  try{const s=localStorage.getItem('vg-locale');if(s&&(s==='en'||I18N[s]))loc=s;else{const n=(navigator.language||'en').slice(0,2);if(I18N[n]||n==='en')loc=n;}}catch(e){}
+-  apply(loc);
+-})();
+-
+-</script>
+-</body>
+-</html>
+diff --git a/lib/i18n.tsx b/lib/i18n.tsx
+new file mode 100644
+index 0000000..9e44410
+--- /dev/null
++++ b/lib/i18n.tsx
+@@ -0,0 +1,63 @@
++'use client';
++
++/**
++ * Four-locale layer, same contract as igrimaldi.engineering: English is
++ * canonical and baked into the prerendered HTML; ES/DE/ZH swap client-side.
++ * Locale persists in the shared `vg-locale` key, so a visitor who chose
++ * Deutsch on the portfolio lands here in Deutsch.
++ */
++
++import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
++import strings from './strings.json';
++
++export type Locale = 'en' | 'es' | 'de' | 'zh';
++
++export const locales: { code: Locale; native: string }[] = [
++  { code: 'en', native: 'English' },
++  { code: 'es', native: 'Español' },
++  { code: 'de', native: 'Deutsch' },
++  { code: 'zh', native: '中文' },
++];
++
++type Dict = Record<string, string>;
++const table = strings as Record<Locale, Dict>;
++
++const STORAGE_KEY = 'vg-locale';
++
++function detect(): Locale {
++  if (typeof window === 'undefined') return 'en';
++  try {
++    const s = window.localStorage.getItem(STORAGE_KEY);
++    if (s === 'en' || s === 'es' || s === 'de' || s === 'zh') return s;
++  } catch {}
++  const n = (navigator.language || 'en').slice(0, 2);
++  return n === 'es' || n === 'de' || n === 'zh' ? (n as Locale) : 'en';
++}
++
++const Ctx = createContext<{ locale: Locale; setLocale: (l: Locale) => void; t: (k: string) => string }>({
++  locale: 'en',
++  setLocale: () => undefined,
++  t: (k) => table.en[k] ?? k,
++});
++
++export function LanguageProvider({ children }: { children: ReactNode }) {
++  const [locale, setLocaleState] = useState<Locale>('en');
++
++  useEffect(() => setLocaleState(detect()), []);
++  useEffect(() => {
++    document.documentElement.lang = locale === 'zh' ? 'zh-Hans' : locale;
++  }, [locale]);
++
++  const setLocale = useCallback((l: Locale) => {
++    setLocaleState(l);
++    try {
++      window.localStorage.setItem(STORAGE_KEY, l);
++    } catch {}
++  }, []);
++
++  const t = useCallback((k: string) => table[locale][k] ?? table.en[k] ?? k, [locale]);
++
++  return <Ctx.Provider value={{ locale, setLocale, t }}>{children}</Ctx.Provider>;
++}
++
++export const useI18n = () => useContext(Ctx);
+diff --git a/lib/strings.json b/lib/strings.json
+new file mode 100644
+index 0000000..1bc9b5d
+--- /dev/null
++++ b/lib/strings.json
+@@ -0,0 +1,294 @@
++{
++ "en": {
++  "brandTag": "Personal • Blog • Life",
++  "navA": "About",
++  "navW": "Now",
++  "navN": "Network",
++  "connect": "Connect",
++  "kicker": "The Grimaldi Network · Personal Surface",
++  "title": "The person behind the engineering.",
++  "lead": "I'm Vincenzo Grimaldi — an electrical engineer in Frankfurt working on the digitalisation of high-voltage rail infrastructure, and the builder of the Grimaldi Network. This is the personal surface: life, travel, and the long arc of the work, in plain words rather than datasheets.",
++  "ctaNow": "What I'm doing now",
++  "ctaCard": "My business card",
++  "a_kicker": "About",
++  "a_title": "One life, three surfaces",
++  "a_intro": "By day I digitise high-voltage traction assets for German rail. Around that sits everything else: software and AI systems, hardware builds, two book manuscripts in progress, and the places in between. Each surface of the network holds one part of it — this one holds the person.",
++  "ab1tag": "Blog",
++  "ab1title": "Life & travel",
++  "ab1body": "Frankfurt, the places in between, and what an engineer notices when the laptop is closed.",
++  "writing": "First posts being written",
++  "ab2tag": "Books",
++  "ab2title": "Two manuscripts in progress",
++  "ab2body": "Long-form work on energy systems and the future of compute — the ideas behind the engineering, argued at book length.",
++  "drafting": "In revision",
++  "ab3tag": "Archive",
++  "ab3title": "The long arc",
++  "ab3body": "How the projects, the books and the network came to be — the record, kept honestly, over the years.",
++  "growing": "Growing with the work",
++  "w_kicker": "Now",
++  "w_title": "What I'm doing now",
++  "w1title": "Engineering the grid",
++  "w1body": "Digitalisation of high-voltage railway traction assets in Frankfurt — IT/OT convergence and security governance for critical infrastructure.",
++  "w2title": "Building the network",
++  "w2body": "Three domains, one identity, four languages — the portfolio, the hardware lab and this page, kept consistent and continuously shipped.",
++  "w3title": "Writing the books",
++  "w3body": "Two manuscripts in revision, on energy sovereignty and on where compute goes next — being rewritten the hard way: claim by claim.",
++  "n_kicker": "The network",
++  "n_title": "Where the work lives",
++  "n1title": "Software & AI",
++  "n1body": "The engineering portfolio: capability register, work registry, live thesis simulator.",
++  "open": "Open →",
++  "n2title": "Hardware & EE",
++  "n2body": "The physical layer: high-voltage systems, embedded boards, power electronics build logs.",
++  "open2": "Open →",
++  "n3tag": "Business card",
++  "n3title": "The digital card",
++  "n3body": "Contact channels, vCard download and a shareable QR — one URL for the whole identity.",
++  "open3": "Open →",
++  "bannerTitle": "Want to know when the first post lands?",
++  "bannerBody": "One email, once. No list, no noise.",
++  "bannerCta": "Tell me",
++  "footAbout": "The personal all-in-one blog of the Grimaldi Network.",
++  "footNet": "The Grimaldi Network",
++  "netSoftware": "Software & AI",
++  "netHardware": "Hardware & EE",
++  "netPersonal": "Personal",
++  "netCard": "Digital business card",
++  "footContact": "Contact",
++  "rights": "© 2026 Vincenzo Grimaldi. All rights reserved.",
++  "top": "Back to top ↑",
++  "jKicker": "The arc",
++  "jTitle": "The journey so far",
++  "j1y": "2025",
++  "j1t": "RWTH Aachen",
++  "j1b": "M.Sc. thesis: a cross-domain CIM–ThreMA ontology with reinforcement-learning security agents — now a live public simulator.",
++  "j2y": "2024–",
++  "j2t": "Frankfurt · DB InfraGO",
++  "j2b": "Digitising high-voltage railway traction assets: IT/OT convergence and security governance for critical infrastructure.",
++  "j3y": "2026",
++  "j3t": "The Grimaldi Network",
++  "j3b": "Three domains, one identity, four languages — the portfolio, the hardware lab and this page, shipped and kept consistent.",
++  "j4y": "Now",
++  "j4t": "Two manuscripts",
++  "j4b": "Long-form writing on energy sovereignty and the future of compute — in revision, claim by claim."
++ },
++ "es": {
++  "brandTag": "Personal • Blog • Vida",
++  "connect": "Saluda",
++  "kicker": "La Red Grimaldi · Superficie Personal",
++  "title": "La persona detrás de la ingeniería.",
++  "lead": "Soy Vincenzo Grimaldi — ingeniero eléctrico en Fráncfort, trabajo en la digitalización de la infraestructura ferroviaria de alta tensión y construyo la Red Grimaldi. Esta es la superficie personal: vida, viajes y el arco largo del trabajo, en palabras llanas y no en hojas de datos.",
++  "ctaNow": "Qué hago ahora",
++  "ctaCard": "Mi tarjeta de presentación",
++  "a_kicker": "Acerca de",
++  "a_title": "Una vida, tres superficies",
++  "a_intro": "De día digitalizo activos de tracción de alta tensión para el ferrocarril alemán. Alrededor está todo lo demás: sistemas de software e IA, construcciones de hardware, dos manuscritos de libro en curso y los lugares intermedios. Cada superficie de la red guarda una parte — esta guarda a la persona.",
++  "ab1tag": "Blog",
++  "ab1title": "Vida y viajes",
++  "ab1body": "Fráncfort, los lugares intermedios y lo que un ingeniero nota cuando cierra el portátil.",
++  "ab2tag": "Libros",
++  "ab2title": "Dos manuscritos en curso",
++  "ab2body": "Trabajo de largo aliento sobre sistemas de energía y el futuro del cómputo — las ideas detrás de la ingeniería, argumentadas a escala de libro.",
++  "ab3tag": "Archivo",
++  "ab3title": "El arco largo",
++  "ab3body": "Cómo nacieron los proyectos, los libros y la red — el registro, llevado con honestidad, a lo largo de los años.",
++  "writing": "Primeras entradas en escritura",
++  "drafting": "En revisión",
++  "growing": "Crece con el trabajo",
++  "w_kicker": "Ahora",
++  "w_title": "Qué hago ahora",
++  "w1title": "Ingeniería de la red eléctrica",
++  "w1body": "Digitalización de activos de tracción de alta tensión en Fráncfort — convergencia IT/OT y gobernanza de seguridad para infraestructura crítica.",
++  "w2title": "Construyendo la red",
++  "w2body": "Tres dominios, una identidad, cuatro idiomas — el portafolio, el laboratorio de hardware y esta página, coherentes y publicados continuamente.",
++  "w3title": "Escribiendo los libros",
++  "w3body": "Dos manuscritos en revisión, sobre soberanía energética y sobre el futuro del cómputo — reescritos como debe ser: afirmación por afirmación.",
++  "n_kicker": "La red",
++  "n_title": "Dónde vive el trabajo",
++  "n1title": "Software e IA",
++  "n1body": "El portafolio de ingeniería: registro de capacidades, registro de trabajo, simulador en vivo.",
++  "n2title": "Hardware e Ing. Eléctrica",
++  "n2body": "La capa física: sistemas de alta tensión, placas embebidas, bitácoras de electrónica de potencia.",
++  "n3tag": "Tarjeta digital",
++  "n3title": "La tarjeta digital",
++  "n3body": "Canales de contacto, vCard descargable y QR para compartir — una URL para toda la identidad.",
++  "open": "Abrir →",
++  "open2": "Abrir →",
++  "open3": "Abrir →",
++  "bannerTitle": "¿Quieres saber cuándo llega la primera entrada?",
++  "bannerBody": "Un email, una vez. Sin listas, sin ruido.",
++  "bannerCta": "Avísame",
++  "footAbout": "El blog personal todo-en-uno de la Red Grimaldi.",
++  "footNet": "La Red Grimaldi",
++  "netSoftware": "Software e IA",
++  "netHardware": "Hardware e Ing. Eléctrica",
++  "netPersonal": "Personal",
++  "netCard": "Tarjeta de presentación digital",
++  "footContact": "Contacto",
++  "rights": "© 2026 Vincenzo Grimaldi. Todos los derechos reservados.",
++  "top": "Volver arriba ↑",
++  "navA": "Acerca de",
++  "navW": "Ahora",
++  "navN": "Red",
++  "jKicker": "El arco",
++  "jTitle": "El camino hasta aquí",
++  "j1y": "2025",
++  "j1t": "RWTH Aachen",
++  "j1b": "Tesis de M.Sc.: una ontología interdominio CIM–ThreMA con agentes de seguridad por refuerzo — hoy un simulador público en vivo.",
++  "j2y": "2024–",
++  "j2t": "Fráncfort · DB InfraGO",
++  "j2b": "Digitalización de activos de tracción ferroviaria de alta tensión: convergencia IT/OT y gobernanza de seguridad para infraestructura crítica.",
++  "j3y": "2026",
++  "j3t": "La Red Grimaldi",
++  "j3b": "Tres dominios, una identidad, cuatro idiomas — el portafolio, el laboratorio de hardware y esta página, publicados y coherentes.",
++  "j4y": "Ahora",
++  "j4t": "Dos manuscritos",
++  "j4b": "Escritura de largo aliento sobre soberanía energética y el futuro del cómputo — en revisión, afirmación por afirmación."
++ },
++ "de": {
++  "brandTag": "Persönlich • Blog • Leben",
++  "connect": "Hallo sagen",
++  "kicker": "Das Grimaldi-Netzwerk · Persönliche Oberfläche",
++  "title": "Der Mensch hinter der Technik.",
++  "lead": "Ich bin Vincenzo Grimaldi — Elektroingenieur in Frankfurt, arbeite an der Digitalisierung der Hochspannungs-Bahninfrastruktur und baue das Grimaldi-Netzwerk. Dies ist die persönliche Oberfläche: Leben, Reisen und der lange Bogen der Arbeit, in klaren Worten statt in Datenblättern.",
++  "ctaNow": "Was ich gerade tue",
++  "ctaCard": "Meine Visitenkarte",
++  "a_kicker": "Über mich",
++  "a_title": "Ein Leben, drei Oberflächen",
++  "a_intro": "Tagsüber digitalisiere ich Hochspannungs-Traktionsanlagen für die deutsche Bahn. Drumherum liegt alles andere: Software- und KI-Systeme, Hardware-Aufbauten, zwei Buchmanuskripte in Arbeit und die Orte dazwischen. Jede Oberfläche des Netzwerks trägt einen Teil — diese trägt den Menschen.",
++  "ab1tag": "Blog",
++  "ab1title": "Leben & Reisen",
++  "ab1body": "Frankfurt, die Orte dazwischen, und was ein Ingenieur bemerkt, wenn der Laptop zu ist.",
++  "ab2tag": "Bücher",
++  "ab2title": "Zwei Manuskripte in Arbeit",
++  "ab2body": "Langform-Arbeit über Energiesysteme und die Zukunft des Rechnens — die Ideen hinter der Technik, in Buchlänge argumentiert.",
++  "ab3tag": "Archiv",
++  "ab3title": "Der lange Bogen",
++  "ab3body": "Wie Projekte, Bücher und das Netzwerk entstanden sind — das Protokoll, ehrlich geführt, über die Jahre.",
++  "writing": "Erste Beiträge entstehen",
++  "drafting": "In Überarbeitung",
++  "growing": "Wächst mit der Arbeit",
++  "w_kicker": "Jetzt",
++  "w_title": "Was ich gerade tue",
++  "w1title": "Das Netz digitalisieren",
++  "w1body": "Digitalisierung von Hochspannungs-Traktionsanlagen in Frankfurt — IT/OT-Konvergenz und Sicherheits-Governance für kritische Infrastruktur.",
++  "w2title": "Das Netzwerk bauen",
++  "w2body": "Drei Domains, eine Identität, vier Sprachen — Portfolio, Hardware-Labor und diese Seite, konsistent und kontinuierlich veröffentlicht.",
++  "w3title": "Die Bücher schreiben",
++  "w3body": "Zwei Manuskripte in Überarbeitung, über Energiesouveränität und die Zukunft des Rechnens — neu geschrieben, wie es sein muss: Behauptung für Behauptung.",
++  "n_kicker": "Das Netzwerk",
++  "n_title": "Wo die Arbeit lebt",
++  "n1title": "Software & KI",
++  "n1body": "Das Engineering-Portfolio: Kompetenzregister, Arbeitsregister, Live-Simulator.",
++  "n2title": "Hardware & Elektrotechnik",
++  "n2body": "Die physische Schicht: Hochspannungssysteme, eingebettete Platinen, Leistungselektronik-Baujournale.",
++  "n3tag": "Visitenkarte",
++  "n3title": "Die digitale Karte",
++  "n3body": "Kontaktkanäle, vCard-Download und teilbarer QR — eine URL für die ganze Identität.",
++  "open": "Öffnen →",
++  "open2": "Öffnen →",
++  "open3": "Öffnen →",
++  "bannerTitle": "Wissen, wann der erste Beitrag erscheint?",
++  "bannerBody": "Eine E-Mail, einmal. Keine Liste, kein Lärm.",
++  "bannerCta": "Sag mir Bescheid",
++  "footAbout": "Der persönliche All-in-One-Blog des Grimaldi-Netzwerks.",
++  "footNet": "Das Grimaldi-Netzwerk",
++  "netSoftware": "Software & KI",
++  "netHardware": "Hardware & Elektrotechnik",
++  "netPersonal": "Persönlich",
++  "netCard": "Digitale Visitenkarte",
++  "footContact": "Kontakt",
++  "rights": "© 2026 Vincenzo Grimaldi. Alle Rechte vorbehalten.",
++  "top": "Nach oben ↑",
++  "navA": "Über mich",
++  "navW": "Jetzt",
++  "navN": "Netzwerk",
++  "jKicker": "Der Bogen",
++  "jTitle": "Der Weg bis hierher",
++  "j1y": "2025",
++  "j1t": "RWTH Aachen",
++  "j1b": "Masterthesis: eine domänenübergreifende CIM–ThreMA-Ontologie mit RL-Sicherheitsagenten — heute ein öffentlicher Live-Simulator.",
++  "j2y": "2024–",
++  "j2t": "Frankfurt · DB InfraGO",
++  "j2b": "Digitalisierung von Hochspannungs-Traktionsanlagen: IT/OT-Konvergenz und Sicherheits-Governance für kritische Infrastruktur.",
++  "j3y": "2026",
++  "j3t": "Das Grimaldi-Netzwerk",
++  "j3b": "Drei Domains, eine Identität, vier Sprachen — Portfolio, Hardware-Labor und diese Seite, veröffentlicht und konsistent.",
++  "j4y": "Jetzt",
++  "j4t": "Zwei Manuskripte",
++  "j4b": "Langform-Texte über Energiesouveränität und die Zukunft des Rechnens — in Überarbeitung, Behauptung für Behauptung."
++ },
++ "zh": {
++  "brandTag": "个人 • 博客 • 生活",
++  "connect": "打个招呼",
++  "kicker": "Grimaldi 站点网络 · 个人界面",
++  "title": "工程背后的那个人。",
++  "lead": "我是 Vincenzo Grimaldi — 法兰克福的电气工程师，从事高压铁路基础设施数字化，同时构建 Grimaldi 站点网络。这里是个人界面：生活、旅行，以及工作的长线脉络 — 用平实的语言，而非数据手册。",
++  "ctaNow": "我现在在做什么",
++  "ctaCard": "我的名片",
++  "a_kicker": "关于",
++  "a_title": "一段人生，三个界面",
++  "a_intro": "白天我为德国铁路数字化高压牵引资产。围绕它的是其余一切：软件与 AI 系统、硬件搭建、两部写作中的书稿，以及途中的地方。网络的每个界面承载一部分 — 这里承载的是人。",
++  "ab1tag": "博客",
++  "ab1title": "生活与旅行",
++  "ab1body": "法兰克福、途中的地方，以及一位工程师合上电脑后所注意到的一切。",
++  "ab2tag": "书",
++  "ab2title": "两部写作中的书稿",
++  "ab2body": "关于能源系统与计算未来的长篇写作 — 工程背后的思想，以一本书的篇幅展开论证。",
++  "ab3tag": "档案",
++  "ab3title": "长线脉络",
++  "ab3body": "项目、书与网络如何一步步成形 — 多年来诚实保存的记录。",
++  "writing": "首批文章撰写中",
++  "drafting": "修订中",
++  "growing": "随工作生长",
++  "w_kicker": "当下",
++  "w_title": "我现在在做什么",
++  "w1title": "数字化电网",
++  "w1body": "在法兰克福数字化高压牵引资产 — 关键基础设施的 IT/OT 融合与安全治理。",
++  "w2title": "构建网络",
++  "w2body": "三个域名、一个身份、四种语言 — 作品集、硬件实验室与这个页面，保持一致并持续发布。",
++  "w3title": "写书",
++  "w3body": "两部书稿在修订中，关于能源主权与计算的未来 — 用最扎实的方式重写：逐条论证。",
++  "n_kicker": "站点网络",
++  "n_title": "工作在哪里",
++  "n1title": "软件与 AI",
++  "n1body": "工程作品集：能力清单、工作台账、在线论文模拟器。",
++  "n2title": "硬件与电气工程",
++  "n2body": "物理层：高压系统、嵌入式电路板、电力电子搭建日志。",
++  "n3tag": "数字名片",
++  "n3title": "数字名片",
++  "n3body": "联系渠道、vCard 下载与可分享的二维码 — 一个 URL 承载完整身份。",
++  "open": "打开 →",
++  "open2": "打开 →",
++  "open3": "打开 →",
++  "bannerTitle": "想知道第一篇文章何时发布吗？",
++  "bannerBody": "只发一封邮件。没有列表，没有噪音。",
++  "bannerCta": "告诉我",
++  "footAbout": "Grimaldi 网络的个人一站式博客。",
++  "footNet": "Grimaldi 站点网络",
++  "netSoftware": "软件与 AI",
++  "netHardware": "硬件与电气工程",
++  "netPersonal": "个人",
++  "netCard": "数字名片",
++  "footContact": "联系",
++  "rights": "© 2026 Vincenzo Grimaldi 版权所有。",
++  "top": "返回顶部 ↑",
++  "navA": "关于",
++  "navW": "当下",
++  "navN": "网络",
++  "jKicker": "轨迹",
++  "jTitle": "一路走来",
++  "j1y": "2025",
++  "j1t": "亚琛工业大学",
++  "j1b": "硕士论文：CIM–ThreMA 跨域本体与强化学习安全智能体 — 如今是公开的在线模拟器。",
++  "j2y": "2024–",
++  "j2t": "法兰克福 · DB InfraGO",
++  "j2b": "数字化高压铁路牵引资产：关键基础设施的 IT/OT 融合与安全治理。",
++  "j3y": "2026",
++  "j3t": "Grimaldi 站点网络",
++  "j3b": "三个域名、一个身份、四种语言 — 作品集、硬件实验室与这个页面，已发布并保持一致。",
++  "j4y": "当下",
++  "j4t": "两部书稿",
++  "j4b": "关于能源主权与计算未来的长篇写作 — 逐条修订中。"
++ }
++}
+\ No newline at end of file
+diff --git a/next-env.d.ts b/next-env.d.ts
+new file mode 100644
+index 0000000..40c3d68
+--- /dev/null
++++ b/next-env.d.ts
+@@ -0,0 +1,5 @@
++/// <reference types="next" />
++/// <reference types="next/image-types/global" />
++
++// NOTE: This file should not be edited
++// see https://nextjs.org/docs/app/building-your-application/configuring/typescript for more information.
+diff --git a/next.config.js b/next.config.js
+new file mode 100644
+index 0000000..d19f028
+--- /dev/null
++++ b/next.config.js
+@@ -0,0 +1,3 @@
++/** Static export: every page prerenders to plain HTML in out/, so crawlers
++ *  and AI agents read the full site with zero JavaScript. */
++module.exports = { output: 'export' };
+diff --git a/package-lock.json b/package-lock.json
+new file mode 100644
+index 0000000..b092d24
+--- /dev/null
++++ b/package-lock.json
+@@ -0,0 +1,498 @@
++{
++  "name": "grimaldi-ca",
++  "version": "3.0.0",
++  "lockfileVersion": 3,
++  "requires": true,
++  "packages": {
++    "": {
++      "name": "grimaldi-ca",
++      "version": "3.0.0",
++      "dependencies": {
++        "next": "14.2.35",
++        "react": "18.3.1",
++        "react-dom": "18.3.1"
++      },
++      "devDependencies": {
++        "@types/node": "^20",
++        "@types/react": "^18",
++        "@types/react-dom": "^18",
++        "typescript": "^5.6.3"
++      }
++    },
++    "node_modules/@next/env": {
++      "version": "14.2.35",
++      "resolved": "https://registry.npmjs.org/@next/env/-/env-14.2.35.tgz",
++      "integrity": "sha512-DuhvCtj4t9Gwrx80dmz2F4t/zKQ4ktN8WrMwOuVzkJfBilwAwGr6v16M5eI8yCuZ63H9TTuEU09Iu2HqkzFPVQ==",
++      "license": "MIT"
++    },
++    "node_modules/@next/swc-darwin-arm64": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-14.2.33.tgz",
++      "integrity": "sha512-HqYnb6pxlsshoSTubdXKu15g3iivcbsMXg4bYpjL2iS/V6aQot+iyF4BUc2qA/J/n55YtvE4PHMKWBKGCF/+wA==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-darwin-x64": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-14.2.33.tgz",
++      "integrity": "sha512-8HGBeAE5rX3jzKvF593XTTFg3gxeU4f+UWnswa6JPhzaR6+zblO5+fjltJWIZc4aUalqTclvN2QtTC37LxvZAA==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-linux-arm64-gnu": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-gnu/-/swc-linux-arm64-gnu-14.2.33.tgz",
++      "integrity": "sha512-JXMBka6lNNmqbkvcTtaX8Gu5by9547bukHQvPoLe9VRBx1gHwzf5tdt4AaezW85HAB3pikcvyqBToRTDA4DeLw==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-linux-arm64-musl": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-musl/-/swc-linux-arm64-musl-14.2.33.tgz",
++      "integrity": "sha512-Bm+QulsAItD/x6Ih8wGIMfRJy4G73tu1HJsrccPW6AfqdZd0Sfm5Imhgkgq2+kly065rYMnCOxTBvmvFY1BKfg==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-linux-x64-gnu": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-14.2.33.tgz",
++      "integrity": "sha512-FnFn+ZBgsVMbGDsTqo8zsnRzydvsGV8vfiWwUo1LD8FTmPTdV+otGSWKc4LJec0oSexFnCYVO4hX8P8qQKaSlg==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-linux-x64-musl": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-14.2.33.tgz",
++      "integrity": "sha512-345tsIWMzoXaQndUTDv1qypDRiebFxGYx9pYkhwY4hBRaOLt8UGfiWKr9FSSHs25dFIf8ZqIFaPdy5MljdoawA==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-win32-arm64-msvc": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-win32-arm64-msvc/-/swc-win32-arm64-msvc-14.2.33.tgz",
++      "integrity": "sha512-nscpt0G6UCTkrT2ppnJnFsYbPDQwmum4GNXYTeoTIdsmMydSKFz9Iny2jpaRupTb+Wl298+Rh82WKzt9LCcqSQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-win32-ia32-msvc": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-win32-ia32-msvc/-/swc-win32-ia32-msvc-14.2.33.tgz",
++      "integrity": "sha512-pc9LpGNKhJ0dXQhZ5QMmYxtARwwmWLpeocFmVG5Z0DzWq5Uf0izcI8tLc+qOpqxO1PWqZ5A7J1blrUIKrIFc7Q==",
++      "cpu": [
++        "ia32"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@next/swc-win32-x64-msvc": {
++      "version": "14.2.33",
++      "resolved": "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-14.2.33.tgz",
++      "integrity": "sha512-nOjfZMy8B94MdisuzZo9/57xuFVLHJaDj5e/xrduJp9CV2/HrfxTRH2fbyLe+K9QT41WBLUd4iXX3R7jBp0EUg==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/@swc/counter": {
++      "version": "0.1.3",
++      "resolved": "https://registry.npmjs.org/@swc/counter/-/counter-0.1.3.tgz",
++      "integrity": "sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==",
++      "license": "Apache-2.0"
++    },
++    "node_modules/@swc/helpers": {
++      "version": "0.5.5",
++      "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.5.tgz",
++      "integrity": "sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==",
++      "license": "Apache-2.0",
++      "dependencies": {
++        "@swc/counter": "^0.1.3",
++        "tslib": "^2.4.0"
++      }
++    },
++    "node_modules/@types/node": {
++      "version": "20.19.43",
++      "resolved": "https://registry.npmjs.org/@types/node/-/node-20.19.43.tgz",
++      "integrity": "sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "undici-types": "~6.21.0"
++      }
++    },
++    "node_modules/@types/prop-types": {
++      "version": "15.7.15",
++      "resolved": "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.15.tgz",
++      "integrity": "sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/@types/react": {
++      "version": "18.3.31",
++      "resolved": "https://registry.npmjs.org/@types/react/-/react-18.3.31.tgz",
++      "integrity": "sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/prop-types": "*",
++        "csstype": "^3.2.2"
++      }
++    },
++    "node_modules/@types/react-dom": {
++      "version": "18.3.7",
++      "resolved": "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.3.7.tgz",
++      "integrity": "sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==",
++      "dev": true,
++      "license": "MIT",
++      "peerDependencies": {
++        "@types/react": "^18.0.0"
++      }
++    },
++    "node_modules/busboy": {
++      "version": "1.6.0",
++      "resolved": "https://registry.npmjs.org/busboy/-/busboy-1.6.0.tgz",
++      "integrity": "sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==",
++      "dependencies": {
++        "streamsearch": "^1.1.0"
++      },
++      "engines": {
++        "node": ">=10.16.0"
++      }
++    },
++    "node_modules/caniuse-lite": {
++      "version": "1.0.30001810",
++      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001810.tgz",
++      "integrity": "sha512-TITQPUkaz+aVk5GL6NhOdwk1aEaNTSDPsGFWrTuhKGtjTF70jL/Oht2W4c6rXUe5fu7Ie19VIahAXHIIiWWNeg==",
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/browserslist"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "CC-BY-4.0"
++    },
++    "node_modules/client-only": {
++      "version": "0.0.1",
++      "resolved": "https://registry.npmjs.org/client-only/-/client-only-0.0.1.tgz",
++      "integrity": "sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==",
++      "license": "MIT"
++    },
++    "node_modules/csstype": {
++      "version": "3.2.3",
++      "resolved": "https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz",
++      "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/graceful-fs": {
++      "version": "4.2.11",
++      "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz",
++      "integrity": "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==",
++      "license": "ISC"
++    },
++    "node_modules/js-tokens": {
++      "version": "4.0.0",
++      "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz",
++      "integrity": "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==",
++      "license": "MIT"
++    },
++    "node_modules/loose-envify": {
++      "version": "1.4.0",
++      "resolved": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz",
++      "integrity": "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==",
++      "license": "MIT",
++      "dependencies": {
++        "js-tokens": "^3.0.0 || ^4.0.0"
++      },
++      "bin": {
++        "loose-envify": "cli.js"
++      }
++    },
++    "node_modules/nanoid": {
++      "version": "3.3.18",
++      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.18.tgz",
++      "integrity": "sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "bin": {
++        "nanoid": "bin/nanoid.cjs"
++      },
++      "engines": {
++        "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
++      }
++    },
++    "node_modules/next": {
++      "version": "14.2.35",
++      "resolved": "https://registry.npmjs.org/next/-/next-14.2.35.tgz",
++      "integrity": "sha512-KhYd2Hjt/O1/1aZVX3dCwGXM1QmOV4eNM2UTacK5gipDdPN/oHHK/4oVGy7X8GMfPMsUTUEmGlsy0EY1YGAkig==",
++      "license": "MIT",
++      "dependencies": {
++        "@next/env": "14.2.35",
++        "@swc/helpers": "0.5.5",
++        "busboy": "1.6.0",
++        "caniuse-lite": "^1.0.30001579",
++        "graceful-fs": "^4.2.11",
++        "postcss": "8.4.31",
++        "styled-jsx": "5.1.1"
++      },
++      "bin": {
++        "next": "dist/bin/next"
++      },
++      "engines": {
++        "node": ">=18.17.0"
++      },
++      "optionalDependencies": {
++        "@next/swc-darwin-arm64": "14.2.33",
++        "@next/swc-darwin-x64": "14.2.33",
++        "@next/swc-linux-arm64-gnu": "14.2.33",
++        "@next/swc-linux-arm64-musl": "14.2.33",
++        "@next/swc-linux-x64-gnu": "14.2.33",
++        "@next/swc-linux-x64-musl": "14.2.33",
++        "@next/swc-win32-arm64-msvc": "14.2.33",
++        "@next/swc-win32-ia32-msvc": "14.2.33",
++        "@next/swc-win32-x64-msvc": "14.2.33"
++      },
++      "peerDependencies": {
++        "@opentelemetry/api": "^1.1.0",
++        "@playwright/test": "^1.41.2",
++        "react": "^18.2.0",
++        "react-dom": "^18.2.0",
++        "sass": "^1.3.0"
++      },
++      "peerDependenciesMeta": {
++        "@opentelemetry/api": {
++          "optional": true
++        },
++        "@playwright/test": {
++          "optional": true
++        },
++        "sass": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/picocolors": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
++      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
++      "license": "ISC"
++    },
++    "node_modules/postcss": {
++      "version": "8.4.31",
++      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.4.31.tgz",
++      "integrity": "sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==",
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/postcss/"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/postcss"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "nanoid": "^3.3.6",
++        "picocolors": "^1.0.0",
++        "source-map-js": "^1.0.2"
++      },
++      "engines": {
++        "node": "^10 || ^12 || >=14"
++      }
++    },
++    "node_modules/react": {
++      "version": "18.3.1",
++      "resolved": "https://registry.npmjs.org/react/-/react-18.3.1.tgz",
++      "integrity": "sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==",
++      "license": "MIT",
++      "dependencies": {
++        "loose-envify": "^1.1.0"
++      },
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/react-dom": {
++      "version": "18.3.1",
++      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz",
++      "integrity": "sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==",
++      "license": "MIT",
++      "dependencies": {
++        "loose-envify": "^1.1.0",
++        "scheduler": "^0.23.2"
++      },
++      "peerDependencies": {
++        "react": "^18.3.1"
++      }
++    },
++    "node_modules/scheduler": {
++      "version": "0.23.2",
++      "resolved": "https://registry.npmjs.org/scheduler/-/scheduler-0.23.2.tgz",
++      "integrity": "sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==",
++      "license": "MIT",
++      "dependencies": {
++        "loose-envify": "^1.1.0"
++      }
++    },
++    "node_modules/source-map-js": {
++      "version": "1.2.1",
++      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
++      "integrity": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==",
++      "license": "BSD-3-Clause",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/streamsearch": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/streamsearch/-/streamsearch-1.1.0.tgz",
++      "integrity": "sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==",
++      "engines": {
++        "node": ">=10.0.0"
++      }
++    },
++    "node_modules/styled-jsx": {
++      "version": "5.1.1",
++      "resolved": "https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.1.tgz",
++      "integrity": "sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==",
++      "license": "MIT",
++      "dependencies": {
++        "client-only": "0.0.1"
++      },
++      "engines": {
++        "node": ">= 12.0.0"
++      },
++      "peerDependencies": {
++        "react": ">= 16.8.0 || 17.x.x || ^18.0.0-0"
++      },
++      "peerDependenciesMeta": {
++        "@babel/core": {
++          "optional": true
++        },
++        "babel-plugin-macros": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/tslib": {
++      "version": "2.8.1",
++      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz",
++      "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==",
++      "license": "0BSD"
++    },
++    "node_modules/typescript": {
++      "version": "5.9.3",
++      "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
++      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "bin": {
++        "tsc": "bin/tsc",
++        "tsserver": "bin/tsserver"
++      },
++      "engines": {
++        "node": ">=14.17"
++      }
++    },
++    "node_modules/undici-types": {
++      "version": "6.21.0",
++      "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-6.21.0.tgz",
++      "integrity": "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==",
++      "dev": true,
++      "license": "MIT"
++    }
++  }
++}
+diff --git a/package.json b/package.json
+new file mode 100644
+index 0000000..f28324f
+--- /dev/null
++++ b/package.json
+@@ -0,0 +1,22 @@
++{
++  "name": "grimaldi-ca",
++  "version": "3.0.0",
++  "private": true,
++  "scripts": {
++    "dev": "next dev",
++    "build": "next build",
++    "start": "next start",
++    "lint": "next lint"
++  },
++  "dependencies": {
++    "next": "14.2.35",
++    "react": "18.3.1",
++    "react-dom": "18.3.1"
++  },
++  "devDependencies": {
++    "@types/node": "^20",
++    "@types/react": "^18",
++    "@types/react-dom": "^18",
++    "typescript": "^5.6.3"
++  }
++}
+\ No newline at end of file
+diff --git a/public/headshot.jpg b/public/headshot.jpg
+new file mode 100644
+index 0000000000000000000000000000000000000000..fa5d9dceccef4451893bb594f8eb6f62d9e13f4c
+GIT binary patch
+literal 9410
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/tsconfig.json b/tsconfig.json
+new file mode 100644
+index 0000000..3b0c124
+--- /dev/null
++++ b/tsconfig.json
+@@ -0,0 +1,20 @@
++{
++  "compilerOptions": {
++    "lib": ["dom", "dom.iterable", "esnext"],
++    "allowJs": false,
++    "skipLibCheck": true,
++    "strict": true,
++    "noEmit": true,
++    "esModuleInterop": true,
++    "module": "esnext",
++    "moduleResolution": "bundler",
++    "resolveJsonModule": true,
++    "isolatedModules": true,
++    "jsx": "preserve",
++    "incremental": true,
++    "plugins": [{ "name": "next" }],
++    "paths": { "@/*": ["./*"] }
++  },
++  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
++  "exclude": ["node_modules"]
++}
+diff --git a/vercel.json b/vercel.json
+new file mode 100644
+index 0000000..57494a2
+--- /dev/null
++++ b/vercel.json
+@@ -0,0 +1,4 @@
++{
++  "buildCommand": "npm run build",
++  "outputDirectory": "out"
++}
+-- 
+2.43.0
+

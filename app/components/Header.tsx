@@ -42,6 +42,9 @@ export default function Header() {
           <a className="utility-link" href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer">
             GitHub
           </a>
+          <a className="utility-link" href="/card">
+            {t.card.kicker}
+          </a>
           <a className="utility-link" href="#connect">
             {t.nav.connect}
           </a>

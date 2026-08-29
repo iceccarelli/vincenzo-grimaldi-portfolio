@@ -44,6 +44,7 @@ export default function SiteFooter() {
               <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">{t.footer.liveSimulator}</a>
               <a className="footer-link" href="#payments">{t.nav.payments}</a>
               <a className="footer-link" href="#connect">{t.nav.connect}</a>
+              <a className="footer-link" href="/card">{t.card.kicker}</a>
             </div>
           </div>
 

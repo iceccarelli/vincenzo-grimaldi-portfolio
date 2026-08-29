@@ -1404,3 +1404,219 @@ code {
   padding: 0;
   margin: 0;
 }
+
+/* ====================== DIGITAL BUSINESS CARD (/card) ====================== */
+.bizcard-stage {
+  min-height: calc(100vh - var(--nav-h));
+  background: var(--hero-gradient);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3.5rem 1.25rem 4.5rem;
+}
+
+.bizcard {
+  width: min(560px, 100%);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(6px);
+  border-radius: 24px;
+  box-shadow: var(--shadow-float);
+  padding: 2.5rem 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.bizcard-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.bizcard-portrait {
+  width: 132px;
+  height: 132px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 4px solid #ffffff;
+  box-shadow: var(--shadow-card);
+  background: var(--ink);
+  margin-bottom: 0.85rem;
+}
+
+.bizcard-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bizcard-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.bizcard-role {
+  margin: 0;
+  font-weight: 600;
+  color: var(--link);
+  font-size: 0.98rem;
+}
+
+.bizcard-tagline {
+  margin: 0.35rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  max-width: 42ch;
+}
+
+.bizcard-availability {
+  margin: 0.6rem 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.bizcard-rows {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+
+.bizcard-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0.25rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.bizcard-row:hover {
+  background: var(--card-bg);
+}
+
+.bizcard-row-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex: none;
+}
+
+.bizcard-row-value {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+  text-align: right;
+  word-break: break-all;
+}
+
+.bizcard-row:hover .bizcard-row-value {
+  color: var(--link);
+}
+
+.bizcard-network {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.bizcard-domains {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bizcard-domains a {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.bizcard-domains a:hover {
+  border-color: var(--link);
+  color: var(--link);
+}
+
+.bizcard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.bizcard-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex: 1;
+}
+
+.bizcard-buttons a {
+  justify-content: center;
+  text-align: center;
+}
+
+.bizcard-qr {
+  margin: 0;
+  text-align: center;
+  flex: none;
+}
+
+.bizcard-qr img {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  display: block;
+}
+
+.bizcard-qr figcaption {
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+  max-width: 112px;
+}
+
+.bizcard-foot {
+  text-align: center;
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+}
+
+.bizcard-foot a {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--link);
+}
+
+.bizcard-foot a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 560px) {
+  .bizcard {
+    padding: 2rem 1.4rem 1.6rem;
+  }
+  .bizcard-actions {
+    flex-direction: column;
+  }
+  .bizcard-buttons {
+    width: 100%;
+  }
+}

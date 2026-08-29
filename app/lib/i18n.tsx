@@ -195,6 +195,20 @@ export type Dictionary = {
     emptySuffix: string;
     groups: Record<string, string>;
   };
+  card: {
+    kicker: string;
+    role: string;
+    tagline: string;
+    email: string;
+    website: string;
+    githubLabel: string;
+    networkLabel: string;
+    saveContact: string;
+    connect: string;
+    scanToShare: string;
+    backHome: string;
+    availability: string;
+  };
 };
 
 const en: Dictionary = {
@@ -401,6 +415,20 @@ const en: Dictionary = {
       Systems: 'Systems',
       Elsewhere: 'Elsewhere',
     },
+  },
+  card: {
+    kicker: 'Digital business card',
+    role: 'Physics-Informed Cyber-Physical Systems Engineer',
+    tagline: 'Deterministic control · Grid intelligence · AI orchestration — across software, hardware and energy systems.',
+    email: 'Email',
+    website: 'Website',
+    githubLabel: 'Code',
+    networkLabel: 'The Grimaldi Network',
+    saveContact: 'Save contact (vCard)',
+    connect: 'Start a conversation',
+    scanToShare: 'Scan to share this card',
+    backHome: 'View the full portfolio →',
+    availability: 'Available for consultation · Europe-based',
   },
 };
 
@@ -646,6 +674,20 @@ const es: Dictionary = {
       Elsewhere: 'Otros sitios',
     },
   },
+  card: {
+    kicker: 'Tarjeta de presentación digital',
+    role: 'Ingeniero de Sistemas Ciberfísicos Informados por la Física',
+    tagline: 'Control determinista · Inteligencia de red · Orquestación de IA — en software, hardware y sistemas de energía.',
+    email: 'Correo',
+    website: 'Sitio web',
+    githubLabel: 'Código',
+    networkLabel: 'La Red Grimaldi',
+    saveContact: 'Guardar contacto (vCard)',
+    connect: 'Iniciar una conversación',
+    scanToShare: 'Escanea para compartir esta tarjeta',
+    backHome: 'Ver el portafolio completo →',
+    availability: 'Disponible para consultoría · Con base en Europa',
+  },
 };
 
 const de: Dictionary = {
@@ -890,6 +932,20 @@ const de: Dictionary = {
       Elsewhere: 'Anderswo',
     },
   },
+  card: {
+    kicker: 'Digitale Visitenkarte',
+    role: 'Ingenieur für physikinformierte cyber-physische Systeme',
+    tagline: 'Deterministische Regelung · Netzintelligenz · KI-Orchestrierung — über Software, Hardware und Energiesysteme hinweg.',
+    email: 'E-Mail',
+    website: 'Website',
+    githubLabel: 'Code',
+    networkLabel: 'Das Grimaldi-Netzwerk',
+    saveContact: 'Kontakt speichern (vCard)',
+    connect: 'Gespräch beginnen',
+    scanToShare: 'Scannen, um diese Karte zu teilen',
+    backHome: 'Zum vollständigen Portfolio →',
+    availability: 'Verfügbar für Beratung · In Europa ansässig',
+  },
 };
 
 const zh: Dictionary = {
@@ -1110,6 +1166,20 @@ const zh: Dictionary = {
       Systems: '系统',
       Elsewhere: '其他站点',
     },
+  },
+  card: {
+    kicker: '数字名片',
+    role: '物理信息网络物理系统工程师',
+    tagline: '确定性控制 · 电网智能 · AI 编排 — 横跨软件、硬件与能源系统。',
+    email: '邮箱',
+    website: '网站',
+    githubLabel: '代码',
+    networkLabel: 'Grimaldi 站点网络',
+    saveContact: '保存联系人（vCard）',
+    connect: '开始对话',
+    scanToShare: '扫码分享这张名片',
+    backHome: '查看完整作品集 →',
+    availability: '可接受咨询 · 常驻欧洲',
   },
 };
 

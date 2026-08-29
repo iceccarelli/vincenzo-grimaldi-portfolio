@@ -583,6 +583,13 @@ const es: Dictionary = {
       'Middleware nativo de IA para orquestación humano-modelo en entornos de seguridad crítica informados por la física.',
     'Bahn Project Manager':
       'Plataforma empresarial para proyectos de infraestructura y estaciones de Deutsche Bahn en 14 departamentos técnicos, basada en un dataset de 1.298 proyectos.',
+    'ForgeOS': 'El sistema operativo robótico nativo de IA para los oficios de mayor dolor y mayor ROI — la plataforma detrás de la Línea Forge en engineeringgrimaldi.com.',
+    'FloorForge AI': 'Automatización nativa de IA para el oficio de los pisos — entrada de la Línea Forge, en desarrollo activo con código público.',
+    'PaintForge AI': 'Automatización nativa de IA para el oficio de la pintura — entrada de la Línea Forge, en desarrollo activo con código público.',
+    'DryForge AI': 'Automatización nativa de IA para flujos de secado y clima en obra — entrada de la Línea Forge, en desarrollo activo con código público.',
+    'GridForge AI': 'Energía detrás del medidor para centros de datos de IA: generación en sitio, microrredes DC y almacenamiento híbrido que evitan las demoras de interconexión.',
+    'ForgePower Semi': 'Módulos de potencia SiC y GaN a medida, convertidores de alta densidad y redes inteligentes de entrega de potencia para GPUs de IA y potencia a nivel de rack.',
+    'ThermalForge': 'Infraestructura de refrigeración líquida y co-optimización térmica-eléctrica para racks de IA de alta densidad: placas frías directo-al-chip y CDUs avanzadas.',
     'Palletizer OS':
       'Base de software determinista y agnóstica al hardware para paletizado de fin de línea: control, seguridad, planificación multi-SKU y telemetría de flota, con optimizador en vivo.',
   },
@@ -841,6 +848,13 @@ const de: Dictionary = {
       'KI-native Middleware für Mensch-Modell-Orchestrierung in sicherheitskritischen, physikinformierten Umgebungen.',
     'Bahn Project Manager':
       'Enterprise-Plattform für DB-Infrastruktur- und Bahnhofsprojekte über 14 Fachbereiche, datengetrieben aus 1.298 Projekten.',
+    'ForgeOS': 'Das KI-native Roboter-Betriebssystem für die schmerzhaftesten Gewerke mit dem höchsten ROI — die Plattform hinter der Forge-Linie auf engineeringgrimaldi.com.',
+    'FloorForge AI': 'KI-native Automatisierung für das Bodenleger-Gewerk — Forge-Linie, in aktiver Entwicklung mit öffentlichem Code.',
+    'PaintForge AI': 'KI-native Automatisierung für das Maler-Gewerk — Forge-Linie, in aktiver Entwicklung mit öffentlichem Code.',
+    'DryForge AI': 'KI-native Automatisierung für Trocknungs- und Klima-Abläufe auf der Baustelle — Forge-Linie, in aktiver Entwicklung mit öffentlichem Code.',
+    'GridForge AI': 'Behind-the-Meter-Strom für KI-Rechenzentren: Vor-Ort-Erzeugung, DC-Microgrids und Hybridspeicher, die Netzanschluss-Verzögerungen umgehen.',
+    'ForgePower Semi': 'Maßgeschneiderte SiC- & GaN-Leistungsmodule, hochdichte Umrichter und intelligente Power-Delivery-Netzwerke für KI-GPUs und Rack-Level-Power.',
+    'ThermalForge': 'Flüssigkühl-Infrastruktur und thermisch-elektrische Co-Optimierung für hochdichte KI-Racks: Direct-to-Chip-Kühlplatten und fortgeschrittene CDUs.',
     'Palletizer OS':
       'Hardware-agnostische, deterministische Software-Basis für End-of-Line-Palettierung: Regelung, Sicherheit, Misch-SKU-Planung und Flottentelemetrie, mit Live-Optimierer.',
   },
@@ -1078,6 +1092,13 @@ const zh: Dictionary = {
     'robot-lidar-fusion': '基于 SE(3) 外参、针孔内参、z-buffer 遮挡处理与 KITTI 标定加载器的 LiDAR 到相机投影。',
     NeuralBridge: '面向安全关键、物理信息环境的人机模型编排 AI 原生中间件。',
     'Bahn Project Manager': '覆盖德国铁路 14 个技术部门的基础设施与车站项目企业平台，基于 1,298 个项目的数据集。',
+    'ForgeOS': '面向痛点最深、回报最高工种的 AI 原生机器人操作系统 — engineeringgrimaldi.com 上 Forge 产品线背后的平台。',
+    'FloorForge AI': '面向地板工种的 AI 原生自动化 — Forge 产品线条目，积极开发中，代码公开。',
+    'PaintForge AI': '面向喷涂工种的 AI 原生自动化 — Forge 产品线条目，积极开发中，代码公开。',
+    'DryForge AI': '面向工地干燥与气候流程的 AI 原生自动化 — Forge 产品线条目，积极开发中，代码公开。',
+    'GridForge AI': '为 AI 数据中心提供表后电力：现场发电、直流微电网与混合储能，绕开并网排队延误。',
+    'ForgePower Semi': '定制与半定制 SiC/GaN 功率模块、高密度变换器，以及面向 AI GPU 与机架级供电的智能配电网络。',
+    'ThermalForge': '面向高密度 AI 机架的液冷基础设施与热-电协同优化：芯片直触冷板与先进 CDU。',
     'Palletizer OS': '硬件无关、确定性的码垛软件基座：控制、安全、混合 SKU 规划与机群遥测，附带在线优化器。',
   },
   payments: {

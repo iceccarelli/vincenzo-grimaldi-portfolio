@@ -217,6 +217,62 @@ export const projects: Project[] = [
     stack: ['TypeScript', 'React 19', 'Vite', 'Vitest'],
   },
   {
+    name: 'ForgeOS',
+    domain: 'Robotics & Perception',
+    summary:
+      'The AI-native robotic operating system for the highest-pain, highest-ROI trades — the platform behind the Forge Line on engineeringgrimaldi.com.',
+    status: 'in-development',
+    stack: ['TypeScript', 'Robotics', 'AI Agents'],
+  },
+  {
+    name: 'FloorForge AI',
+    domain: 'Robotics & Perception',
+    summary: 'AI-native automation for the flooring trade — Forge Line entry, in active development with public code.',
+    repo: 'https://github.com/iceccarelli/floorforge-ai',
+    status: 'in-development',
+    stack: ['TypeScript', 'Trades 2.0'],
+  },
+  {
+    name: 'PaintForge AI',
+    domain: 'Robotics & Perception',
+    summary: 'AI-native automation for the painting trade — Forge Line entry, in active development with public code.',
+    repo: 'https://github.com/iceccarelli/paintforge-ai',
+    status: 'in-development',
+    stack: ['TypeScript', 'Trades 2.0'],
+  },
+  {
+    name: 'DryForge AI',
+    domain: 'Robotics & Perception',
+    summary: 'AI-native automation for drying and climate workflows on site — Forge Line entry, in active development with public code.',
+    repo: 'https://github.com/iceccarelli/dryforge-ai',
+    status: 'in-development',
+    stack: ['TypeScript', 'Trades 2.0'],
+  },
+  {
+    name: 'GridForge AI',
+    domain: 'Grid & Power Systems',
+    summary:
+      'Behind-the-meter power for AI data centers: on-site generation, DC microgrids and hybrid storage that bypass grid interconnection delays.',
+    status: 'in-development',
+    stack: ['TypeScript', 'Microgrids', 'Storage'],
+  },
+  {
+    name: 'ForgePower Semi',
+    domain: 'Grid & Power Systems',
+    summary:
+      'Custom and semi-custom SiC & GaN power modules, high-density converters and intelligent power-delivery networks for AI GPUs and rack-level power.',
+    status: 'in-development',
+    stack: ['SiC/GaN', 'Power Electronics'],
+  },
+  {
+    name: 'ThermalForge',
+    domain: 'Grid & Power Systems',
+    summary:
+      'Liquid-cooling infrastructure and thermal-power co-optimization for high-density AI racks: direct-to-chip cold plates and advanced CDUs.',
+    status: 'in-development',
+    stack: ['Liquid Cooling', 'Thermal'],
+  },
+  {
     name: 'Palletizer OS',
     domain: 'Robotics & Perception',
     summary:

@@ -60,13 +60,6 @@ export const metadata: Metadata = {
     siteName: 'Vincenzo Grimaldi Portfolio',
     locale: 'en_GB',
     type: 'website',
-    images: [
-      {
-        url: 'https://igrimaldi.engineering/og-image.jpg',
-        width: 1200,
-        height: 630,
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',

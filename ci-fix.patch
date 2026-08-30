@@ -1,0 +1,89 @@
+From e896788ebef032d5d5ac2b4d6424f40e76357856 Mon Sep 17 00:00:00 2001
+From: Vincenzo Grimaldi <vince.ceccarelli@gmail.com>
+Date: Sun, 30 Aug 2026 19:54:22 +0000
+Subject: [PATCH] fix(ci): use the runner's version-matched chromedriver; Node
+ 22
+
+PR #3 failed only on the axe step:
+
+  chromedriver@152.0.2 vs Chrome 151.0.7922.173 on ubuntu-24.04
+  Error: session not created: This version of ChromeDriver only
+  supports Chrome version 152
+
+npm's chromedriver package tracks Chrome stable and drifts ahead of the
+runner image. GitHub-hosted images ship a ChromeDriver matched to their
+own Chrome at $CHROMEWEBDRIVER; use it and pass --chromedriver-path.
+The step fails loudly if no matched driver is present rather than
+silently skipping accessibility testing.
+
+Also bumps setup-node to 22: Node 20 is deprecated on Actions runners
+and sits below chromedriver's engine floor (>=22), which produced the
+EBADENGINE warning in the same run.
+
+Also commits the .vercel line that 'vercel link' appended to .gitignore,
+which was showing as an uncommitted change on every branch switch.
+
+Every other CI step already passed, including 'npm run verify'
+(ALL CONTRACTS HELD).
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_019GWsiUVmM3mLw1X2wD6eJi
+---
+ .github/workflows/ci.yml | 16 +++++++++++++---
+ .gitignore               |  1 +
+ 2 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 31bcf69..a11a673 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -16,7 +16,7 @@ jobs:
+       - uses: actions/checkout@v4
+       - uses: actions/setup-node@v4
+         with:
+-          node-version: 20
++          node-version: 22
+           cache: npm
+ 
+       - run: npm ci
+@@ -44,8 +44,18 @@ jobs:
+       - name: Acceptance contract
+         run: npm run verify
+ 
++      # Use the runner image's own ChromeDriver, which is version-matched to
++      # its bundled Chrome. npm's chromedriver package tracks Chrome stable and
++      # drifts ahead of the image (152 vs 151), which is what broke PR #3.
+       - name: Accessibility (axe)
+-        run: npx --yes @axe-core/cli@4 http://localhost:3000/ --exit
++        run: |
++          DRIVER="${CHROMEWEBDRIVER:-/usr/local/share/chromedriver-linux64}/chromedriver"
++          if [ ! -x "$DRIVER" ]; then
++            echo "::error::no version-matched chromedriver on this runner (looked in '$DRIVER')"
++            exit 1
++          fi
++          "$DRIVER" --version
++          npx --yes @axe-core/cli@4 http://localhost:3000/ --exit --chromedriver-path "$DRIVER"
+ 
+       - name: Stop server
+         if: always()
+@@ -58,7 +68,7 @@ jobs:
+       - uses: actions/checkout@v4
+       - uses: actions/setup-node@v4
+         with:
+-          node-version: 20
++          node-version: 22
+           cache: npm
+       - run: npm ci
+       - run: npm run build
+diff --git a/.gitignore b/.gitignore
+index ab150d1..a9a3014 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -9,3 +9,4 @@ out/
+ 
+ # delivery artifacts — patches never live in the tree
+ *.patch
++.vercel
+-- 
+2.43.0
+

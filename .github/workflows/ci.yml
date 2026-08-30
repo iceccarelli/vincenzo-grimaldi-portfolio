@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -14,62 +18,38 @@ jobs:
         with:
           node-version: 20
           cache: npm
+
       - run: npm ci
-
       - name: Typecheck
-        run: npx tsc --noEmit
-
+        run: npm run typecheck
       - name: Lint
         run: npm run lint
-
       - name: Build
         run: npm run build
 
       - name: Start production server
         run: |
-          npm run start &
-          npx wait-on http://localhost:3000 --timeout 60000
-
-      - name: "Assert: security headers served"
-        run: |
-          h=$(curl -sI http://localhost:3000/)
-          echo "$h"
-          echo "$h" | grep -i "strict-transport-security: max-age=63072000; includeSubDomains; preload"
-          echo "$h" | grep -i "x-content-type-options: nosniff"
-          echo "$h" | grep -i "referrer-policy: strict-origin-when-cross-origin"
-          echo "$h" | grep -i "permissions-policy: camera=(), microphone=(), geolocation=()"
-          echo "$h" | grep -i "x-frame-options: DENY"
-          echo "$h" | grep -i "content-security-policy:"
-          if echo "$h" | grep -qi "access-control-allow-origin: \*"; then
-            echo "FAIL: ACAO:* present on document response"; exit 1
-          fi
-
-      - name: "Assert: sitemap has >= 8 URLs"
-        run: |
-          count=$(curl -s http://localhost:3000/sitemap.xml | grep -o "<loc>" | wc -l)
-          echo "sitemap URLs: $count"
-          test "$count" -ge 8
-
-      - name: "Assert: crawl surface returns 200"
-        run: |
-          for p in / /work /work/cim-threma /work/palletizer-os /work/bahn-project-manager \
-                   /capabilities /simulator /payments /connect /card \
-                   /impressum /datenschutz /llms.txt /robots.txt /sitemap.xml \
-                   /favicon.ico /site.webmanifest /.well-known/security.txt; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000$p")
-            echo "$code $p"
-            test "$code" = "200" || exit 1
+          npm run start > /tmp/server.log 2>&1 &
+          echo $! > /tmp/server.pid
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3000/ && exit 0
+            sleep 1
           done
+          echo "server never became ready:"; cat /tmp/server.log; exit 1
 
-      - name: "Assert: 404 route returns 404"
-        run: |
-          code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/does-not-exist)
-          test "$code" = "404"
+      # scripts/verify.sh is the SINGLE source of truth for the acceptance
+      # contract — the same command runs locally and against production.
+      # On localhost it asserts code contracts only; readiness (legal fields,
+      # Stripe links) is asserted separately against the live https origin.
+      - name: Acceptance contract
+        run: npm run verify
 
       - name: Accessibility (axe)
-        run: |
-          npx @axe-core/cli@4 http://localhost:3000/ --exit \
-            --chromedriver-path "$CHROMEWEBDRIVER/chromedriver" || npx @axe-core/cli@4 http://localhost:3000/ --exit
+        run: npx --yes @axe-core/cli@4 http://localhost:3000/ --exit
+
+      - name: Stop server
+        if: always()
+        run: kill "$(cat /tmp/server.pid)" 2>/dev/null || true
 
   lighthouse:
     runs-on: ubuntu-latest
@@ -83,4 +63,4 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Lighthouse CI (gates in lighthouserc.json)
-        run: npx @lhci/cli@0.14.x autorun
+        run: npx --yes @lhci/cli@0.14.x autorun

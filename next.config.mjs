@@ -20,6 +20,9 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
   { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'Access-Control-Allow-Origin', value: 'https://igrimaldi.engineering' },
+  { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+  { key: 'X-DNS-Prefetch-Control', value: 'on' },
   {
     key: 'Content-Security-Policy',
     value:

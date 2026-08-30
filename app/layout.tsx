@@ -5,107 +5,55 @@ import ScrollProgress from './components/ScrollProgress';
 import FeedbackBanner from './components/FeedbackBanner';
 import SiteFooter from './components/SiteFooter';
 import AskWidget from './components/AskWidget';
-import { Analytics } from '@vercel/analytics/react';
+import BookBar from './components/BookBar';
+import ConsentGate from './components/ConsentGate';
+import { GlobalJsonLd } from './components/JsonLd';
 import { LanguageProvider } from './lib/i18n';
+import { SITE_URL, SITE_NAME, JOB_TITLE } from './lib/site';
 import './globals.css';
 
+const DEFAULT_TITLE = `${SITE_NAME} | ${JOB_TITLE}`;
+const DESCRIPTION =
+  'Independent engineering advisory for safety-critical grids and cyber-physical systems: physics-informed AI, deterministic control, OT security. Book a 60-minute consultation or a monthly retainer.';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://igrimaldi.engineering'),
-  title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
-  description:
-    'Physics-Informed Systems • Deterministic Grid Intelligence • Agentic Digital Twins • NeuralBridge • GridOS • DERIM • Deutsche Bahn Grid Networks Engineer. Public implementation of 2025 RWTH Aachen Master Thesis: Cross-Domain CIM–ThreMA Ontology Simulator (https://physics-informed.vercel.app/). Two surfaces, one mission: Portfolio + GitHub.',
-  keywords: [
-    'Vincenzo Grimaldi',
-    'Physics-Informed Neural Networks',
-    'PINNs',
-    'Agentic Digital Twins',
-    'MARL',
-    'GridOS',
-    'NeuralBridge',
-    'DERIM',
-    'Cyber-Physical Systems',
-    'CPS Engineer',
-    'Grid Intelligence',
-    'DER Coordination',
-    'Embedded Systems',
-    'AI-native Middleware',
-    'Deterministic Control',
-    'RTOS',
-    'OT Cybersecurity',
-    'Deutsche Bahn',
-    'Signal Integrity',
-    'Verification & Validation',
-    'Physics-Informed Systems',
-    'CIM ThreMA Ontology',
-    'IEEE 9-Bus Cyber Testbed',
-    'Reinforcement Learning Security Agent',
-  ],
-  authors: [{ name: 'Vincenzo Grimaldi' }],
-  creator: 'Vincenzo Grimaldi',
-  publisher: 'Vincenzo Grimaldi',
-  alternates: {
-    canonical: '/',
-    languages: {
-      'x-default': '/',
-      en: '/',
-      es: '/?lang=es',
-      de: '/?lang=de',
-      'zh-Hans': '/?lang=zh',
-    },
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: DEFAULT_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DESCRIPTION,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  robots: { index: true, follow: true },
+  // i18n decision A: the site ships one indexable language (en). All
+  // hreflang alternates were removed — /?lang=x is a client-side toggle,
+  // not an alternate document. Reintroduce languages only with real
+  // localized routes (next-intl, unique metadata per locale).
+  alternates: { canonical: '/' },
+  manifest: '/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
-    title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
-    description:
-      'Embedding governing equations into AI for guaranteed physical consistency. Explore the immersive portfolio and the live Cross-Domain Ontology Simulator (2025 RWTH Aachen Master Thesis).',
-    url: 'https://igrimaldi.engineering/',
-    siteName: 'Vincenzo Grimaldi Portfolio',
+    title: DEFAULT_TITLE,
+    description: DESCRIPTION,
+    url: `${SITE_URL}/`,
+    siteName: 'Vincenzo Grimaldi — Engineering',
     locale: 'en_GB',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vincenzo Grimaldi | Physics-Informed Cyber-Physical Systems Engineer',
-    description: 'Physics-Informed AI • Deterministic Control • Grid Intelligence • Live Thesis Simulator',
+    title: DEFAULT_TITLE,
+    description: DESCRIPTION,
   },
 };
-
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Vincenzo Grimaldi',
-  url: 'https://igrimaldi.engineering/',
-  sameAs: [
-    'https://github.com/iceccarelli',
-    'https://physics-informed.vercel.app/',
-    'https://engineeringgrimaldi.com/',
-    'https://grimaldi.ca/',
-  ],
-  jobTitle: 'Physics-Informed Cyber-Physical Systems Engineer • Grid Networks Engineer at Deutsche Bahn',
-  knowsAbout: [
-    'Physics-Informed Neural Networks',
-    'Agentic Digital Twins',
-    'Multi-Agent Reinforcement Learning',
-    'Smart Grids',
-    'Distributed Energy Resources',
-    'Digital Infrastructure',
-    'Robotics',
-    'Systems Engineering',
-    'Embedded Control Systems',
-    'RTOS',
-    'OT Cybersecurity',
-    'Deterministic Control Loops',
-    'Physics-Informed AI',
-    'CIM–ThreMA Cross-Domain Ontology',
-    'IEEE 9-Bus Cyber-Physical Validation',
-  ],
-  description:
-    'Engineer building verifiable, physics-guaranteed intelligence for safety-critical grids and autonomous systems. Creator of the public Cross-Domain Ontology Simulator (2025 RWTH Aachen Master Thesis). Dual-surface presence: immersive portfolio and developer-first GitHub profile.',
-  alumniOf: {
-    '@type': 'Organization',
-    name: 'RWTH Aachen University',
-  },
-};
-
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -124,14 +72,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </div>
 
           <AskWidget />
+          <BookBar />
+          <ConsentGate />
         </LanguageProvider>
 
-        <Analytics />
-
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+        <GlobalJsonLd />
       </body>
     </html>
   );

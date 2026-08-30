@@ -1,39 +1,30 @@
 'use client';
 
-import { CalendarClock, Briefcase, ReceiptText, ShieldCheck, Check, ArrowRight } from 'lucide-react';
+import { CalendarClock, Briefcase, ReceiptText, ShieldCheck, Check, ArrowRight, Mail } from 'lucide-react';
 import { useLanguage } from '../lib/i18n';
-
-const RAW_STRIPE = {
-  deposit: 'https://buy.stripe.com/REPLACE_CONSULTATION_DEPOSIT',
-  retainer: 'https://buy.stripe.com/REPLACE_PROJECT_RETAINER',
-  invoice: 'https://buy.stripe.com/REPLACE_PAY_INVOICE',
-};
-
-/**
- * Until a real Stripe payment link is pasted above, the CTA falls back to a
- * pre-filled email instead of a dead checkout URL. The moment a link no
- * longer contains REPLACE, the button switches to Stripe automatically.
- */
-const fallback = (subject: string) =>
-  `mailto:vincenzo@igrimaldi.engineering?subject=${encodeURIComponent(subject)}`;
-
-const STRIPE = {
-  deposit: RAW_STRIPE.deposit.includes('REPLACE') ? fallback('Consultation booking') : RAW_STRIPE.deposit,
-  retainer: RAW_STRIPE.retainer.includes('REPLACE') ? fallback('Advisory retainer') : RAW_STRIPE.retainer,
-  invoice: RAW_STRIPE.invoice.includes('REPLACE') ? fallback('Invoice payment') : RAW_STRIPE.invoice,
-};
+import { emit } from '../lib/events';
+import type { PaymentLinks } from '../lib/site';
 
 const methods = ['Visa', 'Mastercard', 'Amex', 'Apple Pay', 'Google Pay', 'SEPA', 'Link'];
 
-/** Static, locale-independent tier facts; copy comes from the dictionary. */
-const TIER_META = [
-  { icon: CalendarClock, href: STRIPE.deposit, featured: false },
-  { icon: Briefcase, href: STRIPE.retainer, featured: true },
-  { icon: ReceiptText, href: STRIPE.invoice, featured: false },
-];
-
-export default function Payments() {
+/**
+ * Payments — CTAs are Stripe Payment Links injected from the SERVER
+ * (env: STRIPE_PAYMENT_LINK_CONSULT / _RETAINER / _CUSTOM) via the
+ * `links` prop. HARD RULE enforced here: the card-scheme / SEPA / wallet
+ * chips and the "secure checkout" line render ONLY when at least one CTA
+ * is an actual https://buy.stripe.com link. With no links configured the
+ * section is an honest email offer, not a fake checkout.
+ */
+export default function Payments({ links }: { links: PaymentLinks }) {
   const { t } = useLanguage();
+
+  const tierMeta = [
+    { icon: CalendarClock, link: links.consult, id: 'consult', featured: false },
+    { icon: Briefcase, link: links.retainer, id: 'retainer', featured: true },
+    { icon: ReceiptText, link: links.invoice, id: 'invoice', featured: false },
+  ];
+
+  const anyStripe = tierMeta.some((m) => m.link.isStripe);
 
   return (
     <section className="section-shell content-section" id="payments">
@@ -47,7 +38,7 @@ export default function Payments() {
 
       <div className="pay-grid">
         {t.payments.tiers.map((tier, index) => {
-          const meta = TIER_META[index];
+          const meta = tierMeta[index];
           const Icon = meta.icon;
           return (
             <div
@@ -66,26 +57,30 @@ export default function Payments() {
               </ul>
               <a
                 className={meta.featured ? 'primary-button pay-cta' : 'secondary-button pay-cta'}
-                href={meta.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={meta.link.href}
+                {...(meta.link.isStripe ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                onClick={() =>
+                  emit('pay_click', { tier: meta.id, channel: meta.link.isStripe ? 'stripe' : 'email' })
+                }
               >
-                {tier.cta} <ArrowRight size={16} />
+                {tier.cta} {meta.link.isStripe ? <ArrowRight size={16} /> : <Mail size={16} />}
               </a>
             </div>
           );
         })}
       </div>
 
-      <div className="pay-footer">
-        <div className="pay-methods">
-          <span className="pay-methods-label">{t.payments.accepted}</span>
-          {methods.map((m) => <span key={m} className="pay-chip">{m}</span>)}
+      {anyStripe && (
+        <div className="pay-footer">
+          <div className="pay-methods">
+            <span className="pay-methods-label">{t.payments.accepted}</span>
+            {methods.map((m) => <span key={m} className="pay-chip">{m}</span>)}
+          </div>
+          <div className="pay-secure">
+            <ShieldCheck size={16} /> {t.payments.secure}
+          </div>
         </div>
-        <div className="pay-secure">
-          <ShieldCheck size={16} /> {t.payments.secure}
-        </div>
-      </div>
+      )}
     </section>
   );
 }

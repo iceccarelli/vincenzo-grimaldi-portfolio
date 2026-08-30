@@ -3,6 +3,8 @@
 import SocialBar from './SocialBar';
 import BrandMark from './BrandMark';
 import { useLanguage } from '../lib/i18n';
+import { extra } from '../lib/uiStrings';
+import { CONFLICT_DE, CONFLICT_EN } from '../lib/site';
 
 /**
  * AWS-style dark columnar footer, fully localised: CTA topline, four link
@@ -10,13 +12,14 @@ import { useLanguage } from '../lib/i18n';
  * every string follows the active locale.
  */
 export default function SiteFooter() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const x = extra[locale];
 
   return (
     <footer className="site-footer">
       <div className="section-shell">
         <div className="footer-topline">
-          <a className="footer-cta" href="#connect">
+          <a className="footer-cta" href="/connect">
             {t.footer.cta}
           </a>
         </div>
@@ -39,12 +42,12 @@ export default function SiteFooter() {
           <div className="footer-column">
             <h4>{t.footer.platform}</h4>
             <div className="footer-links">
-              <a className="footer-link" href="#capabilities">{t.nav.capabilities}</a>
-              <a className="footer-link" href="#registry">{t.footer.workRegistry}</a>
-              <a className="footer-link" href="#physics-informed">{t.footer.physicsInformed}</a>
-              <a className="footer-link" href="https://physics-informed.vercel.app/" target="_blank" rel="noopener noreferrer">{t.footer.liveSimulator}</a>
-              <a className="footer-link" href="#payments">{t.nav.payments}</a>
-              <a className="footer-link" href="#connect">{t.nav.connect}</a>
+              <a className="footer-link" href="/capabilities">{t.nav.capabilities}</a>
+              <a className="footer-link" href="/work">{t.footer.workRegistry}</a>
+              <a className="footer-link" href="/capabilities#physics-informed">{t.footer.physicsInformed}</a>
+              <a className="footer-link" href="/simulator">{t.footer.liveSimulator}</a>
+              <a className="footer-link" href="/payments">{t.nav.payments}</a>
+              <a className="footer-link" href="/connect">{t.nav.connect}</a>
               <a className="footer-link" href="/card">{t.card.kicker}</a>
             </div>
           </div>
@@ -78,8 +81,16 @@ export default function SiteFooter() {
           <a href="#top">{t.footer.backToTop}</a>
         </div>
 
+        <p className="footer-conflict">
+          {locale === 'de' ? CONFLICT_DE : CONFLICT_EN}
+        </p>
+
         <div className="footer-legal">
           <span>{t.footer.rights}</span>
+          <span className="footer-legal-links">
+            <a className="footer-link" href="/impressum">{x.imprint}</a>
+            <a className="footer-link" href="/datenschutz">{x.privacy}</a>
+          </span>
           <SocialBar />
         </div>
       </div>

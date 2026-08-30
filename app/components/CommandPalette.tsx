@@ -15,14 +15,14 @@ type Command = {
 };
 
 const sectionCommands: Command[] = [
-  { id: 'top', label: 'Top', group: 'Sections', href: '#top' },
-  { id: 'about', label: 'About', group: 'Sections', href: '#about' },
-  { id: 'capabilities', label: 'Capability register', group: 'Sections', href: '#capabilities' },
-  { id: 'registry', label: 'Work registry', group: 'Sections', href: '#registry' },
-  { id: 'experience', label: 'Experience', group: 'Sections', href: '#experience' },
-  { id: 'physics-informed', label: 'Physics-informed', group: 'Sections', href: '#physics-informed' },
-  { id: 'thesis-simulator', label: 'Thesis simulator', group: 'Sections', href: '#thesis-simulator' },
-  { id: 'connect', label: 'Connect', group: 'Sections', href: '#connect' },
+  { id: 'top', label: 'Top', group: 'Sections', href: '/' },
+  { id: 'about', label: 'About', group: 'Sections', href: '/#about' },
+  { id: 'capabilities', label: 'Capability register', group: 'Sections', href: '/capabilities' },
+  { id: 'registry', label: 'Work registry', group: 'Sections', href: '/work' },
+  { id: 'experience', label: 'Experience', group: 'Sections', href: '/#about' },
+  { id: 'physics-informed', label: 'Physics-informed', group: 'Sections', href: '/capabilities#physics-informed' },
+  { id: 'thesis-simulator', label: 'Thesis simulator', group: 'Sections', href: '/simulator' },
+  { id: 'connect', label: 'Connect', group: 'Sections', href: '/connect' },
 ];
 
 const commands: Command[] = [
@@ -32,14 +32,14 @@ const commands: Command[] = [
     label: capability.domain,
     group: 'Capabilities' as const,
     hint: capability.signals.slice(0, 3).join(' · '),
-    href: '#capabilities',
+    href: '/capabilities',
   })),
   ...projects.map((project) => ({
     id: `repo-${project.name}`,
     label: project.name,
     group: 'Systems' as const,
     hint: project.stack.join(' · '),
-    href: project.live ?? '#registry',
+    href: project.live ?? '/work',
     external: Boolean(project.live),
   })),
   {

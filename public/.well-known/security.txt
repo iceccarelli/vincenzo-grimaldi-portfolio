@@ -1,0 +1,5 @@
+Contact: mailto:vincenzo@igrimaldi.engineering
+Expires: 2027-08-30T00:00:00.000Z
+Preferred-Languages: en, de
+Canonical: https://igrimaldi.engineering/.well-known/security.txt
+Policy: https://igrimaldi.engineering/impressum

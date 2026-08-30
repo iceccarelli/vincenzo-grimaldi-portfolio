@@ -32,15 +32,7 @@ export default function CapabilitiesLanding() {
                   <span style={{ color: 'var(--success)' }}>Physics penalty</span>
                 </div>
                 <div style={{ color: 'var(--muted-strong)' }}>{t.physics.penaltyNote}</div>
-                <div
-                  style={{
-                    padding: '1rem 1.1rem',
-                    border: '1px solid rgba(125, 211, 252, 0.16)',
-                    borderRadius: '16px',
-                    background: 'rgba(8, 15, 28, 0.72)',
-                    fontFamily: 'monospace',
-                  }}
-                >
+                <div className="formula-block">
                   L<sub>total</sub> = L<sub>data</sub> + &lambda;L<sub>physics</sub>
                   <br />
                   L<sub>physics</sub> = &#8214;&part;u/&part;t + N[u]&#8214;&sup2;

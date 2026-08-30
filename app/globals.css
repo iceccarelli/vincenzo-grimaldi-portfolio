@@ -23,7 +23,7 @@
   --border-strong: #d1d5db;
 
   /* Accents */
-  --link: #0972d3;
+  --link: #0b5cad;
   --link-hover: #033160;
   --accent: #0972d3;
   --accent-strong: #0972d3;
@@ -1227,7 +1227,7 @@ a {
   gap: 2.5rem;
 }
 
-.footer-column h4 {
+.footer-column h2 {
   margin: 0 0 1rem;
   font-size: 0.95rem;
   font-weight: 700;
@@ -2098,6 +2098,7 @@ code {
 .legal-page h2 { margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.15rem; }
 .legal-page p { line-height: 1.7; color: var(--muted-strong); }
 .legal-page a { color: var(--link); }
+.legal-page p a { text-decoration: underline; }
 
 /* Footer legal additions */
 .footer-conflict {
@@ -2146,7 +2147,7 @@ code {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 .consent-banner p { margin: 0 0 0.75rem; font-size: 0.85rem; line-height: 1.55; }
-.consent-banner a { color: var(--link, #7dd3fc); }
+.consent-banner a { color: #7dd3fc; text-decoration: underline; }
 .consent-actions { display: flex; gap: 0.6rem; }
 .consent-actions .primary-button,
 .consent-actions .secondary-button { padding: 0.45rem 1rem; font-size: 0.85rem; }
@@ -2184,3 +2185,26 @@ code {
   }
   .ask-panel { bottom: 9.6rem; }
 }
+
+/* Work-card headings render at h2 on /work and /404 (where no h2 precedes
+   the grid) and at h3 in the homepage teaser. Same visual weight either way. */
+.work-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* The physics formula panel was a translucent dark fill over a light card,
+   which composited to mid-grey and left the inherited dark text at ~2:1.
+   Opaque ink ground + light ink text = 14.8:1, subscripts included. */
+.formula-block {
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  border-radius: 16px;
+  background: #0b1220;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  line-height: 1.8;
+}
+.formula-block sub { color: #cbd5e1; }

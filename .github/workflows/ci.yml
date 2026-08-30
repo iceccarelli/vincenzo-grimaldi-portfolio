@@ -55,7 +55,17 @@ jobs:
             exit 1
           fi
           "$DRIVER" --version
-          npx --yes @axe-core/cli@4 http://localhost:3000/ --exit --chromedriver-path "$DRIVER"
+          npx --yes @axe-core/cli@4 --exit --chromedriver-path "$DRIVER" \
+            http://localhost:3000/ \
+            http://localhost:3000/work \
+            http://localhost:3000/work/cim-threma \
+            http://localhost:3000/capabilities \
+            http://localhost:3000/simulator \
+            http://localhost:3000/payments \
+            http://localhost:3000/connect \
+            http://localhost:3000/card \
+            http://localhost:3000/impressum \
+            http://localhost:3000/datenschutz
 
       - name: Stop server
         if: always()

@@ -40,7 +40,7 @@ export default function SiteFooter() {
 
           {/* Column 2 – Platform */}
           <div className="footer-column">
-            <h4>{t.footer.platform}</h4>
+            <h2>{t.footer.platform}</h2>
             <div className="footer-links">
               <a className="footer-link" href="/capabilities">{t.nav.capabilities}</a>
               <a className="footer-link" href="/work">{t.footer.workRegistry}</a>
@@ -54,7 +54,7 @@ export default function SiteFooter() {
 
           {/* Column 3 – The Grimaldi Network */}
           <div className="footer-column">
-            <h4>{t.footer.network}</h4>
+            <h2>{t.footer.network}</h2>
             <div className="footer-links">
               <a className="footer-link" href="https://igrimaldi.engineering">igrimaldi.engineering — {t.footer.netSoftware}</a>
               <a className="footer-link" href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer">engineeringgrimaldi.com — {t.footer.netHardware}</a>
@@ -65,7 +65,7 @@ export default function SiteFooter() {
 
           {/* Column 4 – Status */}
           <div className="footer-column">
-            <h4>{t.footer.status}</h4>
+            <h2>{t.footer.status}</h2>
             <div className="footer-status" style={{ marginBottom: '1rem' }}>
               <span className="live-dot" />
               <span>{t.footer.available}</span>

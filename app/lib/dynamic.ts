@@ -382,7 +382,7 @@ export const askEntries: AskEntry[] = [
       zh: '电气工程师兼软件开发者：DB InfraGO 电网工程、可在浏览器中运行的 RWTH 亚琛硕士论文，以及 Grimaldi 网络 — 三个域名，推动行业向自动化系统迁移。',
     },
     links: [
-      { label: { en: 'About', es: 'Acerca de', de: 'Über', zh: '关于' }, href: '#about' },
+      { label: { en: 'About', es: 'Acerca de', de: 'Über', zh: '关于' }, href: '/#about' },
       { label: { en: 'Business card', es: 'Tarjeta de visita', de: 'Visitenkarte', zh: '数字名片' }, href: '/card' },
     ],
   },
@@ -461,7 +461,7 @@ export const askEntries: AskEntry[] = [
       zh: '六个注册能力域，均有可查出处：电网与电力系统、工业协议与 IT/OT、物理信息学习、机器人与感知、代理中间件、系统工程。',
     },
     links: [
-      { label: { en: 'Capability register', es: 'Registro de capacidades', de: 'Kompetenzregister', zh: '能力登记' }, href: '#capabilities' },
+      { label: { en: 'Capability register', es: 'Registro de capacidades', de: 'Kompetenzregister', zh: '能力登记' }, href: '/capabilities' },
     ],
   },
   {
@@ -480,7 +480,7 @@ export const askEntries: AskEntry[] = [
       zh: '发邮件至 vincenzo@igrimaldi.engineering，使用页面下方的联系表单，或从数字名片下载 vCard — 包含全部联系渠道。',
     },
     links: [
-      { label: { en: 'Contact', es: 'Contacto', de: 'Kontakt', zh: '联系' }, href: '#connect' },
+      { label: { en: 'Contact', es: 'Contacto', de: 'Kontakt', zh: '联系' }, href: '/connect' },
       { label: { en: 'vCard', es: 'vCard', de: 'vCard', zh: 'vCard' }, href: '/card' },
     ],
   },
@@ -500,7 +500,7 @@ export const askEntries: AskEntry[] = [
       zh: 'igrimaldi.engineering 是可信度引擎（谁在构建），engineeringgrimaldi.com 是产品站（Forge 产品线，行业 2.0），grimaldi.ca 是信任层（个人、著作、创业项目）。三站互链，共享同一语言系统。',
     },
     links: [
-      { label: { en: 'The network', es: 'La red', de: 'Das Netzwerk', zh: '网络' }, href: '#network' },
+      { label: { en: 'The network', es: 'La red', de: 'Das Netzwerk', zh: '网络' }, href: '/capabilities#network' },
     ],
   },
   {

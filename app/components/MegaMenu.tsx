@@ -36,7 +36,7 @@ export default function MegaMenu() {
 
   const shipped = projects.filter((project) => project.status === 'shipped');
   const live = projects.filter((project) => project.live);
-  const href = (project: (typeof projects)[number]) => project.repo ?? '#registry';
+  const href = (project: (typeof projects)[number]) => project.repo ?? '/work';
 
   return (
     <div className="megamenu" ref={containerRef}>
@@ -60,7 +60,7 @@ export default function MegaMenu() {
             <ul>
               {capabilities.map((capability) => (
                 <li key={capability.domain}>
-                  <a href="#capabilities" onClick={() => setOpen(false)}>
+                  <a href="/capabilities" onClick={() => setOpen(false)}>
                     <span>{t.domainLabels[capability.domain] ?? capability.domain}</span>
                     <small>{capability.signals.length} {t.megamenu.signals}</small>
                   </a>
@@ -81,7 +81,7 @@ export default function MegaMenu() {
                 </li>
               ))}
               <li>
-                <a href="#registry" onClick={() => setOpen(false)}>
+                <a href="/work" onClick={() => setOpen(false)}>
                   <span>{t.megamenu.fullRegistry}</span>
                   <small>{projects.length} {t.megamenu.entries}</small>
                 </a>
@@ -105,7 +105,7 @@ export default function MegaMenu() {
                 <p>{t.projectSummaries[project.name] ?? project.summary}</p>
               </a>
             ))}
-            <a className="megamenu-feature" href="#connect" onClick={() => setOpen(false)}>
+            <a className="megamenu-feature" href="/connect" onClick={() => setOpen(false)}>
               <span className="megamenu-feature-tag">{t.megamenu.contactTag}</span>
               <strong>{t.megamenu.contactTitle}</strong>
               <p>{t.megamenu.contactBody}</p>

@@ -6,6 +6,8 @@ import CommandPalette from './CommandPalette';
 import LanguageSwitcher from './LanguageSwitcher';
 import BrandMark from './BrandMark';
 import { useLanguage } from '../lib/i18n';
+import { extra } from '../lib/uiStrings';
+import { emit } from '../lib/events';
 
 /**
  * Two-tier chrome, one structure on every screen size:
@@ -18,14 +20,14 @@ import { useLanguage } from '../lib/i18n';
  */
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   const navigation = [
-    { label: t.nav.capabilities, href: '#capabilities' },
-    { label: t.nav.simulator, href: '#thesis-simulator' },
-    { label: t.nav.network, href: '#network' },
-    { label: t.nav.payments, href: '#payments' },
-    { label: t.nav.connect, href: '#connect' },
+    { label: extra[locale].navWork, href: '/work' },
+    { label: t.nav.capabilities, href: '/capabilities' },
+    { label: t.nav.simulator, href: '/simulator' },
+    { label: t.nav.payments, href: '/payments' },
+    { label: t.nav.connect, href: '/connect' },
   ];
 
   return (
@@ -46,7 +48,7 @@ export default function Header() {
           <a className="utility-link" href="/card">
             {t.card.kicker}
           </a>
-          <a className="utility-link" href="#connect">
+          <a className="utility-link" href="/connect">
             {t.nav.connect}
           </a>
         </div>
@@ -55,7 +57,7 @@ export default function Header() {
       {/* Tier 2 — primary nav */}
       <div className="topbar">
         <div className="topbar-inner">
-          <a className="brand-lockup" href="#top">
+          <a className="brand-lockup" href="/">
             <BrandMark size={38} />
             <span className="brand-copy">
               <strong>Vincenzo Grimaldi</strong>
@@ -74,7 +76,11 @@ export default function Header() {
 
           <div className="flex items-center gap-4">
             <CommandPalette />
-            <a className="topbar-button" href="#connect">
+            <a
+              className="topbar-button"
+              href="/connect"
+              onClick={() => emit('book_click', { source: 'header' })}
+            >
               {t.nav.connect}
             </a>
 

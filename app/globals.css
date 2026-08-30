@@ -2055,3 +2055,132 @@ code {
     flex-basis: 82vw;
   }
 }
+
+/* ══════════════════ hardening pass additions ══════════════════ */
+
+/* Route pages need clearance under the sticky header */
+.route-page { padding-top: 2rem; min-height: 60vh; }
+
+/* Work cards */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.work-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease;
+}
+.work-card:hover { transform: translateY(-3px); }
+.work-card h3 { margin: 0; }
+.work-card p { margin: 0; color: var(--muted-strong); line-height: 1.55; font-size: 0.92rem; }
+.work-card-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.work-card-more {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--link);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Case study + legal prose */
+.case-study h2 { margin-top: 1.25rem; }
+.legal-page { max-width: 760px; }
+.legal-page h1 { margin-bottom: 1.5rem; }
+.legal-page h2 { margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.15rem; }
+.legal-page p { line-height: 1.7; color: var(--muted-strong); }
+.legal-page a { color: var(--link); }
+
+/* Footer legal additions */
+.footer-conflict {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 720px;
+}
+.footer-legal-links { display: inline-flex; gap: 1rem; }
+
+/* Cal.com embed */
+.cal-frame {
+  width: 100%;
+  height: 640px;
+  border: 0;
+  border-radius: 16px;
+  background: rgba(8, 15, 28, 0.72);
+}
+.cal-placeholder { margin: 0.5rem 0 1rem; }
+
+/* FAQ */
+.faq-list { display: grid; gap: 0.5rem; margin-top: 0.75rem; }
+.faq-item {
+  border: 1px solid rgba(125, 211, 252, 0.16);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+.faq-item summary { cursor: pointer; font-weight: 600; }
+.faq-item p { margin: 0.6rem 0 0.2rem; line-height: 1.6; color: var(--muted-strong); }
+
+/* Consent banner (CMP gate for Vercel Analytics) */
+.consent-banner {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 120;
+  max-width: 380px;
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  background: rgba(8, 15, 28, 0.96);
+  color: #e2e8f0;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+.consent-banner p { margin: 0 0 0.75rem; font-size: 0.85rem; line-height: 1.55; }
+.consent-banner a { color: var(--link, #7dd3fc); }
+.consent-actions { display: flex; gap: 0.6rem; }
+.consent-actions .primary-button,
+.consent-actions .secondary-button { padding: 0.45rem 1rem; font-size: 0.85rem; }
+
+/* Sticky mobile book bar — mobile only, after 40% scroll (JS toggles) */
+.book-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 110;
+  display: none;
+  padding: 0.6rem 0.9rem calc(0.6rem + env(safe-area-inset-bottom));
+  background: rgba(8, 15, 28, 0.96);
+  border-top: 1px solid rgba(125, 211, 252, 0.2);
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+}
+.book-bar--visible { transform: translateY(0); }
+.book-bar-cta { width: 100%; justify-content: center; text-align: center; display: inline-flex; }
+
+@media (max-width: 767px) {
+  .book-bar { display: block; }
+
+  /* ⌘K palette is a desktop affordance — remove below md entirely */
+  .palette-trigger { display: none !important; }
+
+  /* FAB rules: hidden above the fold on mobile (JS adds --past-fold),
+     and lifted above the book bar once both are visible */
+  .ask-launcher { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+  .ask-launcher.ask-launcher--past-fold {
+    opacity: 1;
+    pointer-events: auto;
+    bottom: 5.4rem;
+  }
+  .ask-panel { bottom: 9.6rem; }
+}

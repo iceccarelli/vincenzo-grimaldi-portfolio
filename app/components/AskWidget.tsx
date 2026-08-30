@@ -22,7 +22,18 @@ export default function AskWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
+  const [pastFold, setPastFold] = useState(false);
   const threadRef = useRef<HTMLDivElement>(null);
+
+  // FAB rule: on mobile the launcher must never cover the hero's secondary
+  // CTA. It stays hidden until the visitor scrolls past the first viewport;
+  // desktop is unaffected (CSS shows it regardless above 768px).
+  useEffect(() => {
+    const onScroll = () => setPastFold(window.scrollY > window.innerHeight);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     const thread = threadRef.current;
@@ -154,7 +165,7 @@ export default function AskWidget() {
 
       <button
         type="button"
-        className="ask-launcher"
+        className={`ask-launcher${pastFold || open ? ' ask-launcher--past-fold' : ''}`}
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={askUi.launcher[locale]}

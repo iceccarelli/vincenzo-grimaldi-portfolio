@@ -3,39 +3,59 @@
 import { useState } from 'react';
 import { Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../lib/i18n';
+import { emit } from '../lib/events';
+import { EMAIL } from '../lib/site';
 
-// 1. Create a free form at formspree.io → paste its ID (the part after /f/) below.
-const FORMSPREE_ID = 'REPLACE_FORMSPREE_ID';
-
+/**
+ * ContactForm — posts to the first-party /api/contact (Resend relay).
+ * If the backend reports 503 (RESEND_API_KEY not configured) the form
+ * degrades to a pre-filled mailto instead of a guaranteed failure.
+ */
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle');
   const { t } = useLanguage();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-
-    // No Formspree ID configured yet → degrade gracefully to a pre-filled
-    // email instead of a request that is guaranteed to fail.
-    if (FORMSPREE_ID.includes('REPLACE')) {
-      const subject = encodeURIComponent(`Portfolio contact — ${data.get('name') ?? ''}`);
-      const body = encodeURIComponent(
-        `${data.get('message') ?? ''}\n\n— ${data.get('name') ?? ''} (${data.get('email') ?? ''}) ${data.get('company') ?? ''}`,
-      );
-      window.location.href = `mailto:vincenzo@igrimaldi.engineering?subject=${subject}&body=${body}`;
-      return;
-    }
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const payload = {
+      name: data.get('name') ?? '',
+      email: data.get('email') ?? '',
+      company: data.get('company') ?? '',
+      message: data.get('message') ?? '',
+      _gotcha: data.get('_gotcha') ?? '',
+    };
 
     setStatus('sending');
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: data,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       });
-      if (res.ok) { setStatus('ok'); e.currentTarget.reset(); }
-      else setStatus('error');
-    } catch { setStatus('error'); }
+
+      if (res.status === 503) {
+        // Backend not configured — fall back to a pre-filled email.
+        const subject = encodeURIComponent(`Portfolio contact — ${payload.name}`);
+        const body = encodeURIComponent(
+          `${payload.message}\n\n— ${payload.name} (${payload.email}) ${payload.company}`,
+        );
+        window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+        setStatus('idle');
+        return;
+      }
+
+      if (res.ok) {
+        emit('form_submit', { form: 'contact' });
+        setStatus('ok');
+        form.reset();
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
   }
 
   if (status === 'ok') {

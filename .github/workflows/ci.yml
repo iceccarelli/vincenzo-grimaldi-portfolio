@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -44,8 +44,18 @@ jobs:
       - name: Acceptance contract
         run: npm run verify
 
+      # Use the runner image's own ChromeDriver, which is version-matched to
+      # its bundled Chrome. npm's chromedriver package tracks Chrome stable and
+      # drifts ahead of the image (152 vs 151), which is what broke PR #3.
       - name: Accessibility (axe)
-        run: npx --yes @axe-core/cli@4 http://localhost:3000/ --exit
+        run: |
+          DRIVER="${CHROMEWEBDRIVER:-/usr/local/share/chromedriver-linux64}/chromedriver"
+          if [ ! -x "$DRIVER" ]; then
+            echo "::error::no version-matched chromedriver on this runner (looked in '$DRIVER')"
+            exit 1
+          fi
+          "$DRIVER" --version
+          npx --yes @axe-core/cli@4 http://localhost:3000/ --exit --chromedriver-path "$DRIVER"
 
       - name: Stop server
         if: always()
@@ -58,7 +68,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run build

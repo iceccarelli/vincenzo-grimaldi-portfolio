@@ -6,3 +6,6 @@ out/
 *.log
 .vercel/
 *.tsbuildinfo
+
+# delivery artifacts — patches never live in the tree
+*.patch

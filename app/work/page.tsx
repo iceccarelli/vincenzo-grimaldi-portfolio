@@ -25,7 +25,7 @@ export default function WorkPage() {
         <div className="work-grid">
           {caseStudies.map((c) => (
             <a key={c.slug} className="work-card glass-panel spotlight-border" href={`/work/${c.slug}`}>
-              <h3>{c.name}</h3>
+              <h2 className="work-card-title">{c.name}</h2>
               <p>{c.description}</p>
               <span className="work-card-stack">
                 {c.stack.slice(0, 4).map((s) => (

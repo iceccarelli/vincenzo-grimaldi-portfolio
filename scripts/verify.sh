@@ -14,7 +14,12 @@ for k in strict-transport-security x-content-type-options referrer-policy \
          permissions-policy x-frame-options content-security-policy; do
   grep -qi "^$k:" <<<"$H" && ok "$k" || bad "$k missing"
 done
-grep -qi 'access-control-allow-origin: \*' <<<"$H" && bad "ACAO:* on document" || ok "no ACAO:*"
+if grep -qi 'access-control-allow-origin: \*' <<<"$H"; then
+  bad "ACAO:* on document — the app never sets this; source is upstream"
+  printf '       attribute it: curl -sI %s/ | grep -i access-control\n' "$BASE"
+  printf '       then compare the raw deployment URL (bypasses DNS proxies):\n'
+  printf '       vercel inspect --logs \$(vercel ls --prod -1) # or curl -sI https://<deployment>.vercel.app/\n'
+else ok "no ACAO:*"; fi
 
 echo "▸ crawl surface"
 for p in / /work /work/cim-threma /work/palletizer-os /work/bahn-project-manager \
@@ -37,14 +42,21 @@ HTML=$(curl -sS "$BASE/")
 grep -q 'href="/connect"' <<<"$HTML" && ok "hero CTA -> /connect" || bad "hero CTA not booking-first"
 
 # Readiness = your dashboard work. Auto-runs against https:// targets; force with READINESS=1.
-if [ "$fail" -eq 0 ] && { [ "${READINESS:-0}" = 1 ] || [[ "$BASE" == https://* ]]; }; then
+if [ "${READINESS:-0}" = 1 ] || [[ "$BASE" == https://* ]]; then
 echo "▸ legal / commercial readiness"
 for p in /impressum /datenschutz; do
   if curl -sS "$BASE$p" | grep -q 'TODO_OPERATOR'; then bad "$p still has TODO_OPERATOR placeholders"
   else ok "$p complete"; fi
 done
 if curl -sS "$BASE/payments" | grep -q 'buy.stripe.com'; then ok "Stripe Payment Links wired"
-else bad "payments CTAs are not Stripe links (env not set)"; fi
+else bad "payments CTAs are not Stripe links (STRIPE_PAYMENT_LINK_* unset or empty)"; fi
+# Fail-safe assertion: with no Stripe link the page must NOT advertise card
+# schemes / SEPA / wallets. This is the anti-lying invariant.
+if curl -sS "$BASE/payments" | grep -q 'buy.stripe.com' || ! curl -sS "$BASE/payments" | grep -q 'Apple Pay'; then
+  ok "no false payment-method claims"
+else bad "payment-method chips shown without a real checkout"; fi
+if curl -sS "$BASE/connect" | grep -qE 'cal\.com'; then ok "Cal.com booking wired"
+else bad "no booking calendar on /connect (NEXT_PUBLIC_CAL_URL unset or empty)"; fi
 else
 echo "▸ legal / commercial readiness  (skipped — run against https:// or set READINESS=1)"
 fi

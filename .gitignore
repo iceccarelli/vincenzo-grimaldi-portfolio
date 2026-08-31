@@ -9,3 +9,4 @@ out/
 
 # delivery artifacts — patches never live in the tree
 *.patch
+.vercel

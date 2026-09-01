@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react';
 import { capabilities, projects, type CapabilityDomain } from '../lib/registry';
 import { useLanguage } from '../lib/i18n';
+import StatusBadge from './StatusBadge';
+import { linkable, STATUS_LABEL } from '../lib/status';
 
 /**
  * Two sections that share one piece of state: the selected domain.
@@ -15,7 +17,7 @@ import { useLanguage } from '../lib/i18n';
  */
 export default function CapabilitySystem() {
   const [selected, setSelected] = useState<CapabilityDomain | null>(null);
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   const visibleProjects = useMemo(
     () => (selected ? projects.filter((project) => project.domain === selected) : projects),
@@ -39,7 +41,7 @@ export default function CapabilitySystem() {
         <div className="glass-panel cta-panel spotlight-border">
           <div>
             <span className="section-kicker">{t.capability.kicker}</span>
-            <h2>{t.capability.title}</h2>
+            <h1>{t.capability.title}</h1>
             <p>{t.capability.intro}</p>
           </div>
         </div>
@@ -85,7 +87,10 @@ export default function CapabilitySystem() {
                           {entry.label}
                         </a>
                       ) : (
-                        <span key={entry.label}>{entry.label}</span>
+                        <span key={entry.label}>
+                          {entry.label}
+                          {entry.parked ? ` · ${STATUS_LABEL.PARKED[locale]}` : ''}
+                        </span>
                       ),
                     )}
                   </div>
@@ -114,9 +119,7 @@ export default function CapabilitySystem() {
         <div className="card-grid three-up">
           {visibleProjects.map((project) => (
             <article className="glass-panel glow-card registry-card" key={project.name}>
-              <span className={`registry-status registry-status--${project.status}`}>
-                {project.status === 'shipped' ? t.registryUi.shipped : t.registryUi.inDevelopment}
-              </span>
+              <StatusBadge status={project.status} locale={locale} />
               <h3>{project.name}</h3>
               <p>{t.projectSummaries[project.name] ?? project.summary}</p>
               <ul className="registry-stack">
@@ -130,12 +133,12 @@ export default function CapabilitySystem() {
                     {t.registryUi.openLive}
                   </a>
                 )}
-                {project.repo ? (
+                {linkable(project.repo) ? (
                   <a href={project.repo} target="_blank" rel="noreferrer">
                     {t.registryUi.source}
                   </a>
                 ) : (
-                  <a href="#connect">{t.registryUi.privateAccess}</a>
+                  <a href={project.shelf === 'work' ? '/work' : `/${project.shelf}`}>/{project.shelf}</a>
                 )}
               </div>
             </article>

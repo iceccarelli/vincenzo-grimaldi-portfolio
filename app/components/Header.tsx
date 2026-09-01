@@ -6,8 +6,8 @@ import CommandPalette from './CommandPalette';
 import LanguageSwitcher from './LanguageSwitcher';
 import BrandMark from './BrandMark';
 import { useLanguage } from '../lib/i18n';
-import { extra } from '../lib/uiStrings';
 import { emit } from '../lib/events';
+import { nav, tx } from '../lib/copy';
 
 /**
  * Two-tier chrome, one structure on every screen size:
@@ -22,11 +22,19 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, locale } = useLanguage();
 
+  // Ranked: Work / Simulator / Advisory / Network. Ventures, Lab, Books and
+  // Capabilities are one click deeper (mega menu + mobile menu + footer).
   const navigation = [
-    { label: extra[locale].navWork, href: '/work' },
-    { label: t.nav.capabilities, href: '/capabilities' },
-    { label: t.nav.simulator, href: '/simulator' },
-    { label: t.nav.payments, href: '/payments' },
+    { label: tx(nav.work, locale), href: '/work' },
+    { label: tx(nav.simulator, locale), href: '/simulator' },
+    { label: tx(nav.advisory, locale), href: '/advisory' },
+    { label: tx(nav.network, locale), href: '/network' },
+  ];
+  const secondary = [
+    { label: tx(nav.ventures, locale), href: '/ventures' },
+    { label: tx(nav.lab, locale), href: '/lab' },
+    { label: tx(nav.books, locale), href: '/books' },
+    { label: tx(nav.capabilities, locale), href: '/capabilities' },
     { label: t.nav.connect, href: '/connect' },
   ];
 
@@ -61,7 +69,7 @@ export default function Header() {
             <BrandMark size={38} />
             <span className="brand-copy">
               <strong>Vincenzo Grimaldi</strong>
-              <small>Physics-Informed • Deterministic Control</small>
+              <small>Grids · Traction · Verification</small>
             </span>
           </a>
 
@@ -100,7 +108,7 @@ export default function Header() {
 
       {/* Mobile menu — same sections, same order as desktop */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        {navigation.map((item) => (
+        {[...navigation, ...secondary].map((item) => (
           <a key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}>
             {item.label}
           </a>

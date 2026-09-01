@@ -1,43 +1,92 @@
 import { SITE_URL, EMAIL } from '../lib/site';
-import { caseStudies } from '../lib/work';
+import { registerStudies } from '../lib/work';
+import { byShelf } from '../lib/registry';
+import { GITHUB_404 } from '../lib/status';
+import { SNAPSHOT, SNAPSHOT_DATE, EXPLORER_URL, VALIDATION_JSON_URL, REPRODUCE_CMD } from '../lib/validation';
 
 export const dynamic = 'force-static';
 
 /**
  * /llms.txt — machine-readable site brief for AI crawlers and agents
- * (https://llmstxt.org). Served as a route handler so it stays in sync
- * with the work registry at build time.
+ * (https://llmstxt.org). Who, one-liner, what to buy, what is parked,
+ * contact, pointers to the other domains. Generated from the registry so it
+ * cannot drift from the pages.
  */
 export function GET() {
-  const work = caseStudies
-    .map((c) => `- [${c.name}](${SITE_URL}/work/${c.slug}): ${c.description}`)
+  const work = registerStudies
+    .map((c) => `- [${c.name}](${SITE_URL}/work/${c.slug}) — ${c.status}: ${c.description}`)
     .join('\n');
+  const parked = byShelf('lab')
+    .map((p) => `- ${p.name} — ${p.status}${p.repoClaimed ? ` (claimed path ${p.repoClaimed.replace('https://', '')} returned 404 on ${SNAPSHOT_DATE}; not linked)` : ''}`)
+    .join('\n');
+  const ventures = byShelf('ventures')
+    .map((p) => `- ${p.name} — ${p.status}${p.live ? `: ${p.live}` : ''}${p.soldOn ? ` (sold on ${p.soldOn})` : ''}`)
+    .join('\n');
+  const dead = GITHUB_404.map((n) => `github.com/iceccarelli/${n}`).join(', ');
 
-  const body = `# Vincenzo Grimaldi — Engineering
+  const body = `# igrimaldi.engineering — verifiable intelligence for grids and traction power
 
-> Independent engineering advisory for safety-critical grids and cyber-physical
-> systems: physics-informed AI, deterministic control, OT security.
-> Operator: Vincenzo Grimaldi (legal name Vincenzo Ceccarelli Grimaldi),
+> Physics-constrained intelligence for grids and traction power. Residuals you
+> can check. Agents you can audit. Patterns from live HV rail assets — sanitized.
+> Operator: Vincenzo Ceccarelli Grimaldi (display name Vincenzo Grimaldi),
 > Frankfurt am Main, Germany. Contact: ${EMAIL}.
-> Advisory work is independent and outside the scope of the operator's
-> employment at DB InfraGO AG; no employer data is used.
+> Day job: ITk Fachspezialist, DB InfraGO AG (Aug 2024–present) — digitisation
+> of railway traction HV grids, IT/OT, KRITIS-aligned cybersecurity governance.
+> Advisory work is independent of the employer; no employer data, topologies or
+> systems are used. RWTH Aachen M.Sc. 2025 (CIM–ThreMA + RL) is background.
 
-## Offers
+## What to buy
 
-- Engineering consultation, 60 minutes, EUR 280 — book at ${SITE_URL}/connect
-- Advisory retainer, EUR 3,200 / month — details at ${SITE_URL}/payments
+- 60-minute teardown, EUR 280 — written recap, residual/architecture critique,
+  go/no-go for a 30-day pilot with a kill date. ${SITE_URL}/advisory
+- Monthly advisory, EUR 3,200 — ONLY after a teardown. One scoped artefact per
+  month. Cancel anytime. Not "access to a network".
+- PINN / residual pilot — a validation report on the customer's feeder, scoped
+  in the teardown. 30 days, kill date in the contract.
+- Not for sale here: GridOS, NeuralBridge, DERIM, hardware cells, Palletizer
+  pilots (those are sold on https://engineeringgrimaldi.com/).
 
-## Work
+## The instrument
+
+- ${EXPLORER_URL} — IEEE 9-bus explorer: DC PINN vs analytical
+  (${SNAPSHOT.dc_pinn.rmse_deg.toFixed(4)}° RMSE), AC PINN vs Newton-Raphson
+  (${SNAPSHOT.ac_pinn.angle_rmse_deg.toFixed(4)}° RMSE), N-1 sweep
+  (${SNAPSHOT.n1_contingency.secure}/${SNAPSHOT.n1_contingency.total} secure),
+  physics-loss ablation, ${SNAPSHOT.tests_passed} tests. Report: ${VALIDATION_JSON_URL}
+  Reproduce: \`${REPRODUCE_CMD}\`  (numbers above: snapshot ${SNAPSHOT_DATE})
+- ${SITE_URL}/simulator — in-browser IEEE 9-bus DC solver + residual table + what it is not.
+
+## Work (gated register: 200 URL + honest badge + serves grids/traction/verification)
 
 ${work}
 
+## Ventures (real, off-niche or client builds)
+
+${ventures}
+
+## Parked (nothing to clone; never linked)
+
+${parked}
+
+GitHub paths that 404 as of ${SNAPSHOT_DATE} and must not be cited as products: ${dead}.
+
 ## Pages
 
-- [Capabilities](${SITE_URL}/capabilities): capability register with provenance
-- [Thesis simulator](${SITE_URL}/simulator): CIM–ThreMA ontology simulator (RWTH Aachen M.Sc. thesis)
-- [Payments](${SITE_URL}/payments): offers and payment options
-- [Connect](${SITE_URL}/connect): booking calendar and contact form
-- [Business card](${SITE_URL}/card): vCard, QR, verified profiles
+- [Work](${SITE_URL}/work) · [Simulator](${SITE_URL}/simulator) · [Advisory](${SITE_URL}/advisory)
+- [Network](${SITE_URL}/network) · [Ventures](${SITE_URL}/ventures) · [Lab](${SITE_URL}/lab) · [Books](${SITE_URL}/books)
+- [Capabilities](${SITE_URL}/capabilities) · [Payments](${SITE_URL}/payments) · [Connect](${SITE_URL}/connect) · [Card](${SITE_URL}/card)
+
+## The network
+
+- igrimaldi.engineering — verifiable intelligence for grids and traction power (this domain)
+- engineeringgrimaldi.com — one trade cell, shipped and measured
+- grimaldi.ca — logbook, podcast, reviews, books
+- github.com/iceccarelli — clone or it does not exist
+
+## Disambiguation
+
+Not the Grimaldi shipping group, not a French consultancy, not a UK garage,
+not Grimaldi Industri (Sweden). Own the sentence, not the surname.
 
 ## Profiles
 

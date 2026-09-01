@@ -23,7 +23,8 @@ else ok "no ACAO:*"; fi
 
 echo "▸ crawl surface"
 for p in / /work /work/cim-threma /work/palletizer-os /work/bahn-project-manager \
-         /work/gridos /capabilities /simulator /payments /connect /card \
+         /work/gridos /simulator /advisory /network /ventures /lab /books \
+         /capabilities /payments /connect /card \
          /impressum /datenschutz /llms.txt /robots.txt /sitemap.xml \
          /favicon.ico /apple-touch-icon.png /site.webmanifest /.well-known/security.txt; do
   c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
@@ -39,7 +40,22 @@ HTML=$(curl -sS "$BASE/")
 [ "$(grep -c 'name="keywords"' <<<"$HTML")" -eq 0 ] && ok "no meta keywords" || bad "meta keywords present"
 [ "$(grep -c 'hreflang' <<<"$HTML")"        -eq 0 ] && ok "no hreflang"      || bad "hreflang present"
 [ "$(grep -c '@graph' <<<"$HTML")"          -ge 1 ] && ok "JSON-LD @graph"   || bad "JSON-LD @graph missing"
-grep -q 'href="/connect"' <<<"$HTML" && ok "hero CTA -> /connect" || bad "hero CTA not booking-first"
+if grep -qE 'href="(https://buy\.stripe\.com/[^"]*|mailto:vincenzo@igrimaldi\.engineering\?subject=Consultation%20booking)"' <<<"$HTML"; then
+  ok "hero CTA -> €280 teardown (Stripe or mailto)"; else bad "hero CTA is not the teardown"; fi
+grep -q 'Physics-constrained intelligence for grids and traction power' <<<"$HTML" && ok "H1 sentence present" || bad "H1 sentence missing"
+grep -q 'data-instrument="ieee9-dc"' <<<"$HTML" && ok "live instrument rendered server-side" || bad "instrument missing from SSR HTML"
+
+echo "▸ honesty contract"
+# 404 GitHub paths must never be rendered as links anywhere on the homepage or /work.
+for p in / /work /simulator; do
+  PAGE=$(curl -sS "$BASE$p")
+  if grep -qiE 'href="https://github\.com/iceccarelli/(GridOS|neuralbridge|derim-middleware|robot-lidar-fusion|physics-informed)' <<<"$PAGE"; then
+    bad "$p links a 404 GitHub path"; else ok "$p has no 404 GitHub links"; fi
+done
+# Forbidden hero themes and banned phrases on the homepage.
+for w in 'Peru' 'paint' 'orbital' 'any factory' 'production reference' 'trillion' 'operating surface' 'sub-8' '99.999' '15–40%'; do
+  if grep -qi -- "$w" <<<"$HTML"; then bad "homepage mentions '$w'"; else ok "homepage free of '$w'"; fi
+done
 
 # Readiness = your dashboard work. Auto-runs against https:// targets; force with READINESS=1.
 if [ "${READINESS:-0}" = 1 ] || [[ "$BASE" == https://* ]]; then

@@ -16,14 +16,19 @@ type Command = {
 
 const sectionCommands: Command[] = [
   { id: 'top', label: 'Top', group: 'Sections', href: '/' },
-  { id: 'about', label: 'About', group: 'Sections', href: '/#about' },
-  { id: 'capabilities', label: 'Capability register', group: 'Sections', href: '/capabilities' },
-  { id: 'registry', label: 'Work registry', group: 'Sections', href: '/work' },
-  { id: 'experience', label: 'Experience', group: 'Sections', href: '/#about' },
-  { id: 'physics-informed', label: 'Physics-informed', group: 'Sections', href: '/capabilities#physics-informed' },
-  { id: 'thesis-simulator', label: 'Thesis simulator', group: 'Sections', href: '/simulator' },
+  { id: 'work', label: 'Work — capability register', group: 'Sections', href: '/work' },
+  { id: 'simulator', label: 'Simulator — IEEE 9-bus residuals', group: 'Sections', href: '/simulator' },
+  { id: 'advisory', label: 'Advisory — €280 teardown', group: 'Sections', href: '/advisory' },
+  { id: 'network', label: 'Network — four addresses', group: 'Sections', href: '/network' },
+  { id: 'ventures', label: 'Ventures — client builds', group: 'Sections', href: '/ventures' },
+  { id: 'lab', label: 'Lab — parked', group: 'Sections', href: '/lab' },
+  { id: 'books', label: 'Books — pointer to grimaldi.ca', group: 'Sections', href: '/books' },
+  { id: 'capabilities', label: 'Capabilities — competency matrix', group: 'Sections', href: '/capabilities' },
+  { id: 'card', label: 'Business card', group: 'Sections', href: '/card' },
   { id: 'connect', label: 'Connect', group: 'Sections', href: '/connect' },
 ];
+
+const shelfHref = (shelf: 'work' | 'ventures' | 'lab') => (shelf === 'work' ? '/work' : `/${shelf}`);
 
 const commands: Command[] = [
   ...sectionCommands,
@@ -38,13 +43,13 @@ const commands: Command[] = [
     id: `repo-${project.name}`,
     label: project.name,
     group: 'Systems' as const,
-    hint: project.stack.join(' · '),
-    href: project.live ?? '/work',
+    hint: `${project.status} · ${project.stack.join(' · ')}`,
+    href: project.live ?? shelfHref(project.shelf),
     external: Boolean(project.live),
   })),
   {
     id: 'sim',
-    label: 'Live thesis simulator',
+    label: 'IEEE 9-bus explorer (live)',
     group: 'Elsewhere',
     href: 'https://physics-informed.vercel.app/',
     external: true,
@@ -102,9 +107,13 @@ export default function CommandPalette() {
         window.open(command.href, command.href.startsWith('mailto:') ? '_self' : '_blank', 'noopener');
         return;
       }
-      const target = document.querySelector(command.href);
-      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      history.replaceState(null, '', command.href);
+      if (command.href.startsWith('#') || command.href.startsWith('/#')) {
+        const target = document.querySelector(command.href.replace(/^\//, ''));
+        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', command.href);
+        return;
+      }
+      window.location.assign(command.href);
     },
     [close],
   );

@@ -25,9 +25,9 @@ type Extra = {
 export const extra: Record<Locale, Extra> = {
   en: {
     navWork: 'Work',
-    ctaBook: 'Book a consultation',
+    ctaBook: 'Book a €280 teardown',
     ctaWork: 'See the work',
-    bookBar: 'Book a 60-min consultation — €280',
+    bookBar: 'Book a 60-min teardown — €280',
     consentText:
       'This site uses cookieless Vercel Analytics to count visits. No personal profiles, no ads.',
     consentAccept: 'Allow',
@@ -40,9 +40,9 @@ export const extra: Record<Locale, Extra> = {
   },
   es: {
     navWork: 'Proyectos',
-    ctaBook: 'Reservar una consultoría',
+    ctaBook: 'Reservar teardown de 280 €',
     ctaWork: 'Ver los proyectos',
-    bookBar: 'Reservar consultoría de 60 min — 280 €',
+    bookBar: 'Reservar teardown de 60 min — 280 €',
     consentText:
       'Este sitio usa Vercel Analytics sin cookies para contar visitas. Sin perfiles personales ni publicidad.',
     consentAccept: 'Permitir',
@@ -55,9 +55,9 @@ export const extra: Record<Locale, Extra> = {
   },
   de: {
     navWork: 'Projekte',
-    ctaBook: 'Beratung buchen',
+    ctaBook: '€280-Teardown buchen',
     ctaWork: 'Projekte ansehen',
-    bookBar: '60-Min-Beratung buchen — 280 €',
+    bookBar: '60-Min-Teardown buchen — 280 €',
     consentText:
       'Diese Seite nutzt cookieloses Vercel Analytics zur Besucherzählung. Keine Profile, keine Werbung.',
     consentAccept: 'Erlauben',
@@ -70,9 +70,9 @@ export const extra: Record<Locale, Extra> = {
   },
   zh: {
     navWork: '项目',
-    ctaBook: '预约咨询',
+    ctaBook: '预约 €280 拆解评审',
     ctaWork: '查看项目',
-    bookBar: '预约 60 分钟咨询 — €280',
+    bookBar: '预约 60 分钟拆解评审 — €280',
     consentText: '本站使用无 Cookie 的 Vercel Analytics 统计访问量。不建立个人画像，无广告。',
     consentAccept: '允许',
     consentDecline: '拒绝',

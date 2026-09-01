@@ -33,7 +33,7 @@ export default function BookBar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  if (pathname === '/connect' || pathname === '/impressum' || pathname === '/datenschutz') {
+  if (pathname === '/connect' || pathname === '/advisory' || pathname === '/impressum' || pathname === '/datenschutz') {
     return null;
   }
 
@@ -41,7 +41,7 @@ export default function BookBar() {
     <div className={`book-bar${visible ? ' book-bar--visible' : ''}`} aria-hidden={!visible}>
       <a
         className="primary-button book-bar-cta"
-        href="/connect"
+        href="/advisory"
         tabIndex={visible ? 0 : -1}
         onClick={() => emit('book_click', { source: 'book_bar' })}
       >

@@ -271,26 +271,23 @@ const en: Dictionary = {
       {
         host: 'igrimaldi.engineering',
         href: 'https://igrimaldi.engineering',
-        focus: 'Software · AI Agents · Infrastructure',
-        description:
-          'You are here. Software engineering, agentic AI systems, physics-informed learning, grid middleware, and the full development and deployment practice behind them.',
-        cta: 'This site',
+        focus: 'Verifiable intelligence for grids and traction power',
+        description: 'You are here. Residuals you can check, agents you can audit, sanitized patterns from live HV rail assets. The full capability register lives here only.',
+        cta: 'Verify',
       },
       {
         host: 'engineeringgrimaldi.com',
         href: 'https://engineeringgrimaldi.com',
-        focus: 'Hardware · Electrical Engineering',
-        description:
-          'The hardware and electrical engineering surface: high-voltage systems, embedded control boards, power electronics, and continuously deployed engineering write-ups of physical builds.',
-        cta: 'Visit the hardware lab',
+        focus: 'One trade cell, shipped and measured',
+        description: 'Hardware and trade automation — Palletizer, the Forge cells — sold and measured there, not here.',
+        cta: 'Buy',
       },
       {
         host: 'grimaldi.ca',
         href: 'https://grimaldi.ca',
-        focus: 'Personal · Blog · Life',
-        description:
-          'The personal all-in-one blog: life, travel, social updates, and the long arc of the work across the years — the human context around the engineering.',
-        cta: 'Read the blog',
+        focus: 'Logbook, podcast, reviews, books',
+        description: 'Essays, the podcast, reviews, the books and the love of the work — the person behind both engineering domains.',
+        cta: 'Read',
       },
     ],
   },
@@ -341,16 +338,16 @@ const en: Dictionary = {
         title: 'Consultation',
         price: '€280',
         sub: 'per 60-min session',
-        desc: 'A focused, high-density working session on grid intelligence, cyber-physical systems, or physics-informed AI.',
-        points: ['Live problem-solving', 'Written recap you keep', 'Slot within 48 hours'],
+        desc: 'A 60-minute teardown of your model, feeder, substation LAN diagram or vendor proposal.',
+        points: ['Written recap', 'Residual / architecture critique', 'Go/no-go for a 30-day pilot', 'Slot within 48 hours'],
         cta: 'Book a session',
       },
       {
         title: 'Advisory Retainer',
         price: '€3,200',
         sub: 'per month',
-        desc: 'A dedicated advisory and engineering block with priority access and guaranteed turnaround. Cancel anytime.',
-        points: ['Priority direct access', 'Scoped monthly deliverables', 'Senior, hands-on work'],
+        desc: 'Only after a teardown. One scoped artefact per month — a validation report, a review, a pattern. Cancel anytime.',
+        points: ['Requires a completed teardown', 'Scoped monthly artefact', 'Not “access to a network”'],
         cta: 'Start retainer',
       },
       {
@@ -383,8 +380,8 @@ const en: Dictionary = {
     workRegistry: 'Work registry',
     physicsInformed: 'Physics-informed',
     liveSimulator: 'Live simulator',
-    available: 'Available for consultation',
-    europe: 'Europe-based • Open to high-impact CPS, grid intelligence, and autonomous systems opportunities.',
+    available: 'Available for a €280 teardown',
+    europe: 'Frankfurt am Main • Grids, traction power, verification. Slot within 48 hours.',
     backToTop: 'Back to top ↑',
     rights: '© 2026 Vincenzo Grimaldi. All rights reserved.',
     netSoftware: 'Software & AI',
@@ -392,7 +389,7 @@ const en: Dictionary = {
     netPersonal: 'Personal blog',
   },
   megamenu: {
-    trigger: 'Work',
+    trigger: 'Browse',
     capabilities: 'Capabilities',
     systems: 'Systems',
     openNow: 'Open now',
@@ -492,26 +489,23 @@ const es: Dictionary = {
       {
         host: 'igrimaldi.engineering',
         href: 'https://igrimaldi.engineering',
-        focus: 'Software · Agentes de IA · Infraestructura',
-        description:
-          'Estás aquí. Ingeniería de software, sistemas de IA agéntica, aprendizaje informado por la física, middleware de red eléctrica y toda la práctica de desarrollo y despliegue detrás de ellos.',
-        cta: 'Este sitio',
+        focus: 'Inteligencia verificable para redes y tracción',
+        description: 'Está aquí. Residuos verificables, agentes auditables, patrones anonimizados de activos ferroviarios de AT. El registro completo de capacidades vive solo aquí.',
+        cta: 'Verificar',
       },
       {
         host: 'engineeringgrimaldi.com',
         href: 'https://engineeringgrimaldi.com',
-        focus: 'Hardware · Ingeniería Eléctrica',
-        description:
-          'La superficie de hardware e ingeniería eléctrica: sistemas de alta tensión, placas de control embebido, electrónica de potencia y publicaciones de ingeniería con despliegue continuo sobre construcciones físicas.',
-        cta: 'Visitar el laboratorio de hardware',
+        focus: 'Una celda de oficio, entregada y medida',
+        description: 'Automatización de hardware y oficios — Palletizer, las celdas Forge — se vende y se mide allí, no aquí.',
+        cta: 'Comprar',
       },
       {
         host: 'grimaldi.ca',
         href: 'https://grimaldi.ca',
-        focus: 'Personal · Blog · Vida',
-        description:
-          'El blog personal todo-en-uno: vida, viajes, actualizaciones sociales y el arco largo del trabajo a través de los años — el contexto humano alrededor de la ingeniería.',
-        cta: 'Leer el blog',
+        focus: 'Bitácora, podcast, reseñas, libros',
+        description: 'Ensayos, el podcast, reseñas, los libros y el amor por el oficio — la persona detrás de ambos dominios de ingeniería.',
+        cta: 'Leer',
       },
     ],
   },
@@ -614,8 +608,8 @@ const es: Dictionary = {
         title: 'Retainer de Asesoría',
         price: '3.200 €',
         sub: 'al mes',
-        desc: 'Un bloque dedicado de asesoría e ingeniería con acceso prioritario y plazos garantizados. Cancela cuando quieras.',
-        points: ['Acceso directo prioritario', 'Entregables mensuales definidos', 'Trabajo senior y práctico'],
+        desc: 'Solo tras un teardown. Un artefacto definido al mes — un informe de validación, una revisión, un patrón. Cancela cuando quieras.',
+        points: ['Requiere un teardown completado', 'Artefacto mensual definido', 'No es «acceso a una red»'],
         cta: 'Iniciar retainer',
       },
       {
@@ -648,8 +642,8 @@ const es: Dictionary = {
     workRegistry: 'Registro de trabajo',
     physicsInformed: 'Informado por la física',
     liveSimulator: 'Simulador en vivo',
-    available: 'Disponible para consultoría',
-    europe: 'Con base en Europa • Abierto a oportunidades de alto impacto en CPS, inteligencia de red y sistemas autónomos.',
+    available: 'Disponible para un teardown de 280 €',
+    europe: 'Fráncfort del Meno • Redes, tracción ferroviaria, verificación. Cita en menos de 48 horas.',
     backToTop: 'Volver arriba ↑',
     rights: '© 2026 Vincenzo Grimaldi. Todos los derechos reservados.',
     netSoftware: 'Software e IA',
@@ -657,7 +651,7 @@ const es: Dictionary = {
     netPersonal: 'Blog personal',
   },
   megamenu: {
-    trigger: 'Trabajo',
+    trigger: 'Explorar',
     capabilities: 'Capacidades',
     systems: 'Sistemas',
     openNow: 'Abrir ahora',
@@ -757,26 +751,23 @@ const de: Dictionary = {
       {
         host: 'igrimaldi.engineering',
         href: 'https://igrimaldi.engineering',
-        focus: 'Software · KI-Agenten · Infrastruktur',
-        description:
-          'Sie sind hier. Softwareentwicklung, agentische KI-Systeme, physikinformiertes Lernen, Netz-Middleware und die gesamte Entwicklungs- und Deployment-Praxis dahinter.',
-        cta: 'Diese Seite',
+        focus: 'Verifizierbare Intelligenz für Stromnetze und Bahnstrom',
+        description: 'Sie sind hier. Prüfbare Residuen, auditierbare Agenten, bereinigte Muster aus laufenden HV-Bahnanlagen. Das vollständige Kompetenzregister lebt nur hier.',
+        cta: 'Prüfen',
       },
       {
         host: 'engineeringgrimaldi.com',
         href: 'https://engineeringgrimaldi.com',
-        focus: 'Hardware · Elektrotechnik',
-        description:
-          'Die Hardware- und Elektrotechnik-Oberfläche: Hochspannungssysteme, eingebettete Steuerplatinen, Leistungselektronik und kontinuierlich veröffentlichte Engineering-Berichte über physische Aufbauten.',
-        cta: 'Zum Hardware-Labor',
+        focus: 'Eine Handwerkszelle, ausgeliefert und gemessen',
+        description: 'Hardware- und Handwerksautomatisierung — Palletizer, die Forge-Zellen — wird dort verkauft und gemessen, nicht hier.',
+        cta: 'Kaufen',
       },
       {
         host: 'grimaldi.ca',
         href: 'https://grimaldi.ca',
-        focus: 'Persönlich · Blog · Leben',
-        description:
-          'Der persönliche All-in-One-Blog: Leben, Reisen, soziale Updates und der lange Bogen der Arbeit über die Jahre — der menschliche Kontext rund um die Technik.',
-        cta: 'Blog lesen',
+        focus: 'Logbuch, Podcast, Rezensionen, Bücher',
+        description: 'Essays, der Podcast, Rezensionen, die Bücher und die Liebe zur Arbeit — der Mensch hinter beiden Engineering-Domains.',
+        cta: 'Lesen',
       },
     ],
   },
@@ -871,16 +862,16 @@ const de: Dictionary = {
         title: 'Beratung',
         price: '280 €',
         sub: 'pro 60-Min.-Session',
-        desc: 'Eine fokussierte, dichte Arbeitssession zu Netzintelligenz, cyber-physischen Systemen oder physikinformierter KI.',
-        points: ['Live-Problemlösung', 'Schriftliche Zusammenfassung', 'Termin innerhalb von 48 Stunden'],
+        desc: 'Ein 60-Minuten-Teardown Ihres Modells, Abgangs, Unterwerks-LAN-Diagramms oder Anbieterangebots.',
+        points: ['Schriftliche Zusammenfassung', 'Residuen-/Architekturkritik', 'Go/No-Go für einen 30-Tage-Pilot', 'Termin innerhalb von 48 Stunden'],
         cta: 'Session buchen',
       },
       {
         title: 'Advisory-Retainer',
         price: '3.200 €',
         sub: 'pro Monat',
-        desc: 'Ein dediziertes Beratungs- und Engineering-Kontingent mit Prioritätszugang und garantierter Bearbeitung. Jederzeit kündbar.',
-        points: ['Priorisierter Direktzugang', 'Definierte monatliche Ergebnisse', 'Senior-Arbeit, hands-on'],
+        desc: 'Nur nach einem Teardown. Ein definiertes Artefakt pro Monat — ein Validierungsreport, ein Review, ein Muster. Jederzeit kündbar.',
+        points: ['Setzt einen abgeschlossenen Teardown voraus', 'Definiertes Monatsartefakt', 'Kein „Zugang zu einem Netzwerk“'],
         cta: 'Retainer starten',
       },
       {
@@ -913,8 +904,8 @@ const de: Dictionary = {
     workRegistry: 'Arbeitsregister',
     physicsInformed: 'Physikinformiert',
     liveSimulator: 'Live-Simulator',
-    available: 'Verfügbar für Beratung',
-    europe: 'In Europa ansässig • Offen für wirkungsvolle Projekte in CPS, Netzintelligenz und autonomen Systemen.',
+    available: 'Verfügbar für einen €280-Teardown',
+    europe: 'Frankfurt am Main • Stromnetze, Bahnstrom, Verifikation. Termin innerhalb von 48 Stunden.',
     backToTop: 'Nach oben ↑',
     rights: '© 2026 Vincenzo Grimaldi. Alle Rechte vorbehalten.',
     netSoftware: 'Software & KI',
@@ -922,7 +913,7 @@ const de: Dictionary = {
     netPersonal: 'Persönlicher Blog',
   },
   megamenu: {
-    trigger: 'Arbeit',
+    trigger: 'Übersicht',
     capabilities: 'Kompetenzen',
     systems: 'Systeme',
     openNow: 'Jetzt öffnen',
@@ -1016,24 +1007,23 @@ const zh: Dictionary = {
       {
         host: 'igrimaldi.engineering',
         href: 'https://igrimaldi.engineering',
-        focus: '软件 · AI 智能体 · 基础设施',
-        description:
-          '您正在这里。软件工程、智能体 AI 系统、物理信息学习、电网中间件，以及支撑它们的完整开发与部署实践。',
-        cta: '本站',
+        focus: '面向电网与牵引供电的可验证智能',
+        description: '您在这里。可校验的残差、可审计的智能体、来自在运高压铁路资产的脱敏模式。完整能力登记仅在本站。',
+        cta: '验证',
       },
       {
         host: 'engineeringgrimaldi.com',
         href: 'https://engineeringgrimaldi.com',
-        focus: '硬件 · 电气工程',
-        description: '硬件与电气工程界面：高压系统、嵌入式控制板、电力电子，以及针对实体项目持续部署的工程记录。',
-        cta: '访问硬件实验室',
+        focus: '一个已交付并测量的工种单元',
+        description: '硬件与工种自动化——Palletizer、Forge 单元——在那里销售和测量，不在这里。',
+        cta: '购买',
       },
       {
         host: 'grimaldi.ca',
         href: 'https://grimaldi.ca',
-        focus: '个人 · 博客 · 生活',
-        description: '个人一站式博客：生活、旅行、社交动态，以及多年来工作的长线脉络 — 工程背后的人文语境。',
-        cta: '阅读博客',
+        focus: '日志、播客、评论、著作',
+        description: '随笔、播客、评论、著作，以及对工作的热爱——两个工程域名背后的人。',
+        cta: '阅读',
       },
     ],
   },
@@ -1121,8 +1111,8 @@ const zh: Dictionary = {
         title: '顾问月费',
         price: '€3,200',
         sub: '每月',
-        desc: '专属的顾问与工程时间块，享有优先响应与交付保障。可随时取消。',
-        points: ['优先直达沟通', '明确的每月交付物', '资深且亲力亲为'],
+        desc: '仅在拆解评审之后。每月一个明确范围的交付物——验证报告、评审或模式。可随时取消。',
+        points: ['需先完成拆解评审', '明确范围的月度交付物', '不是“加入一个网络”'],
         cta: '开始合作',
       },
       {
@@ -1155,8 +1145,8 @@ const zh: Dictionary = {
     workRegistry: '工作台账',
     physicsInformed: '物理信息',
     liveSimulator: '在线模拟器',
-    available: '可接受咨询',
-    europe: '常驻欧洲 • 欢迎高影响力的 CPS、电网智能与自主系统机会。',
+    available: '可预约 €280 拆解评审',
+    europe: '法兰克福 • 电网、牵引供电、验证。48 小时内安排。',
     backToTop: '返回顶部 ↑',
     rights: '© 2026 Vincenzo Grimaldi 版权所有。',
     netSoftware: '软件与 AI',
@@ -1164,7 +1154,7 @@ const zh: Dictionary = {
     netPersonal: '个人博客',
   },
   megamenu: {
-    trigger: '作品',
+    trigger: '浏览',
     capabilities: '能力',
     systems: '系统',
     openNow: '立即打开',
@@ -1210,6 +1200,20 @@ const STORAGE_KEY = 'vg-locale';
 
 function detectLocale(): Locale {
   if (typeof window === 'undefined') return 'en';
+  // /de /es /zh redirect to /?lang=xx (vercel.json) — honour it and persist it.
+  try {
+    const q = new URLSearchParams(window.location.search).get('lang');
+    if (q === 'en' || q === 'es' || q === 'de' || q === 'zh') {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, q);
+      } catch {
+        /* private mode */
+      }
+      return q;
+    }
+  } catch {
+    /* no URL access — fall through */
+  }
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === 'en' || stored === 'es' || stored === 'de' || stored === 'zh') return stored;

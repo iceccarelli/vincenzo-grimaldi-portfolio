@@ -1,7 +1,7 @@
-# Vincenzo Grimaldi
+# igrimaldi.engineering
 
-**Physics-Informed Cyber-Physical Systems Engineer**
-*Designing deterministic, physics-informed intelligence for safety-critical control and grid systems — verifiable, adaptive, and built to deploy in the real world.*
+**Physics-constrained intelligence for grids and traction power.**
+*Residuals you can check. Agents you can audit. Patterns from live HV rail assets — sanitized.*
 
 [![Live site](https://img.shields.io/badge/Live-igrimaldi.engineering-38bdf8?style=for-the-badge)](https://igrimaldi.engineering/)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -10,61 +10,51 @@
 
 ---
 
-## About
+## What this domain is
 
-I work at the intersection of embedded control, real-time systems, AI orchestration, and grid-scale infrastructure — currently as a Grid Networks Engineer at **DB InfraGO AG (Deutsche Bahn)**, digitalising high-voltage assets for Germany's rail network.
+The vendor site of Vincenzo Ceccarelli Grimaldi for **grids, traction power and verification**. One live instrument (an in-browser IEEE 9-bus DC power flow that reproduces the explorer's analytical solution and prints its residual), one paid door (a €280 / 60-min teardown), and a capability register gated to artefacts a stranger can open.
 
-My focus is integrating AI, software, energy, and control into **deterministic, physics-informed systems** where each layer is verifiable and safety-critical. The live portfolio at [igrimaldi.engineering](https://igrimaldi.engineering/) and this profile are two views of that work.
+Identity split across the network (never blurred):
 
----
+- igrimaldi.engineering — verifiable intelligence for grids and traction power
+- engineeringgrimaldi.com — one trade cell, shipped and measured
+- grimaldi.ca — logbook, podcast, reviews, books
+- github.com/iceccarelli — clone or it does not exist
 
-## Experience
+## Routes
 
-**Grid Networks Engineer — ITk Fachspezialist (Digitisation of High-Voltage Assets)**
-**DB InfraGO AG (Deutsche Bahn)** · Aug 2024 – Present · Frankfurt, Germany
-- Digitalisation of railway traction high-voltage grids
-- IT/OT convergence with KRITIS-compliant cybersecurity governance
-- Resilience engineering for mission-critical rail infrastructure
+| Route | Purpose |
+|---|---|
+| `/` | H1 + live instrument + €280 teardown CTA; three proof chips |
+| `/work` | Capability register — only 200-URL, honestly badged, on-niche artefacts |
+| `/simulator` | In-browser IEEE 9-bus DC solver, deep link to the explorer, residual table, "what this is not" |
+| `/advisory` | €280 teardown · €3,200 monthly (only after a teardown) · pilot · scope boundaries |
+| `/network` | One line + one verb per address |
+| `/ventures` | Client builds and off-niche work (Palletizer, Plastilonas, ecowoods-app, Bahn PM) |
+| `/lab` | Parked: GridOS, NeuralBridge, DERIM, robot-lidar-fusion, mcp-foundry, Forge vapor |
+| `/books` | Pointer to grimaldi.ca/books |
+| `/capabilities` `/payments` `/connect` `/card` `/impressum` `/datenschutz` | kept |
 
-**Industrial Engineering Intern — High-Voltage Maintenance**
-**DB Fahrzeuginstandhaltung GmbH & DB Netz AG** · Jun 2022 – Sep 2024
-- Lifecycle management of traction power substations
-- Asset condition monitoring and predictive maintenance
+Every artefact carries a status badge (`app/lib/status.ts`): SHIPPED · SHIPPED DEMO · PILOT · CLIENT BUILD · RESEARCH · IN REVISION · PARKED · 404-DO-NOT-LINK.
 
----
+## Honesty rules enforced in code
 
-## Flagship work
+- A GitHub path that returned 404 on 2026-09-01 (`GridOS`, `neuralbridge`, `derim-middleware`, `robot-lidar-fusion`, `physics-informed`) is never rendered as a link (`linkable()` in `app/lib/status.ts`). Remove a name from `GITHUB_404` only after `curl -sI https://github.com/iceccarelli/<name>` returns 200.
+- Residual numbers come from the explorer's machine-readable report (`app/lib/validation.ts`): fetched at build/revalidate, with a dated snapshot fallback. The UI says which one it is showing.
+- `scripts/verify.sh` fails the build if the homepage links a 404 path, loses the H1 sentence, loses the server-rendered instrument, or mentions Peru / paint / orbital / any banned phrase.
 
-### physics-informed — Master's thesis (RWTH Aachen)
-An interactive research simulator for cross-domain CIM + ThreMA ontology, physics-informed neural networks, RL security agents, and IEEE 9-Bus cyber-physical validation.
+## The instrument
 
-- **Thesis**: *Data Modeling in a Cross-domain Ontology for Cyber Intelligence in Smart-Grids Using Reinforcement Learning* — RWTH Aachen University, June 2025
-- First systematic integration of the **Common Information Model (CIM)** with the **ThreMA** cybersecurity framework
-- 5 formal semantic mappings · 4 documented attack scenarios · validated on an enhanced **IEEE 9-Bus** cyber testbed
-- **Live demo**: [physics-informed.vercel.app](https://physics-informed.vercel.app/) · **Code**: [github.com/iceccarelli/physics-informed](https://github.com/iceccarelli/physics-informed)
+`app/lib/ieee9.ts` — DC power flow on the IEEE 9-bus (WSCC) system, same data as [physics-informed.vercel.app/demos](https://physics-informed.vercel.app/demos). Default injections reproduce that page's angles, flows and the 4.44e-16 p.u. balance residual. Trip a line: the six ring lines stay solvable, the three generator step-ups island — 6/9 secure, matching the explorer's N-1 result.
 
-### GridOS
-Control-oriented operating surface for smart-grid intelligence, DER coordination, and real-time observability.
-[github.com/iceccarelli/GridOS](https://github.com/iceccarelli/GridOS)
+## Experience (context, not a product)
 
-### DERIM
-Distributed Energy Resource Intelligence Middleware for verifiable coordination and grid-aware execution, using Multi-Agent Reinforcement Learning to reduce grid curtailment.
-[github.com/iceccarelli/derim-middleware](https://github.com/iceccarelli/derim-middleware)
+**ITk Fachspezialist — Digitisation of high-voltage assets** · DB InfraGO AG · Aug 2024 – present · Frankfurt
+Railway traction HV grids, IT/OT, KRITIS-aligned cybersecurity governance. Advisory work is independent; no employer data, topologies or systems are used.
 
-> Quantitative results for DERIM are reported in the thesis evaluation; see the live simulator and thesis for methodology and figures.
+**Industrial Engineering Intern — HV maintenance** · DB Fahrzeuginstandhaltung GmbH & DB Netz AG · Jun 2022 – Sep 2024
 
-### NeuralBridge *(in development)*
-AI-native middleware for human-to-model orchestration in safety-critical, physics-informed environments — designed to target sub-10 ms deterministic latency. *Repository available on request.*
-
-### Robot LiDAR Fusion *(in development)*
-Real-time perception and sensor-fusion stack bridging software intelligence with physical autonomy. *Repository available on request.*
-
----
-
-## Education
-
-**RWTH Aachen University** — M.Sc. (matriculation 353970)
-Master's thesis (June 2025): cross-domain ontology (CIM + ThreMA) and reinforcement learning for cyber defence in critical infrastructure.
+**RWTH Aachen University** — M.Sc. 2025. Thesis: *Data Modeling in a Cross-domain Ontology for Cyber Intelligence in Smart-Grids Using Reinforcement Learning* (CIM–ThreMA + RL, IEEE 9-bus cyber testbed). Background, not what the explorer currently validates.
 
 ---
 

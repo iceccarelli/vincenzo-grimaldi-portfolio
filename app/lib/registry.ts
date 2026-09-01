@@ -1,41 +1,56 @@
 /**
- * registry.ts — single source of truth for capabilities and shipped work.
+ * registry.ts — single source of truth for capabilities and artefacts.
  *
- * Two rules for this file.
+ * Rules for this file (2026-09 IA):
  *
  * 1. Every capability carries a `provenance` entry naming the place it was
  *    actually exercised. A capability with no provenance does not belong here.
- * 2. Nothing links to a surface a visitor cannot open. Most repositories are
- *    private, so no `repo` is set for them and no provenance entry links to
- *    GitHub. `bahn-project-manager` and `palletizer` are public, so they carry
- *    `repo` URLs; when another repository is made public, add its `repo` URL
- *    back and the card, the mega menu and the command palette will all start
- *    linking to it.
+ * 2. Every project carries a `status` from status.ts and a `shelf`:
+ *      work     → passes the /work gate (200 URL + honest badge + serves
+ *                 grids / traction / verification / CIM / PINN / IT-OT)
+ *      ventures → real, opened by real users, off-niche or client build
+ *      lab      → parked; nothing a stranger can open, or a product that
+ *                 belongs to another domain
+ * 3. `repo` is set ONLY when a stranger can open it (raw README returned 200
+ *    on 2026-09-01). A path that was claimed and 404s goes in `repoClaimed`
+ *    and is rendered as text, never as a link (see status.ts GITHUB_404).
  */
+
+import type { Status } from './status';
 
 export type Provenance = {
   label: string;
   href?: string;
+  /** The named artefact is parked — the label is rendered with a PARKED hint. */
+  parked?: boolean;
 };
 
 export type Capability = {
   domain: string;
-  /** Short line describing what the domain is for, in operator terms. */
   summary: string;
-  /** Concrete, checkable competencies. Protocols, methods, artefacts. */
   signals: string[];
   provenance: Provenance[];
 };
+
+export type Shelf = 'work' | 'ventures' | 'lab';
 
 export type Project = {
   name: string;
   domain: CapabilityDomain;
   summary: string;
-  /** Only set when the source is actually browsable by a visitor. */
+  status: Status;
+  shelf: Shelf;
+  /** Public repository a visitor can open (verified 200). */
   repo?: string;
+  /** A GitHub path that was claimed on this domain and 404s. Text only. */
+  repoClaimed?: string;
   /** A deployment anyone can open right now. */
   live?: string;
-  status: 'shipped' | 'in-development';
+  /** Where it is sold, if not here. */
+  soldOn?: string;
+  /** Lab only: what actually exists, and what unlocks the shelf change. */
+  exists?: string;
+  unlock?: string;
   stack: string[];
 };
 
@@ -47,11 +62,12 @@ export type CapabilityDomain =
   | 'Agentic Middleware'
   | 'Systems Engineering';
 
-const DB_INFRAGO: Provenance = { label: 'DB InfraGO AG' };
-const THESIS: Provenance = {
-  label: 'RWTH Aachen M.Sc. thesis',
+const DB_INFRAGO: Provenance = { label: 'DB InfraGO AG (sanitized)' };
+const EXPLORER: Provenance = {
+  label: 'IEEE 9-bus explorer',
   href: 'https://physics-informed.vercel.app/',
 };
+const THESIS: Provenance = { label: 'RWTH Aachen M.Sc. thesis (background)' };
 
 export const capabilities: Capability[] = [
   {
@@ -61,17 +77,12 @@ export const capabilities: Capability[] = [
     signals: [
       'CIM / CGMES semantic modelling',
       'High-voltage traction asset digitalisation',
-      'DER fleet coordination',
+      'DC / AC power-flow validation',
+      'N-1 contingency sweeps',
       'MILP battery dispatch',
-      'MPC and forecast-driven control loops',
       'IEEE 9-bus cyber-physical testbed',
     ],
-    provenance: [
-      DB_INFRAGO,
-      THESIS,
-      { label: 'GridOS' },
-      { label: 'DERIM' },
-    ],
+    provenance: [DB_INFRAGO, EXPLORER, { label: 'GridOS', parked: true }, { label: 'DERIM', parked: true }],
   },
   {
     domain: 'Industrial Protocols & IT/OT',
@@ -85,26 +96,20 @@ export const capabilities: Capability[] = [
       'IT/OT convergence',
       'KRITIS-aligned OT security governance',
     ],
-    provenance: [
-      DB_INFRAGO,
-      { label: 'GridOS' },
-    ],
+    provenance: [DB_INFRAGO, { label: 'GridOS', parked: true }],
   },
   {
     domain: 'Physics-Informed Learning',
     summary:
-      'Embedding governing equations and threat models into learned components so their outputs stay physically admissible.',
+      'Embedding governing equations and threat models into learned components so their outputs stay physically admissible — and measuring the residual.',
     signals: [
       'Physics-informed neural networks (PINNs)',
+      'Surrogate-vs-ground-truth residual reporting',
       'Reinforcement learning security agents',
-      'Multi-agent RL coordination',
       'ThreMA threat-model ontology',
-      'Time-series anomaly detection',
+      'Physics-loss ablation',
     ],
-    provenance: [
-      THESIS,
-      { label: 'physics-informed' },
-    ],
+    provenance: [EXPLORER, THESIS],
   },
   {
     domain: 'Robotics & Perception',
@@ -117,9 +122,7 @@ export const capabilities: Capability[] = [
       'KITTI calibration ingestion',
       'URDF-driven kinematic simulation',
     ],
-    provenance: [
-      { label: 'robot-lidar-fusion' },
-    ],
+    provenance: [{ label: 'robot-lidar-fusion', parked: true }],
   },
   {
     domain: 'Agentic Middleware',
@@ -132,158 +135,220 @@ export const capabilities: Capability[] = [
       'HMAC-signed action tokens',
       'Hash-chained audit logs',
     ],
-    provenance: [
-      { label: 'mcp-foundry' },
-      { label: 'NeuralBridge' },
-    ],
+    provenance: [{ label: 'mcp-foundry', parked: true }, { label: 'NeuralBridge', parked: true }],
   },
   {
     domain: 'Systems Engineering',
     summary:
-      'The delivery substrate: typed services, native extensions, real-time browsers surfaces, and pipelines that publish.',
+      'The delivery substrate: typed services, native extensions, real-time browser surfaces, and pipelines that publish.',
     signals: [
       'Python · FastAPI',
       'C++ via pybind11',
-      'TypeScript · Next.js · React Three Fiber',
+      'TypeScript · Next.js · React',
       'TimescaleDB / InfluxDB',
       'PyPI trusted publishing (OIDC)',
       'Hardware-in-the-loop test harnesses',
     ],
-    provenance: [
-      DB_INFRAGO,
-      { label: 'GridOS' },
-      { label: 'robot-lidar-fusion' },
-    ],
+    provenance: [DB_INFRAGO, { label: 'Bahn Project Manager', href: 'https://github.com/iceccarelli/bahn-project-manager' }],
   },
 ];
 
 export const projects: Project[] = [
+  /* ---------------- /work — passes the gate ---------------- */
   {
     name: 'physics-informed',
     domain: 'Physics-Informed Learning',
     summary:
-      'Interactive simulator for the cross-domain CIM + ThreMA ontology, PINN solvers, RL security agents and IEEE 9-bus cyber-physical validation.',
+      'IEEE 9-bus explorer: DC PINN vs analytical, AC PINN vs Newton-Raphson, N-1 sweep, physics-loss ablation, 25 tests, one-command report.',
+    status: 'SHIPPED DEMO',
+    shelf: 'work',
     live: 'https://physics-informed.vercel.app/',
-    status: 'shipped',
-    stack: ['Python', 'PINNs', 'RL', 'CIM'],
-  },
-  {
-    name: 'GridOS',
-    domain: 'Grid & Power Systems',
-    summary:
-      'DER middleware and control surface: protocol ingest, MILP dispatch, anomaly detection, and an MPC forecast loop.',
-    status: 'shipped',
-    stack: ['FastAPI', 'Modbus', 'OPC-UA', 'MILP'],
-  },
-  {
-    name: 'DERIM',
-    domain: 'Grid & Power Systems',
-    summary:
-      'Distributed energy resource integration middleware focused on verifiable coordination and grid-aware execution.',
-    status: 'in-development',
-    stack: ['Python', 'FastAPI', 'DER'],
-  },
-  {
-    name: 'mcp-foundry',
-    domain: 'Agentic Middleware',
-    summary:
-      'Governance layer for AI agents acting on financial systems: deterministic policy engine, signed action tokens, hash-chained audit log.',
-    status: 'shipped',
-    stack: ['MCP', 'JSON-RPC', 'HMAC'],
-  },
-  {
-    name: 'robot-lidar-fusion',
-    domain: 'Robotics & Perception',
-    summary:
-      'LiDAR-to-camera projection with SE(3) extrinsics, pinhole intrinsics, z-buffer occlusion handling and a KITTI calibration loader.',
-    status: 'shipped',
-    stack: ['Python', 'SE(3)', 'KITTI'],
-  },
-  {
-    name: 'NeuralBridge',
-    domain: 'Agentic Middleware',
-    summary:
-      'AI-native middleware for human-to-model orchestration in safety-critical, physics-informed environments.',
-    status: 'in-development',
-    stack: ['Python', 'Orchestration'],
+    repoClaimed: 'https://github.com/iceccarelli/physics-informed',
+    stack: ['Python', 'PINNs', 'Newton-Raphson', 'IEEE 9-bus'],
   },
   {
     name: 'Bahn Project Manager',
     domain: 'Systems Engineering',
     summary:
-      'Enterprise platform for Deutsche Bahn infrastructure and station-development projects across 14 technical departments, data-driven from a 1,298-project dataset.',
+      'Public app on a 1,298-project infrastructure-style dataset across 14 departments. Not an official DB system of record.',
+    status: 'CLIENT BUILD',
+    shelf: 'work',
     repo: 'https://github.com/iceccarelli/bahn-project-manager',
-    status: 'shipped',
     stack: ['TypeScript', 'React 19', 'Vite', 'Vitest'],
   },
-  {
-    name: 'ForgeOS',
-    domain: 'Robotics & Perception',
-    summary:
-      'The AI-native robotic operating system for the highest-pain, highest-ROI trades — the platform behind the Forge Line on engineeringgrimaldi.com.',
-    status: 'in-development',
-    stack: ['TypeScript', 'Robotics', 'AI Agents'],
-  },
-  {
-    name: 'FloorForge AI',
-    domain: 'Robotics & Perception',
-    summary: 'AI-native automation for the flooring trade — Forge Line entry, in active development with public code.',
-    repo: 'https://github.com/iceccarelli/floorforge-ai',
-    status: 'in-development',
-    stack: ['TypeScript', 'Trades 2.0'],
-  },
-  {
-    name: 'PaintForge AI',
-    domain: 'Robotics & Perception',
-    summary: 'AI-native automation for the painting trade — Forge Line entry, in active development with public code.',
-    repo: 'https://github.com/iceccarelli/paintforge-ai',
-    status: 'in-development',
-    stack: ['TypeScript', 'Trades 2.0'],
-  },
-  {
-    name: 'DryForge AI',
-    domain: 'Robotics & Perception',
-    summary: 'AI-native automation for drying and climate workflows on site — Forge Line entry, in active development with public code.',
-    repo: 'https://github.com/iceccarelli/dryforge-ai',
-    status: 'in-development',
-    stack: ['TypeScript', 'Trades 2.0'],
-  },
-  {
-    name: 'GridForge AI',
-    domain: 'Grid & Power Systems',
-    summary:
-      'Behind-the-meter power for AI data centers: on-site generation, DC microgrids and hybrid storage that bypass grid interconnection delays.',
-    status: 'in-development',
-    stack: ['TypeScript', 'Microgrids', 'Storage'],
-  },
-  {
-    name: 'ForgePower Semi',
-    domain: 'Grid & Power Systems',
-    summary:
-      'Custom and semi-custom SiC & GaN power modules, high-density converters and intelligent power-delivery networks for AI GPUs and rack-level power.',
-    status: 'in-development',
-    stack: ['SiC/GaN', 'Power Electronics'],
-  },
-  {
-    name: 'ThermalForge',
-    domain: 'Grid & Power Systems',
-    summary:
-      'Liquid-cooling infrastructure and thermal-power co-optimization for high-density AI racks: direct-to-chip cold plates and advanced CDUs.',
-    status: 'in-development',
-    stack: ['Liquid Cooling', 'Thermal'],
-  },
+
+  /* ---------------- /ventures — real, off-niche ---------------- */
   {
     name: 'Palletizer OS',
     domain: 'Robotics & Perception',
     summary:
-      'Hardware-agnostic, deterministic software foundation for end-of-line palletizing: control loops, safety logic, mixed-SKU planning and fleet telemetry, with a live optimizer.',
+      'Mixed-SKU pallet planning with a live optimizer. v0.2, heuristic planner. Sold on the trades domain.',
+    status: 'SHIPPED',
+    shelf: 'ventures',
     repo: 'https://github.com/iceccarelli/palletizer',
     live: 'https://palletizer-app.vercel.app',
-    status: 'shipped',
-    stack: ['Python', 'Robotics', 'Optimization'],
+    soldOn: 'https://engineeringgrimaldi.com/',
+    stack: ['Python', 'Heuristic optimizer', 'v0.2'],
+  },
+  {
+    name: 'Plastilonas Peruanas SAC',
+    domain: 'Systems Engineering',
+    summary:
+      'B2B site for an industrial-textile manufacturer: quotation-led, no invented certifications, facts from a single data layer.',
+    status: 'CLIENT BUILD',
+    shelf: 'ventures',
+    repo: 'https://github.com/iceccarelli/Plastilonas-Peruanas-SAC',
+    live: 'https://plastilonas-peruanas-sac.vercel.app/',
+    stack: ['Next.js 15', 'TypeScript', 'Off-niche'],
+  },
+  {
+    name: 'ecowoods-app',
+    domain: 'Systems Engineering',
+    summary:
+      'Lead engine and marketplace platform for a Toronto hardwood-flooring shop established in 2000. Client channel candidate — the shop is not this practice.',
+    status: 'CLIENT BUILD',
+    shelf: 'ventures',
+    repo: 'https://github.com/iceccarelli/ecowoods-app',
+    live: 'https://ecowoods.ca/',
+    stack: ['Next.js 15', 'Turborepo', 'Prisma'],
+  },
+
+  /* ---------------- /lab — parked ---------------- */
+  {
+    name: 'GridOS',
+    domain: 'Grid & Power Systems',
+    summary: 'DER middleware and control surface: protocol ingest, MILP dispatch, anomaly detection, MPC forecast loop.',
+    status: 'PARKED',
+    shelf: 'lab',
+    repoClaimed: 'https://github.com/iceccarelli/GridOS',
+    exists: 'Private tree. No public clone, no public tests.',
+    unlock: 'Public repository returns 200 with a test suite a stranger can run.',
+    stack: ['FastAPI', 'Modbus', 'OPC-UA', 'MILP'],
+  },
+  {
+    name: 'DERIM',
+    domain: 'Grid & Power Systems',
+    summary: 'DER integration middleware for verifiable coordination and grid-aware execution.',
+    status: 'PARKED',
+    shelf: 'lab',
+    repoClaimed: 'https://github.com/iceccarelli/derim-middleware',
+    exists: 'Design notes. Thesis-adjacent.',
+    unlock: 'Public repository returns 200 with a reproducible result.',
+    stack: ['Python', 'FastAPI', 'DER'],
+  },
+  {
+    name: 'NeuralBridge',
+    domain: 'Agentic Middleware',
+    summary: 'Middleware for human-to-model orchestration in physics-informed environments.',
+    status: 'PARKED',
+    shelf: 'lab',
+    repoClaimed: 'https://github.com/iceccarelli/neuralbridge',
+    exists: 'Concept and private prototype.',
+    unlock: 'Public repository returns 200; a latency number a stranger can reproduce.',
+    stack: ['Python', 'Orchestration'],
+  },
+  {
+    name: 'mcp-foundry',
+    domain: 'Agentic Middleware',
+    summary: 'Governance layer for agents acting on financial systems: deterministic policy engine, signed action tokens, hash-chained audit log.',
+    status: 'PARKED',
+    shelf: 'lab',
+    exists: 'Private tree.',
+    unlock: 'Public repository returns 200.',
+    stack: ['MCP', 'JSON-RPC', 'HMAC'],
+  },
+  {
+    name: 'robot-lidar-fusion',
+    domain: 'Robotics & Perception',
+    summary: 'LiDAR-to-camera projection with SE(3) extrinsics, pinhole intrinsics, z-buffer occlusion, KITTI loader.',
+    status: 'PARKED',
+    shelf: 'lab',
+    repoClaimed: 'https://github.com/iceccarelli/robot-lidar-fusion',
+    exists: 'Private tree.',
+    unlock: 'Public repository returns 200.',
+    stack: ['Python', 'SE(3)', 'KITTI'],
+  },
+  {
+    name: 'ForgeOS',
+    domain: 'Robotics & Perception',
+    summary: 'Robotic operating layer behind the Forge Line on engineeringgrimaldi.com.',
+    status: 'PARKED',
+    shelf: 'lab',
+    soldOn: 'https://engineeringgrimaldi.com/',
+    exists: 'Private tree; product story lives on the trades domain.',
+    unlock: 'A shipped cell on engineeringgrimaldi.com with a measured number.',
+    stack: ['TypeScript', 'Robotics'],
+  },
+  {
+    name: 'FloorForge AI',
+    domain: 'Robotics & Perception',
+    summary: 'Hardwood-floor refinishing automation — waitlist site and repository; pilot programme forming.',
+    status: 'PILOT',
+    shelf: 'lab',
+    repo: 'https://github.com/iceccarelli/floorforge-ai',
+    soldOn: 'https://engineeringgrimaldi.com/',
+    exists: 'Public repository (marketing + waitlist).',
+    unlock: 'A measured pilot on the trades domain.',
+    stack: ['TypeScript', 'Trades'],
+  },
+  {
+    name: 'PaintForge AI',
+    domain: 'Robotics & Perception',
+    summary: 'Interior-finishing automation — repository with pilot recruitment; figures are engineering targets, not results.',
+    status: 'PILOT',
+    shelf: 'lab',
+    repo: 'https://github.com/iceccarelli/paintforge-ai',
+    soldOn: 'https://engineeringgrimaldi.com/',
+    exists: 'Public repository (pilot recruitment).',
+    unlock: 'A measured pilot on the trades domain.',
+    stack: ['TypeScript', 'Trades'],
+  },
+  {
+    name: 'DryForge AI',
+    domain: 'Robotics & Perception',
+    summary: 'Drywall-finishing automation as a service — pre-launch repository.',
+    status: 'PILOT',
+    shelf: 'lab',
+    repo: 'https://github.com/iceccarelli/dryforge-ai',
+    soldOn: 'https://engineeringgrimaldi.com/',
+    exists: 'Public repository (pre-launch).',
+    unlock: 'A measured pilot on the trades domain.',
+    stack: ['TypeScript', 'Trades'],
+  },
+  {
+    name: 'GridForge AI',
+    domain: 'Grid & Power Systems',
+    summary: 'Behind-the-meter power for data-center campuses: on-site generation, DC microgrids, hybrid storage.',
+    status: 'PARKED',
+    shelf: 'lab',
+    exists: 'Concept.',
+    unlock: 'A public model with a residual a stranger can regenerate.',
+    stack: ['Microgrids', 'Storage'],
+  },
+  {
+    name: 'ForgePower Semi',
+    domain: 'Grid & Power Systems',
+    summary: 'SiC / GaN power modules and rack-level power delivery for accelerator racks.',
+    status: 'PARKED',
+    shelf: 'lab',
+    exists: 'Concept.',
+    unlock: 'A measured board on engineeringgrimaldi.com.',
+    stack: ['SiC/GaN', 'Power electronics'],
+  },
+  {
+    name: 'ThermalForge',
+    domain: 'Grid & Power Systems',
+    summary: 'Liquid-cooling and thermal–power co-optimisation for high-density racks.',
+    status: 'PARKED',
+    shelf: 'lab',
+    exists: 'Concept.',
+    unlock: 'A measured loop on engineeringgrimaldi.com.',
+    stack: ['Liquid cooling', 'Thermal'],
   },
 ];
 
 export const domains: CapabilityDomain[] = capabilities.map(
   (capability) => capability.domain as CapabilityDomain,
 );
+
+export const byShelf = (shelf: Shelf) => projects.filter((p) => p.shelf === shelf);

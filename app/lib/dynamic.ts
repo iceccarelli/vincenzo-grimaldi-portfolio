@@ -274,7 +274,7 @@ export const deployments: Deployment[] = [
     host: 'plastilonas-peruanas-sac.vercel.app',
     title: { en: 'Plastilonas Peruanas SAC', es: 'Plastilonas Peruanas SAC', de: 'Plastilonas Peruanas SAC', zh: 'Plastilonas Peruanas SAC' },
     desc: {
-      en: 'Production B2B platform for a real Lima business.',
+      en: 'Client build: B2B site for a Lima manufacturer.',
       es: 'Plataforma B2B en producción para un negocio real de Lima.',
       de: 'Produktive B2B-Plattform für ein reales Unternehmen in Lima.',
       zh: '为利马真实企业运行的 B2B 生产平台。',
@@ -286,10 +286,10 @@ export const deployments: Deployment[] = [
     host: 'ecowoods.ca',
     title: { en: 'Ecowoods', es: 'Ecowoods', de: 'Ecowoods', zh: 'Ecowoods' },
     desc: {
-      en: 'Flooring venture platform, live in Canada.',
-      es: 'Plataforma del negocio de pisos, en vivo en Canadá.',
-      de: 'Plattform des Bodenbelag-Ventures, live in Kanada.',
-      zh: '地板创业项目平台，加拿大在线运行。',
+      en: 'Client build: lead engine for a Toronto flooring shop (est. 2000).',
+      es: 'Proyecto de cliente: motor de leads para una tienda de pisos de Toronto (desde 2000).',
+      de: 'Kundenprojekt: Lead-Engine für ein Bodenleger-Geschäft in Toronto (seit 2000).',
+      zh: '客户项目：多伦多地板店（2000 年创立）的线索引擎。',
     },
   },
   {
@@ -376,19 +376,19 @@ export const askEntries: AskEntry[] = [
       zh: 'Vincenzo Grimaldi 是谁？',
     },
     answer: {
-      en: 'An electrical engineer and software developer: grid networks engineering at DB InfraGO, an RWTH Aachen master thesis you can run in the browser, and the Grimaldi Network — three domains migrating the trades to automated systems.',
-      es: 'Ingeniero electricista y desarrollador de software: ingeniería de redes en DB InfraGO, una tesis de RWTH Aachen ejecutable en el navegador, y la Red Grimaldi — tres dominios migrando los oficios a sistemas automatizados.',
-      de: 'Elektroingenieur und Softwareentwickler: Netzingenieur bei DB InfraGO, eine im Browser ausführbare RWTH-Masterarbeit und das Grimaldi-Netzwerk — drei Domains, die das Handwerk zu automatisierten Systemen migrieren.',
-      zh: '电气工程师兼软件开发者：DB InfraGO 电网工程、可在浏览器中运行的 RWTH 亚琛硕士论文，以及 Grimaldi 网络 — 三个域名，推动行业向自动化系统迁移。',
+      en: 'Vincenzo Ceccarelli Grimaldi. Day job: ITk Fachspezialist at DB InfraGO AG, Frankfurt — digitisation of railway traction HV grids, IT/OT, KRITIS-aligned governance. Night job: physics-constrained software and advisory for grids and traction power, with residuals you can check. RWTH Aachen M.Sc. 2025.',
+      es: 'Vincenzo Ceccarelli Grimaldi. De día: ITk Fachspezialist en DB InfraGO AG, Fráncfort — digitalización de redes de tracción ferroviaria de AT, IT/OT, gobernanza alineada con KRITIS. De noche: software y asesoría con restricciones físicas para redes y tracción, con residuos verificables. M.Sc. RWTH Aachen 2025.',
+      de: 'Vincenzo Ceccarelli Grimaldi. Hauptberuf: ITk-Fachspezialist bei der DB InfraGO AG, Frankfurt — Digitalisierung von Bahnstrom-Hochspannungsnetzen, IT/OT, KRITIS-orientierte Governance. Abends: physikalisch beschränkte Software und Beratung für Stromnetze und Bahnstrom, mit prüfbaren Residuen. M.Sc. RWTH Aachen 2025.',
+      zh: 'Vincenzo Ceccarelli Grimaldi。本职：DB InfraGO AG（法兰克福）ITk 专家——铁路牵引高压电网数字化、IT/OT、KRITIS 合规治理。业余：面向电网与牵引供电的物理约束软件与咨询，残差可校验。RWTH 亚琛硕士，2025。',
     },
     links: [
-      { label: { en: 'About', es: 'Acerca de', de: 'Über', zh: '关于' }, href: '/#about' },
+      { label: { en: 'Work', es: 'Trabajo', de: 'Arbeit', zh: '工作' }, href: '/work' },
       { label: { en: 'Business card', es: 'Tarjeta de visita', de: 'Visitenkarte', zh: '数字名片' }, href: '/card' },
     ],
   },
   {
     id: 'forge',
-    keywords: ['forge', 'trades', 'palletizer', 'floor', 'paint', 'dry', 'robot', 'automation', 'oficio', 'automatización', 'automatizacion', 'handwerk', 'automatisierung', '行业', '自动化', '机器人', 'product'],
+    keywords: ['forge', 'trades', 'palletizer', 'floor', 'robot', 'automation', 'oficio', 'automatización', 'automatizacion', 'handwerk', 'automatisierung', '行业', '自动化', '机器人', 'hardware'],
     question: {
       en: 'What is the Forge Line?',
       es: '¿Qué es la Línea Forge?',
@@ -396,19 +396,19 @@ export const askEntries: AskEntry[] = [
       zh: '什么是 Forge 产品线？',
     },
     answer: {
-      en: 'The Trades 2.0 product line: one automation product per trade. Palletizer OS is shipped with a live optimizer; FloorForge, PaintForge and DryForge AI are in open development; ForgeOS is the robotic OS behind them.',
-      es: 'La línea de producto Oficios 2.0: un producto de automatización por oficio. Palletizer OS está entregado con optimizador en vivo; FloorForge, PaintForge y DryForge AI en desarrollo abierto; ForgeOS es el SO robótico detrás.',
-      de: 'Die Handwerk-2.0-Produktlinie: ein Automatisierungsprodukt pro Gewerk. Palletizer OS ist ausgeliefert (Live-Optimierer); FloorForge, PaintForge und DryForge AI in offener Entwicklung; ForgeOS ist das robotische OS dahinter.',
-      zh: '行业 2.0 产品线：每个行业一款自动化产品。Palletizer OS 已交付并有在线优化器；FloorForge、PaintForge、DryForge AI 公开开发中；背后是机器人操作系统 ForgeOS。',
+      en: 'Hardware-trade automation, sold on engineeringgrimaldi.com — not here. Palletizer OS is shipped (v0.2, heuristic planner, live optimizer); the other trade cells are pilot repositories. On this domain they are listed under /lab only.',
+      es: 'Automatización de oficios de hardware, vendida en engineeringgrimaldi.com — no aquí. Palletizer OS está entregado (v0.2, planificador heurístico, optimizador en vivo); las demás celdas son repositorios piloto. En este dominio solo aparecen en /lab.',
+      de: 'Automatisierung für Handwerksgewerke, verkauft auf engineeringgrimaldi.com — nicht hier. Palletizer OS ist ausgeliefert (v0.2, heuristischer Planer, Live-Optimierer); die anderen Zellen sind Pilot-Repositories. Auf dieser Domain stehen sie nur unter /lab.',
+      zh: '硬件工种自动化，在 engineeringgrimaldi.com 销售——不在这里。Palletizer OS 已发布（v0.2，启发式规划器，在线优化器）；其他工种单元为试点仓库。本站仅在 /lab 列出。',
     },
     links: [
-      { label: { en: 'Product site', es: 'Sitio de producto', de: 'Produktseite', zh: '产品站点' }, href: 'https://engineeringgrimaldi.com' },
-      { label: { en: 'Live optimizer', es: 'Optimizador en vivo', de: 'Live-Optimierer', zh: '在线优化器' }, href: 'https://palletizer-app.vercel.app' },
+      { label: { en: 'engineeringgrimaldi.com', es: 'engineeringgrimaldi.com', de: 'engineeringgrimaldi.com', zh: 'engineeringgrimaldi.com' }, href: 'https://engineeringgrimaldi.com' },
+      { label: { en: 'Lab', es: 'Laboratorio', de: 'Labor', zh: '实验室' }, href: '/lab' },
     ],
   },
   {
     id: 'books',
-    keywords: ['book', 'books', 'renewables', 'orbital', 'manuscript', 'libro', 'buch', 'bücher', '书', '著作', 'proof', 'chapter', 'capítulo', 'kapitel', '章'],
+    keywords: ['book', 'books', 'renewables', 'manuscript', 'libro', 'buch', 'bücher', '书', '著作', 'proof', 'chapter', 'capítulo', 'kapitel', '章'],
     question: {
       en: 'What about the books?',
       es: '¿Y los libros?',
@@ -416,13 +416,13 @@ export const askEntries: AskEntry[] = [
       zh: '著作情况如何？',
     },
     answer: {
-      en: 'Two manuscripts, both honestly in revision: The Renewables Migration — with eleven public chapter proof-engine repositories so every load-bearing number can be re-run — and The Orbital AI Compute Roadmap.',
-      es: 'Dos manuscritos, ambos honestamente en revisión: The Renewables Migration — con once repositorios públicos de motores de prueba por capítulo — y The Orbital AI Compute Roadmap.',
-      de: 'Zwei Manuskripte, beide ehrlich in Überarbeitung: The Renewables Migration — mit elf öffentlichen Kapitel-Beweis-Engines — und The Orbital AI Compute Roadmap.',
-      zh: '两部书稿，均如实标注修订中：《The Renewables Migration》配有十一个公开的章节验证引擎仓库，以及《The Orbital AI Compute Roadmap》。',
+      en: 'Books live on grimaldi.ca. Two manuscripts, both in revision, and public chapter proof-engine repositories behind the first. This domain keeps a pointer at /books only.',
+      es: 'Los libros viven en grimaldi.ca. Dos manuscritos, ambos en revisión, y repositorios públicos de motores de prueba por capítulo del primero. Este dominio solo mantiene un puntero en /books.',
+      de: 'Bücher leben auf grimaldi.ca. Zwei Manuskripte, beide in Überarbeitung, und öffentliche Kapitel-Beweis-Engine-Repositories hinter dem ersten. Diese Domain hält nur einen Verweis unter /books.',
+      zh: '著作在 grimaldi.ca。两部书稿均在修订中，第一部背后有公开的章节验证引擎仓库。本站仅在 /books 保留指向链接。',
     },
     links: [
-      { label: { en: 'Books & receipts', es: 'Libros y recibos', de: 'Bücher & Belege', zh: '著作与凭证' }, href: 'https://grimaldi.ca/#books' },
+      { label: { en: 'grimaldi.ca/books', es: 'grimaldi.ca/books', de: 'grimaldi.ca/books', zh: 'grimaldi.ca/books' }, href: 'https://grimaldi.ca/books' },
     ],
   },
   {
@@ -435,14 +435,14 @@ export const askEntries: AskEntry[] = [
       zh: '现在能打开哪些在线内容？',
     },
     answer: {
-      en: 'The palletizer optimizer, the thesis simulator, both sister domains, the Plastilonas and Ecowoods production platforms, and the digital business card — all in production.',
-      es: 'El optimizador de paletizado, el simulador de la tesis, los dos dominios hermanos, las plataformas en producción Plastilonas y Ecowoods, y la tarjeta digital — todo en producción.',
-      de: 'Den Palettier-Optimierer, den Thesis-Simulator, beide Schwester-Domains, die Produktivplattformen Plastilonas und Ecowoods sowie die digitale Visitenkarte — alles produktiv.',
-      zh: '码垛优化器、论文仿真器、两个姊妹域名、Plastilonas 与 Ecowoods 生产平台，以及数字名片 — 全部在生产环境运行。',
+      en: 'The IEEE 9-bus explorer (DC PINN vs analytical, AC vs Newton-Raphson, N-1, ablation, 25 tests, one-command report) and the in-browser DC solver on /simulator. Client builds are on /ventures.',
+      es: 'El explorador IEEE de 9 barras (PINN DC vs analítico, AC vs Newton-Raphson, N-1, ablación, 25 pruebas, informe de un comando) y el solver DC en el navegador en /simulator. Los proyectos de clientes están en /ventures.',
+      de: 'Den IEEE-9-Bus-Explorer (DC-PINN vs. analytisch, AC vs. Newton-Raphson, N-1, Ablation, 25 Tests, Ein-Befehl-Report) und den DC-Solver im Browser auf /simulator. Kundenprojekte stehen auf /ventures.',
+      zh: 'IEEE 9 节点浏览器（DC PINN 对比解析解、AC 对比 Newton-Raphson、N-1、消融、25 项测试、一条命令生成报告）以及 /simulator 上的浏览器内 DC 求解器。客户项目见 /ventures。',
     },
     links: [
-      { label: { en: 'Optimizer', es: 'Optimizador', de: 'Optimierer', zh: '优化器' }, href: 'https://palletizer-app.vercel.app' },
-      { label: { en: 'Simulator', es: 'Simulador', de: 'Simulator', zh: '仿真器' }, href: 'https://physics-informed.vercel.app/' },
+      { label: { en: 'Explorer', es: 'Explorador', de: 'Explorer', zh: '浏览器工具' }, href: 'https://physics-informed.vercel.app/' },
+      { label: { en: 'Simulator', es: 'Simulador', de: 'Simulator', zh: '仿真器' }, href: '/simulator' },
     ],
   },
   {
@@ -461,7 +461,8 @@ export const askEntries: AskEntry[] = [
       zh: '六个注册能力域，均有可查出处：电网与电力系统、工业协议与 IT/OT、物理信息学习、机器人与感知、代理中间件、系统工程。',
     },
     links: [
-      { label: { en: 'Capability register', es: 'Registro de capacidades', de: 'Kompetenzregister', zh: '能力登记' }, href: '/capabilities' },
+      { label: { en: 'Capability register', es: 'Registro de capacidades', de: 'Kompetenzregister', zh: '能力登记' }, href: '/work' },
+      { label: { en: 'Competency matrix', es: 'Matriz de competencias', de: 'Kompetenzmatrix', zh: '能力矩阵' }, href: '/capabilities' },
     ],
   },
   {
@@ -494,13 +495,52 @@ export const askEntries: AskEntry[] = [
       zh: '三个域名各有什么用途？',
     },
     answer: {
-      en: 'igrimaldi.engineering is the credibility engine (who builds it), engineeringgrimaldi.com is the product site (the Forge Line, Trades 2.0), grimaldi.ca is the trust layer (the person, the books, the ventures). They cross-link everywhere and share one language system.',
-      es: 'igrimaldi.engineering es el motor de credibilidad (quién lo construye), engineeringgrimaldi.com es el sitio de producto (la Línea Forge, Oficios 2.0), grimaldi.ca es la capa de confianza (la persona, los libros, las empresas). Se enlazan entre sí y comparten un sistema de idiomas.',
-      de: 'igrimaldi.engineering ist die Glaubwürdigkeits-Engine (wer baut), engineeringgrimaldi.com die Produktseite (Forge Line, Handwerk 2.0), grimaldi.ca die Vertrauensschicht (die Person, die Bücher, die Ventures). Alles ist querverlinkt mit einem gemeinsamen Sprachsystem.',
-      zh: 'igrimaldi.engineering 是可信度引擎（谁在构建），engineeringgrimaldi.com 是产品站（Forge 产品线，行业 2.0），grimaldi.ca 是信任层（个人、著作、创业项目）。三站互链，共享同一语言系统。',
+      en: 'igrimaldi.engineering — verifiable intelligence for grids and traction power. engineeringgrimaldi.com — one trade cell, shipped and measured. grimaldi.ca — logbook, podcast, reviews, books. github.com/iceccarelli — clone or it does not exist.',
+      es: 'igrimaldi.engineering — inteligencia verificable para redes y tracción. engineeringgrimaldi.com — una celda de oficio, entregada y medida. grimaldi.ca — bitácora, podcast, reseñas, libros. github.com/iceccarelli — clónalo o no existe.',
+      de: 'igrimaldi.engineering — verifizierbare Intelligenz für Stromnetze und Bahnstrom. engineeringgrimaldi.com — eine Handwerkszelle, ausgeliefert und gemessen. grimaldi.ca — Logbuch, Podcast, Rezensionen, Bücher. github.com/iceccarelli — klonen oder es existiert nicht.',
+      zh: 'igrimaldi.engineering——面向电网与牵引供电的可验证智能。engineeringgrimaldi.com——一个已交付并测量的工种单元。grimaldi.ca——日志、播客、评论、著作。github.com/iceccarelli——能克隆才算存在。',
     },
     links: [
-      { label: { en: 'The network', es: 'La red', de: 'Das Netzwerk', zh: '网络' }, href: '/capabilities#network' },
+      { label: { en: 'The network', es: 'La red', de: 'Das Netzwerk', zh: '网络' }, href: '/network' },
+    ],
+  },
+  {
+    id: 'buy',
+    keywords: ['buy', 'price', 'cost', 'teardown', 'pilot', 'retainer', 'advisory', 'offer', '280', '3200', 'comprar', 'precio', 'kaufen', 'preis', 'beratung', '购买', '价格', '咨询', 'what do i'],
+    question: {
+      en: 'What do I buy?',
+      es: '¿Qué compro?',
+      de: 'Was kaufe ich?',
+      zh: '我该买什么？',
+    },
+    answer: {
+      en: 'A 60-minute teardown for €280: written recap, residual/architecture critique, go/no-go for a 30-day pilot with a kill date. Monthly advisory (€3,200) only after a teardown. A PINN/residual pilot is a validation report on your feeder. Nothing else is for sale here.',
+      es: 'Un teardown de 60 minutos por 280 €: resumen escrito, crítica de residuos/arquitectura, go/no-go para un piloto de 30 días con fecha de cierre. Asesoría mensual (3.200 €) solo tras un teardown. Un piloto PINN/de residuos es un informe de validación sobre su alimentador. Nada más se vende aquí.',
+      de: 'Einen 60-Minuten-Teardown für 280 €: schriftliche Zusammenfassung, Residuen-/Architekturkritik, Go/No-Go für einen 30-Tage-Pilot mit Kill-Date. Monatliche Beratung (3.200 €) nur nach einem Teardown. Ein PINN-/Residuen-Pilot ist ein Validierungsreport auf Ihrem Abgang. Sonst steht hier nichts zum Verkauf.',
+      zh: '60 分钟拆解评审，€280：书面纪要、残差/架构评审、30 天试点的 go/no-go（含终止日期）。月度顾问（€3,200）仅在拆解评审之后。PINN/残差试点是针对您馈线的验证报告。此外这里不出售任何东西。',
+    },
+    links: [
+      { label: { en: 'Advisory', es: 'Asesoría', de: 'Beratung', zh: '咨询' }, href: '/advisory' },
+      { label: { en: 'Book by email', es: 'Reservar por correo', de: 'Per E-Mail buchen', zh: '邮件预约' }, href: 'mailto:vincenzo@igrimaldi.engineering?subject=Consultation%20booking' },
+    ],
+  },
+  {
+    id: 'parked',
+    keywords: ['gridos', 'neuralbridge', 'derim', 'lidar', 'mcp-foundry', 'parked', 'lab', 'private', 'clone', 'geparkt', 'aparcado', '搁置', 'github'],
+    question: {
+      en: 'What happened to GridOS, NeuralBridge, DERIM?',
+      es: '¿Qué pasó con GridOS, NeuralBridge, DERIM?',
+      de: 'Was ist mit GridOS, NeuralBridge, DERIM?',
+      zh: 'GridOS、NeuralBridge、DERIM 怎么了？',
+    },
+    answer: {
+      en: 'Parked. Their GitHub paths returned 404 on 2026-09-01, so they are not products and are not linked. They are listed on /lab with what actually exists and what would move them out.',
+      es: 'Aparcados. Sus rutas de GitHub devolvieron 404 el 01-09-2026, así que no son productos y no se enlazan. Están en /lab con lo que realmente existe y lo que los sacaría de ahí.',
+      de: 'Geparkt. Ihre GitHub-Pfade lieferten am 01.09.2026 einen 404 — also keine Produkte, keine Links. Sie stehen auf /lab mit dem, was tatsächlich existiert, und dem, was sie dort herausholen würde.',
+      zh: '已搁置。它们的 GitHub 路径在 2026-09-01 返回 404，因此不是产品，也不链接。它们列在 /lab，注明了实际存在的内容以及离开搁置的条件。',
+    },
+    links: [
+      { label: { en: 'Lab', es: 'Laboratorio', de: 'Labor', zh: '实验室' }, href: '/lab' },
     ],
   },
   {
@@ -523,7 +563,7 @@ export const askEntries: AskEntry[] = [
 ];
 
 /** Ids of the entries offered as starter suggestions (AWS-style chips). */
-export const askSuggestions = ['who', 'forge', 'demos', 'contact'];
+export const askSuggestions = ['buy', 'demos', 'who', 'contact'];
 
 /** Very small, honest matcher: keyword hits, best score wins. */
 export function matchAsk(query: string): AskEntry | null {

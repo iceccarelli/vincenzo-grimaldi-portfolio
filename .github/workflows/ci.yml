@@ -59,8 +59,13 @@ jobs:
             http://localhost:3000/ \
             http://localhost:3000/work \
             http://localhost:3000/work/cim-threma \
-            http://localhost:3000/capabilities \
             http://localhost:3000/simulator \
+            http://localhost:3000/advisory \
+            http://localhost:3000/network \
+            http://localhost:3000/ventures \
+            http://localhost:3000/lab \
+            http://localhost:3000/books \
+            http://localhost:3000/capabilities \
             http://localhost:3000/payments \
             http://localhost:3000/connect \
             http://localhost:3000/card \

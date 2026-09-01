@@ -9,12 +9,12 @@ import BookBar from './components/BookBar';
 import ConsentGate from './components/ConsentGate';
 import { GlobalJsonLd } from './components/JsonLd';
 import { LanguageProvider } from './lib/i18n';
-import { SITE_URL, SITE_NAME, JOB_TITLE } from './lib/site';
+import { SITE_URL, SITE_NAME } from './lib/site';
 import './globals.css';
 
-const DEFAULT_TITLE = `${SITE_NAME} | ${JOB_TITLE}`;
+const DEFAULT_TITLE = 'Verifiable physics-informed intelligence for HV grids and traction | Grimaldi';
 const DESCRIPTION =
-  'Independent engineering advisory for safety-critical grids and cyber-physical systems: physics-informed AI, deterministic control, OT security. Book a 60-minute consultation or a monthly retainer.';
+  'Physics-constrained intelligence for grids and traction power. Residuals you can check (IEEE 9-bus: DC PINN vs analytical 0.0124°, AC vs Newton-Raphson 0.0035°), agents you can audit, sanitized patterns from live HV rail assets. €280 teardown; monthly advisory only after a teardown.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     title: DEFAULT_TITLE,
     description: DESCRIPTION,
     url: `${SITE_URL}/`,
-    siteName: 'Vincenzo Grimaldi — Engineering',
+    siteName: 'igrimaldi.engineering',
     locale: 'en_GB',
     type: 'website',
   },

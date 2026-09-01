@@ -6,6 +6,8 @@
       "url": [
         "http://localhost:3000/",
         "http://localhost:3000/work",
+        "http://localhost:3000/simulator",
+        "http://localhost:3000/advisory",
         "http://localhost:3000/connect",
         "http://localhost:3000/payments"
       ],

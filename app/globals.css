@@ -2208,3 +2208,202 @@ code {
   line-height: 1.8;
 }
 .formula-block sub { color: #cbd5e1; }
+
+/* ============================================================================
+   2026-09 IA — instrument, badges, offers, shelves, convergence footer.
+   One signal colour for residuals (--signal). Motion 200–400 ms eased, and
+   none at all under prefers-reduced-motion. No decorative animation.
+   ========================================================================== */
+:root {
+  --signal: #16a34a;          /* residual signal on light surfaces */
+  --signal-on-dark: #4ade80;  /* residual signal on the ink tile */
+}
+
+/* ---------- Hero with instrument ---------- */
+.hero-section--instrument { padding-bottom: 6.5rem; }
+.hero-section--instrument .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; }
+.hero-section--instrument .hero-copy h1 { font-size: clamp(2rem, 3.6vw, 2.9rem); }
+.hero-section--instrument .hero-lead { font-size: 1.08rem; }
+.hero-panel--instrument { padding: 1rem; display: flex; }
+.hero-panel--instrument .instrument { flex: 1; }
+
+/* ---------- Instrument ---------- */
+.instrument {
+  background: var(--ink);
+  color: #e5e7eb;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.1rem 1.1rem;
+  display: grid;
+  gap: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  min-width: 0;
+}
+.instrument-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.instrument-title { display: block; font-weight: 700; font-size: 0.95rem; color: #ffffff; letter-spacing: -0.01em; }
+.instrument-sub { display: block; font-size: 0.78rem; color: #9ca3af; margin-top: 0.15rem; }
+.instrument-live { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.74rem; font-weight: 700; color: var(--signal-on-dark); letter-spacing: 0.06em; white-space: nowrap; }
+.instrument-live .live-dot { background: var(--signal-on-dark); }
+.instrument-controls { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: 0.6rem; align-items: end; }
+.instrument-controls label { display: grid; gap: 0.3rem; font-size: 0.74rem; color: #cbd5e1; min-width: 0; }
+.instrument-controls input[type='range'] { width: 100%; accent-color: var(--signal-on-dark); margin: 0; }
+.instrument-controls select {
+  width: 100%; background: #0f1520; color: #e5e7eb; border: 1px solid #334155; border-radius: 8px;
+  padding: 0.35rem 0.5rem; font-size: 0.8rem; font-family: inherit;
+}
+.instrument-reset {
+  background: transparent; color: #cbd5e1; border: 1px solid #334155; border-radius: 999px;
+  padding: 0.38rem 0.8rem; font-size: 0.76rem; font-weight: 600; cursor: pointer; font-family: inherit;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.instrument-reset:hover { border-color: #94a3b8; color: #ffffff; }
+.instrument-bars { width: 100%; height: auto; display: block; }
+.instrument-axis { stroke: #475569; stroke-width: 1; }
+.instrument-bar { fill: var(--signal-on-dark); transition: width 0.3s ease, x 0.3s ease; }
+.instrument-label { fill: #94a3b8; font-size: 9px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.instrument-value { fill: #e5e7eb; font-size: 8.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.instrument-readout { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; margin: 0; }
+.instrument-readout div { display: grid; gap: 0.1rem; min-width: 0; }
+.instrument-readout dt { font-size: 0.68rem; color: #94a3b8; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.instrument-readout dd { margin: 0; font-size: 0.86rem; font-weight: 600; color: #ffffff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.instrument-readout dd.instrument-signal { color: var(--signal-on-dark); }
+.instrument-islanded { margin: 0; padding: 1.4rem 0.9rem; border: 1px dashed #64748b; border-radius: var(--radius-md); color: #fbbf24; font-size: 0.86rem; font-weight: 600; text-align: center; }
+.instrument-pinn { margin: 0; font-size: 0.78rem; color: #cbd5e1; line-height: 1.5; }
+.instrument-source { color: #94a3b8; }
+.instrument-open { font-size: 0.82rem; font-weight: 700; color: #ffffff; text-decoration: underline; text-underline-offset: 3px; justify-self: start; }
+.instrument-open:hover { color: var(--signal-on-dark); }
+.instrument--compact { padding: 0.9rem 1rem 1rem; gap: 0.65rem; }
+.instrument--compact .instrument-controls { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+
+/* ---------- Proof chips (exactly three) ---------- */
+.proof-chips { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; counter-reset: chip; }
+.proof-chip { padding: 1.25rem 1.35rem; display: grid; gap: 0.55rem; align-content: start; position: relative; }
+.proof-chip::before { counter-increment: chip; content: counter(chip); position: absolute; top: 1.1rem; right: 1.2rem; font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.proof-chip-label { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.proof-chip p { margin: 0; font-size: 0.95rem; }
+.proof-chip a { font-size: 0.86rem; font-weight: 600; color: var(--link); }
+.proof-chip a:hover { text-decoration: underline; }
+
+/* ---------- Ranked site map ---------- */
+.site-map ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.75rem; }
+.site-map li { display: grid; gap: 0.2rem; padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--card-bg-alt); }
+.site-map a { font-weight: 700; color: var(--text); }
+.site-map a:hover { color: var(--link); }
+.site-map span { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; }
+
+/* ---------- Status badge ---------- */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.22rem 0.6rem; border-radius: 6px;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  border: 1px solid transparent; white-space: nowrap; vertical-align: middle;
+}
+.status-badge-dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+.status-badge-note { font-weight: 600; letter-spacing: 0.02em; text-transform: none; opacity: 0.85; }
+.status-badge--ship { background: #e6f4e6; color: #0b6b1b; border-color: #bfe3c4; }
+.status-badge--demo { background: #e6f1fb; color: #0b5cad; border-color: #bcd8f5; }
+.status-badge--pilot { background: #fdf2e3; color: #9a4a06; border-color: #f4d7ae; }
+.status-badge--client { background: #eef0f3; color: #3b4652; border-color: #d1d5db; }
+.status-badge--research { background: #efeafd; color: #5033b8; border-color: #d6ccf7; }
+.status-badge--revision { background: #fff4e5; color: #8a4a00; border-color: #f7d9b0; }
+.status-badge--parked { background: #f3f4f6; color: #6b7280; border-color: #e5e7eb; }
+.status-badge--dead { background: #fdecec; color: #a11d1d; border-color: #f5c2c2; text-decoration: none; }
+
+/* ---------- Work register cards ---------- */
+.work-card { display: grid; gap: 0.75rem; align-content: start; }
+.work-card-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.25rem; }
+.work-card-links .primary-button, .work-card-links .secondary-button { padding: 0.5rem 1rem; font-size: 0.84rem; }
+.work-card-dead { margin: 0; font-size: 0.8rem; color: var(--muted); }
+.work-card-dead s { color: #a11d1d; }
+.pointer-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+.pointer-line a { color: var(--link); font-weight: 600; }
+.pointer-line a:hover { text-decoration: underline; }
+
+/* ---------- Offer cards (/advisory) ---------- */
+.offer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+.offer-card { padding: 1.75rem; display: grid; gap: 0.9rem; align-content: start; }
+.offer-card--featured { border-color: var(--ink); box-shadow: var(--shadow-card); }
+.offer-name { margin: 0; font-size: 1.15rem; color: var(--text); }
+.offer-price { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); display: flex; align-items: baseline; gap: 0.5rem; }
+.offer-price span { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+.offer-body { margin: 0; }
+.offer-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; font-size: 0.92rem; color: var(--text-secondary); }
+.offer-points li::before { content: '—'; margin-right: 0.5rem; color: var(--muted); }
+.offer-cta { justify-self: start; }
+.offer-gate { margin: 0; font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); padding: 0.7rem 0.9rem; border: 1px dashed var(--border-strong); border-radius: var(--radius-md); }
+.offer-note { margin-top: 1rem; font-size: 0.86rem; color: var(--muted); max-width: 720px; }
+.not-list { margin: 0.75rem 0 0; padding-left: 1.25rem; display: grid; gap: 0.6rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* ---------- Simulator ---------- */
+.simulator-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 1.5rem; margin-top: 2rem; align-items: stretch; }
+.simulator-grid .hero-panel--instrument { background: var(--card-bg); box-shadow: none; }
+.residual-table-wrap { margin-top: 1rem; overflow-x: auto; }
+.residual-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+.residual-table caption { caption-side: top; text-align: left; font-size: 0.78rem; color: var(--muted); padding: 0 0 0.6rem; font-weight: 600; letter-spacing: 0.04em; }
+.residual-table th, .residual-table td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.residual-table thead th { background: var(--card-bg); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.residual-table tbody th { font-weight: 600; color: var(--text); }
+.residual-table td:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.residual-table td.residual-signal { color: var(--signal); font-weight: 700; }
+.residual-table tr:last-child th, .residual-table tr:last-child td { border-bottom: none; }
+.residual-actions { display: grid; gap: 0.75rem; margin-top: 1rem; }
+.residual-cmd { display: block; background: var(--ink); color: #e5e7eb; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.82rem; overflow-x: auto; white-space: nowrap; }
+.residual-cmd-label { color: var(--signal-on-dark); font-weight: 700; margin-right: 0.5rem; }
+.residual-links { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.88rem; font-weight: 600; }
+.residual-links a { color: var(--link); }
+.residual-links a:hover { text-decoration: underline; }
+
+/* ---------- Shelves (/ventures, /lab) ---------- */
+.shelf { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 1rem; counter-reset: shelf; }
+.shelf-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.25rem; padding: 1.25rem 1.5rem; align-items: start; }
+.shelf-main { display: grid; gap: 0.6rem; min-width: 0; }
+.shelf-title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.shelf-title h2 { margin: 0; font-size: 1.1rem; }
+.shelf-main p { margin: 0; }
+.shelf-lab { margin: 0.25rem 0 0; display: grid; gap: 0.4rem; font-size: 0.86rem; }
+.shelf-lab div { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 0.5rem; }
+.shelf-lab dt { color: var(--muted); font-weight: 600; }
+.shelf-lab dd { margin: 0; color: var(--text-secondary); }
+.shelf-stack { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.shelf-links { display: grid; gap: 0.5rem; justify-items: end; font-size: 0.86rem; font-weight: 600; text-align: right; }
+.shelf-links a { color: var(--link); white-space: nowrap; }
+.shelf-links a:hover { text-decoration: underline; }
+.shelf-dead { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+.shelf-dead s { color: #a11d1d; }
+
+/* ---------- /network lines ---------- */
+.network-lines { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 0.75rem; }
+.network-line { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.75rem 1rem; align-items: baseline; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--card-bg-alt); }
+.network-line--here { border-color: var(--signal); background: #ffffff; }
+.network-line > a { font-weight: 700; color: var(--text); white-space: nowrap; }
+.network-line > a:hover { color: var(--link); }
+.network-line-text { color: var(--text-secondary); }
+.network-line-verb { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
+/* ---------- Convergence footer ---------- */
+.network-footer { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; font-size: 0.88rem; line-height: 1.5; }
+.network-footer a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.site-footer .network-footer { color: #cbd5e1; }
+.site-footer .network-footer a { color: #ffffff; }
+.route-page .network-footer { color: var(--text-secondary); padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--card-bg-alt); }
+.route-page .network-footer a { color: var(--text); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .hero-section--instrument .hero-grid { grid-template-columns: 1fr; }
+  .proof-chips { grid-template-columns: 1fr; }
+  .site-map ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .offer-grid { grid-template-columns: 1fr; }
+  .simulator-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .instrument-controls, .instrument--compact .instrument-controls { grid-template-columns: 1fr; }
+  .instrument-readout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .shelf-row { grid-template-columns: 1fr; }
+  .shelf-links { justify-items: start; text-align: left; }
+  .shelf-lab div { grid-template-columns: 1fr; }
+  .network-line { grid-template-columns: 1fr; }
+  .site-map ol { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .instrument-bar, .instrument-reset { transition: none; }
+}

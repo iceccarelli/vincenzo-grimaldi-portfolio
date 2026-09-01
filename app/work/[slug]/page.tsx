@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { SoftwareAppJsonLd } from '../../components/JsonLd';
+import StatusBadge from '../../components/StatusBadge';
 import { caseStudies, getCaseStudy } from '../../lib/work';
 import { SITE_URL } from '../../lib/site';
+import { linkable } from '../../lib/status';
 
 type Props = { params: { slug: string } };
 
@@ -20,6 +22,8 @@ export function generateMetadata({ params }: Props): Metadata {
     title: c.title,
     description: c.description,
     alternates: { canonical: `/work/${c.slug}` },
+    // Parked / off-register studies stay reachable but are not canonical work.
+    robots: c.onRegister ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: {
       title: c.title,
       description: c.description,
@@ -32,11 +36,15 @@ export function generateMetadata({ params }: Props): Metadata {
 export default function CaseStudyPage({ params }: Props) {
   const c = getCaseStudy(params.slug);
   if (!c) notFound();
+  const repo = linkable(c.repo);
 
   return (
     <main className="content-sheet route-page">
       <article className="section-shell content-section case-study">
         <span className="section-kicker">Case study</span>
+        <div style={{ marginBottom: '0.75rem' }}>
+          <StatusBadge status={c.status} note={c.slug === 'palletizer-os' ? 'v0.2 HEURISTIC · sold on engineeringgrimaldi.com' : undefined} />
+        </div>
         <h1>{c.title}</h1>
         <p className="section-intro" style={{ maxWidth: '720px' }}>{c.description}</p>
 
@@ -57,18 +65,29 @@ export default function CaseStudyPage({ params }: Props) {
           <div className="hero-actions">
             {c.live && (
               <a className="primary-button" href={c.live} target="_blank" rel="noopener noreferrer">
-                Open the live deployment
+                Open the live deployment ↗
               </a>
             )}
-            {c.repo && (
-              <a className="secondary-button" href={c.repo} target="_blank" rel="noopener noreferrer">
-                Inspect the source
+            {repo && (
+              <a className="secondary-button" href={repo} target="_blank" rel="noopener noreferrer">
+                Inspect the source ↗
               </a>
             )}
-            <a className="secondary-button" href="/connect">
-              Discuss a similar system
+            {c.soldOn && (
+              <a className="secondary-button" href={c.soldOn} target="_blank" rel="noopener noreferrer">
+                Sold on engineeringgrimaldi.com ↗
+              </a>
+            )}
+            <a className="secondary-button" href="/advisory">
+              Book a €280 teardown
             </a>
           </div>
+
+          {c.repoClaimed && !repo && (
+            <p className="work-card-dead">
+              <s>{c.repoClaimed.replace('https://', '')}</s> — GH repo path not public; do not claim cloneable until 200.
+            </p>
+          )}
         </div>
       </article>
 
@@ -76,7 +95,7 @@ export default function CaseStudyPage({ params }: Props) {
         name={c.name}
         description={c.description}
         url={`${SITE_URL}/work/${c.slug}`}
-        repo={c.repo}
+        repo={repo}
         live={c.live}
       />
     </main>

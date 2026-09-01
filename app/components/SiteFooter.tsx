@@ -2,6 +2,8 @@
 
 import SocialBar from './SocialBar';
 import BrandMark from './BrandMark';
+import NetworkFooter from './NetworkFooter';
+import { nav, tx } from '../lib/copy';
 import { useLanguage } from '../lib/i18n';
 import { extra } from '../lib/uiStrings';
 import { CONFLICT_DE, CONFLICT_EN } from '../lib/site';
@@ -19,8 +21,8 @@ export default function SiteFooter() {
     <footer className="site-footer">
       <div className="section-shell">
         <div className="footer-topline">
-          <a className="footer-cta" href="/connect">
-            {t.footer.cta}
+          <a className="footer-cta" href="/advisory">
+            €280 · {tx(nav.advisory, locale)} →
           </a>
         </div>
 
@@ -32,9 +34,9 @@ export default function SiteFooter() {
               <span className="brand-copy"><strong style={{ color: '#ffffff' }}>Vincenzo Grimaldi</strong></span>
             </div>
             <p style={{ lineHeight: 1.6, fontSize: '0.9rem' }}>
-              {t.footer.role}
+              Physics-constrained intelligence for grids and traction power.
               <br />
-              {t.footer.roleSub}
+              Residuals you can check. Agents you can audit.
             </p>
           </div>
 
@@ -42,25 +44,23 @@ export default function SiteFooter() {
           <div className="footer-column">
             <h2>{t.footer.platform}</h2>
             <div className="footer-links">
-              <a className="footer-link" href="/capabilities">{t.nav.capabilities}</a>
-              <a className="footer-link" href="/work">{t.footer.workRegistry}</a>
-              <a className="footer-link" href="/capabilities#physics-informed">{t.footer.physicsInformed}</a>
-              <a className="footer-link" href="/simulator">{t.footer.liveSimulator}</a>
+              <a className="footer-link" href="/work">{tx(nav.work, locale)}</a>
+              <a className="footer-link" href="/simulator">{tx(nav.simulator, locale)}</a>
+              <a className="footer-link" href="/advisory">{tx(nav.advisory, locale)}</a>
+              <a className="footer-link" href="/ventures">{tx(nav.ventures, locale)}</a>
+              <a className="footer-link" href="/lab">{tx(nav.lab, locale)}</a>
+              <a className="footer-link" href="/books">{tx(nav.books, locale)}</a>
+              <a className="footer-link" href="/capabilities">{tx(nav.capabilities, locale)}</a>
               <a className="footer-link" href="/payments">{t.nav.payments}</a>
               <a className="footer-link" href="/connect">{t.nav.connect}</a>
               <a className="footer-link" href="/card">{t.card.kicker}</a>
             </div>
           </div>
 
-          {/* Column 3 – The Grimaldi Network */}
-          <div className="footer-column">
+          {/* Column 3 – Convergence footer: the exact four lines */}
+          <div className="footer-column footer-column--network">
             <h2>{t.footer.network}</h2>
-            <div className="footer-links">
-              <a className="footer-link" href="https://igrimaldi.engineering">igrimaldi.engineering — {t.footer.netSoftware}</a>
-              <a className="footer-link" href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer">engineeringgrimaldi.com — {t.footer.netHardware}</a>
-              <a className="footer-link" href="https://grimaldi.ca" target="_blank" rel="noopener noreferrer">grimaldi.ca — {t.footer.netPersonal}</a>
-              <a className="footer-link" href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer">GitHub — iceccarelli</a>
-            </div>
+            <NetworkFooter />
           </div>
 
           {/* Column 4 – Status */}

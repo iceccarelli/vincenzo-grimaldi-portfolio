@@ -8,7 +8,8 @@ export const SITE_URL = 'https://igrimaldi.engineering';
 export const SITE_NAME = 'Vincenzo Grimaldi';
 export const LEGAL_NAME = 'Vincenzo Ceccarelli Grimaldi';
 export const EMAIL = 'vincenzo@igrimaldi.engineering';
-export const JOB_TITLE = 'Physics-Informed Cyber-Physical Systems Engineer';
+export const JOB_TITLE = 'ITk Fachspezialist, DB InfraGO AG · Physics-constrained software and advisory for grids and traction power';
+export const ONE_LINER = 'Physics-constrained intelligence for grids and traction power. Residuals you can check. Agents you can audit.';
 export const HEADSHOT = `${SITE_URL}/vincenzo_grimaldi_headshot.jpg`;
 
 export const SAME_AS = [
@@ -20,8 +21,8 @@ export const SAME_AS = [
 ];
 
 export const OFFER = {
-  consult: { name: 'Engineering consultation (60 min)', price: '280', currency: 'EUR' },
-  retainer: { name: 'Advisory retainer (monthly)', price: '3200', currency: 'EUR' },
+  consult: { name: '60-minute teardown', price: '280', currency: 'EUR' },
+  retainer: { name: 'Monthly advisory (only after a teardown)', price: '3200', currency: 'EUR' },
 } as const;
 
 /** Employer-conflict disclosure. Must render in the footer and /impressum. */

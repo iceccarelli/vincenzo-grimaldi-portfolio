@@ -1,59 +1,46 @@
 /**
- * site.ts — single source of truth for identity, canonical URLs and the
- * commercial offer. Every schema node, metadata block and CTA reads from
- * here so the identity cannot fragment again.
+ * site.ts — single source of truth for identity and canonical URLs.
+ * Every schema node, metadata block and link reads from here.
+ *
+ * This host carries no commercial offer. There is no price, no checkout,
+ * no booking widget anywhere in this module or in anything that imports it.
  */
 
 export const SITE_URL = 'https://igrimaldi.engineering';
-export const SITE_NAME = 'Vincenzo Grimaldi';
+
+/** Display name = legal name on this host. The H1 and <title> use it. */
+export const SITE_NAME = 'Vincenzo Ceccarelli Grimaldi';
 export const LEGAL_NAME = 'Vincenzo Ceccarelli Grimaldi';
+export const SHORT_NAME = 'Vincenzo Grimaldi';
+
 export const EMAIL = 'vincenzo@igrimaldi.engineering';
-export const JOB_TITLE = 'Physics-Informed Cyber-Physical Systems Engineer';
+export const CITY = 'Frankfurt am Main';
+
+/** One line. Discipline, not a job advert. */
+export const ONE_LINE = 'Physics-constrained control · grid digitalisation';
+export const ONE_LINE_DE = 'Physikalisch beschränkte Regelung · Netzdigitalisierung';
+
+/** Public role, as it appears on the profile. No internals. */
+export const ROLE_TITLE = 'ITk Fachspezialist';
+export const EMPLOYER = 'DB InfraGO AG';
+
+export const JOB_TITLE = 'Engineer — physics-constrained control and grid digitalisation';
 export const HEADSHOT = `${SITE_URL}/vincenzo_grimaldi_headshot.jpg`;
 
+export const GITHUB = 'https://github.com/iceccarelli';
+export const LINKEDIN = 'https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0';
+export const THESIS_DEMO = 'https://physics-informed.vercel.app/';
+
 export const SAME_AS = [
-  'https://github.com/iceccarelli',
-  'https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0',
-  'https://physics-informed.vercel.app/',
+  GITHUB,
+  LINKEDIN,
+  THESIS_DEMO,
   'https://engineeringgrimaldi.com/',
   'https://grimaldi.ca/',
 ];
 
-export const OFFER = {
-  consult: { name: 'Engineering consultation (60 min)', price: '280', currency: 'EUR' },
-  retainer: { name: 'Advisory retainer (monthly)', price: '3200', currency: 'EUR' },
-} as const;
-
-/** Employer-conflict disclosure. Must render in the footer and /impressum. */
+/** Employer-conflict disclosure. Renders in the footer and /impressum. */
 export const CONFLICT_EN =
-  'Advisory work is independent and outside the scope of my role at DB InfraGO AG. No employer data, systems or confidential information are used.';
+  'Everything on this site is independent of, and outside the scope of, my role at DB InfraGO AG. No employer data, systems or confidential information are used or described.';
 export const CONFLICT_DE =
-  'Beratungsleistungen erfolgen unabhängig und außerhalb meiner Tätigkeit bei der DB InfraGO AG. Es werden keine Daten, Systeme oder vertraulichen Informationen des Arbeitgebers verwendet.';
-
-export function getPaymentLinks() {
-  const real = (v: string | undefined) =>
-    !!v && v.startsWith('https://buy.stripe.com/') && !v.includes('REPLACE');
-  const mail = (subject: string) =>
-    `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}`;
-  const consult = process.env.STRIPE_PAYMENT_LINK_CONSULT;
-  const retainer = process.env.STRIPE_PAYMENT_LINK_RETAINER;
-  const custom = process.env.STRIPE_PAYMENT_LINK_CUSTOM;
-  return {
-    consult: {
-      href: real(consult) ? (consult as string) : mail('Consultation booking'),
-      isStripe: real(consult),
-    },
-    retainer: {
-      href: real(retainer) ? (retainer as string) : mail('Advisory retainer'),
-      isStripe: real(retainer),
-    },
-    invoice: {
-      href: real(custom) ? (custom as string) : mail('Invoice payment'),
-      isStripe: real(custom),
-    },
-  };
-}
-
-export type PaymentLinks = ReturnType<typeof getPaymentLinks>;
-
-export const CAL_URL = process.env.NEXT_PUBLIC_CAL_URL || '';
+  'Alle Inhalte dieser Website sind unabhängig von meiner Tätigkeit bei der DB InfraGO AG und liegen außerhalb ihres Umfangs. Es werden keine Daten, Systeme oder vertraulichen Informationen des Arbeitgebers verwendet oder beschrieben.';

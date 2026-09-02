@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { SoftwareAppJsonLd } from '../../components/JsonLd';
 import { caseStudies, getCaseStudy } from '../../lib/work';
+import { copy } from '../../lib/copy';
 import { SITE_URL } from '../../lib/site';
 
 type Props = { params: { slug: string } };
@@ -29,55 +30,67 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
+/**
+ * /work/[slug] — a document page: problem, approach, validation, limits.
+ * The "Limits" section is mandatory; an entry without stated limits is
+ * not defendable and does not ship.
+ */
 export default function CaseStudyPage({ params }: Props) {
-  const c = getCaseStudy(params.slug);
-  if (!c) notFound();
+  const w = getCaseStudy(params.slug);
+  if (!w) notFound();
+  const c = copy.en.work;
 
   return (
-    <main className="content-sheet route-page">
-      <article className="section-shell content-section case-study">
-        <span className="section-kicker">Case study</span>
-        <h1>{c.title}</h1>
-        <p className="section-intro" style={{ maxWidth: '720px' }}>{c.description}</p>
+    <main className="doc">
+      <article className="blk blk-first">
+        <p className="kicker">
+          <a href="/work">{c.back}</a>
+        </p>
+        <h1 className="h1">{w.title}</h1>
+        <p className="entry-kind">{w.kind}</p>
+        <p className="lead">{w.description}</p>
 
-        <div className="glass-panel cta-panel spotlight-border">
-          <h2>Problem</h2>
-          <p>{c.problem}</p>
-          <h2>Approach</h2>
-          <p>{c.approach}</p>
-          <h2>Outcome & proof</h2>
-          <p>{c.outcome}</p>
+        <p className="path-line">
+          {w.paths.map((p) => (
+            <code key={p} className="path">{p}</code>
+          ))}
+        </p>
 
-          <div className="metric-pills">
-            {c.stack.map((s) => (
-              <span key={s} className="metric-pill">{s}</span>
-            ))}
-          </div>
+        <h2 className="blk-h">{c.problem}</h2>
+        <p>{w.problem}</p>
+        <h2 className="blk-h">{c.approach}</h2>
+        <p>{w.approach}</p>
+        <h2 className="blk-h">{c.validation}</h2>
+        <p>{w.validation}</p>
+        <h2 className="blk-h">{c.limits}</h2>
+        <p>{w.limits}</p>
 
-          <div className="hero-actions">
-            {c.live && (
-              <a className="primary-button" href={c.live} target="_blank" rel="noopener noreferrer">
-                Open the live deployment
-              </a>
-            )}
-            {c.repo && (
-              <a className="secondary-button" href={c.repo} target="_blank" rel="noopener noreferrer">
-                Inspect the source
-              </a>
-            )}
-            <a className="secondary-button" href="/connect">
-              Discuss a similar system
+        <p className="tags">
+          {w.stack.map((s) => (
+            <span key={s} className="tag">{s}</span>
+          ))}
+        </p>
+
+        <p className="actions">
+          {w.live && (
+            <a className="btn" href={w.live} rel="noopener noreferrer">
+              {c.openLive} ↗
             </a>
-          </div>
-        </div>
+          )}
+          {w.repo && (
+            <a className="btn-quiet" href={w.repo} rel="noopener noreferrer">
+              {c.openRepo} ↗
+            </a>
+          )}
+        </p>
       </article>
 
       <SoftwareAppJsonLd
-        name={c.name}
-        description={c.description}
-        url={`${SITE_URL}/work/${c.slug}`}
-        repo={c.repo}
-        live={c.live}
+        name={w.name}
+        description={w.description}
+        url={`${SITE_URL}/work/${w.slug}`}
+        repo={w.repo}
+        live={w.live}
       />
     </main>
   );

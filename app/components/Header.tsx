@@ -1,125 +1,55 @@
 'use client';
 
-import { useState } from 'react';
-import MegaMenu from './MegaMenu';
-import CommandPalette from './CommandPalette';
 import LanguageSwitcher from './LanguageSwitcher';
-import BrandMark from './BrandMark';
 import { useLanguage } from '../lib/i18n';
-import { extra } from '../lib/uiStrings';
-import { emit } from '../lib/events';
+import { pick } from '../lib/copy';
+import { SITE_NAME } from '../lib/site';
 
 /**
- * Two-tier chrome, one structure on every screen size:
+ * Header — one quiet bar. Name on the left, three sections on the right,
+ * a two-letter language toggle. On narrow screens the sections fold into a
+ * native <details> element, so the menu works with JavaScript disabled.
  *
- *   1. Dark utility bar — language switcher + cross-domain links.
- *      Scrolls away; hidden entirely on small screens.
- *   2. White primary nav — brand, sections, search, Connect CTA.
- *      Sticky on every screen size. On mobile the sections move into the
- *      hamburger menu; nothing else changes.
+ * No mega menu, no search, no call to action. The document is the header.
  */
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { t, locale } = useLanguage();
+  const { locale } = useLanguage();
+  const c = pick(locale);
 
-  const navigation = [
-    { label: extra[locale].navWork, href: '/work' },
-    { label: t.nav.capabilities, href: '/capabilities' },
-    { label: t.nav.simulator, href: '/simulator' },
-    { label: t.nav.payments, href: '/payments' },
-    { label: t.nav.connect, href: '/connect' },
+  const items = [
+    { label: c.nav.work, href: '/work' },
+    { label: c.nav.thesis, href: '/simulator' },
+    { label: c.nav.contact, href: '/connect' },
   ];
 
   return (
-    <header className="site-header">
-      {/* Tier 1 — utility bar */}
-      <div className="utility-bar">
-        <div className="utility-inner">
+    <header className="hdr" id="top">
+      <div className="hdr-in">
+        <a className="hdr-name" href="/">
+          {SITE_NAME}
+        </a>
+
+        <nav className="hdr-nav" aria-label="Primary">
+          {items.map((i) => (
+            <a key={i.href} href={i.href}>
+              {i.label}
+            </a>
+          ))}
           <LanguageSwitcher />
-          <a className="utility-link" href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer">
-            engineeringgrimaldi.com
-          </a>
-          <a className="utility-link" href="https://grimaldi.ca" target="_blank" rel="noopener noreferrer">
-            grimaldi.ca
-          </a>
-          <a className="utility-link" href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer">
-            GitHub
-          </a>
-          <a className="utility-link" href="/card">
-            {t.card.kicker}
-          </a>
-          <a className="utility-link" href="/connect">
-            {t.nav.connect}
-          </a>
-        </div>
-      </div>
+        </nav>
 
-      {/* Tier 2 — primary nav */}
-      <div className="topbar">
-        <div className="topbar-inner">
-          <a className="brand-lockup" href="/">
-            <BrandMark size={38} />
-            <span className="brand-copy">
-              <strong>Vincenzo Grimaldi</strong>
-              <small>Physics-Informed • Deterministic Control</small>
-            </span>
-          </a>
-
-          <nav className="topbar-nav" aria-label="Primary navigation">
-            <MegaMenu />
-            {navigation.map((item) => (
-              <a key={item.href} href={item.href}>
-                {item.label}
+        <details className="hdr-m">
+          <summary>{c.nav.menu}</summary>
+          <div className="hdr-m-list">
+            {items.map((i) => (
+              <a key={i.href} href={i.href}>
+                {i.label}
               </a>
             ))}
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <CommandPalette />
-            <a
-              className="topbar-button"
-              href="/connect"
-              onClick={() => emit('book_click', { source: 'header' })}
-            >
-              {t.nav.connect}
-            </a>
-
-            <button
-              className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle mobile menu"
-              aria-expanded={mobileMenuOpen}
-            >
-              <span className="bar" />
-              <span className="bar" />
-              <span className="bar" />
-            </button>
+            <a href="/card">{c.nav.card}</a>
+            <LanguageSwitcher />
           </div>
-        </div>
-      </div>
-
-      {/* Mobile menu — same sections, same order as desktop */}
-      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        {navigation.map((item) => (
-          <a key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}>
-            {item.label}
-          </a>
-        ))}
-        <a
-          href="https://github.com/iceccarelli"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => setMobileMenuOpen(false)}
-        >
-          GitHub →
-        </a>
-        <a href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
-          engineeringgrimaldi.com →
-        </a>
-        <a href="https://grimaldi.ca" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
-          grimaldi.ca →
-        </a>
-        <LanguageSwitcher />
+        </details>
       </div>
     </header>
   );

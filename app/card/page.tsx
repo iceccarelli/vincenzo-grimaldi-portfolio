@@ -3,23 +3,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '../lib/i18n';
-import BrandMark from '../components/BrandMark';
 
 /**
- * /card — the digital business card of the Grimaldi Network.
- *
- * One screen, shareable as a single URL: headshot, name, role, direct
- * channels, the three domains, a downloadable vCard and a QR that always
- * points back here. Rendered in the visitor's locale like every other
- * surface of the site.
+ * /card — the digital business card. One screen, shareable as a single
+ * URL: headshot, name, role, direct channels, the other two domains, a
+ * downloadable vCard and a QR that always points back here. Not linked
+ * from the homepage; reachable from the menu and by URL.
  */
 
 const LINKS = {
   email: 'vincenzo@igrimaldi.engineering',
   github: 'https://github.com/iceccarelli',
   linkedin: 'https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0',
-  x: 'https://x.com/Vince87Grimaldi',
-  instagram: 'https://www.instagram.com/grimaldiengineering/',
 };
 
 export default function CardPage() {
@@ -33,19 +28,16 @@ export default function CardPage() {
           <div className="bizcard-portrait">
             <Image
               src="/vincenzo_grimaldi_headshot.jpg"
-              alt="Vincenzo Grimaldi"
-              width={132}
-              height={132}
+              alt="Vincenzo Ceccarelli Grimaldi"
+              width={120}
+              height={120}
               priority
             />
           </div>
-          <span className="section-kicker">{t.card.kicker}</span>
-          <h1>Vincenzo Grimaldi</h1>
+          <p className="kicker">{t.card.kicker}</p>
+          <h1>Vincenzo Ceccarelli Grimaldi</h1>
           <p className="bizcard-role">{t.card.role}</p>
           <p className="bizcard-tagline">{t.card.tagline}</p>
-          <p className="bizcard-availability">
-            <span className="live-dot" /> {t.card.availability}
-          </p>
         </header>
 
         {/* Channels */}
@@ -85,10 +77,10 @@ export default function CardPage() {
         {/* Actions + QR */}
         <div className="bizcard-actions">
           <div className="bizcard-buttons">
-            <a className="primary-button" href="/card.vcf" download>
+            <a className="btn" href="/card.vcf" download>
               {t.card.saveContact}
             </a>
-            <a className="secondary-button" href={`mailto:${LINKS.email}`}>
+            <a className="btn-quiet" href={`mailto:${LINKS.email}`}>
               {t.card.connect}
             </a>
           </div>
@@ -102,9 +94,6 @@ export default function CardPage() {
         </div>
 
         <footer className="bizcard-foot">
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.85rem' }}>
-            <BrandMark size={34} />
-          </div>
           <Link href="/">{t.card.backHome}</Link>
         </footer>
       </article>

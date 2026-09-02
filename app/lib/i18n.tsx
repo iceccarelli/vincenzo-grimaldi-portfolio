@@ -25,11 +25,11 @@ import {
 
 export type Locale = 'en' | 'es' | 'de' | 'zh';
 
+/** The header offers two languages on this host. The other dictionaries
+ *  remain typed and complete but are no longer selectable. */
 export const locales: { code: Locale; label: string; native: string }[] = [
-  { code: 'en', label: 'English', native: 'English' },
-  { code: 'es', label: 'Spanish', native: 'Español' },
-  { code: 'de', label: 'German', native: 'Deutsch' },
-  { code: 'zh', label: 'Mandarin', native: '中文' },
+  { code: 'en', label: 'English', native: 'EN' },
+  { code: 'de', label: 'German', native: 'DE' },
 ];
 
 export type DomainCard = {
@@ -418,17 +418,17 @@ const en: Dictionary = {
   },
   card: {
     kicker: 'Digital business card',
-    role: 'Physics-Informed Cyber-Physical Systems Engineer',
-    tagline: 'Deterministic control · Grid intelligence · AI orchestration — across software, hardware and energy systems.',
+    role: 'ITk Fachspezialist, DB InfraGO AG · Frankfurt am Main',
+    tagline: 'Physics-constrained control · grid digitalisation.',
     email: 'Email',
     website: 'Website',
     githubLabel: 'Code',
-    networkLabel: 'The Grimaldi Network',
+    networkLabel: 'Other domains',
     saveContact: 'Save contact (vCard)',
-    connect: 'Start a conversation',
+    connect: 'Email',
     scanToShare: 'Scan to share this card',
-    backHome: 'View the full portfolio →',
-    availability: 'Available for consultation · Europe-based',
+    backHome: 'igrimaldi.engineering',
+    availability: 'Frankfurt am Main',
   },
 };
 
@@ -948,17 +948,17 @@ const de: Dictionary = {
   },
   card: {
     kicker: 'Digitale Visitenkarte',
-    role: 'Ingenieur für physikinformierte cyber-physische Systeme',
-    tagline: 'Deterministische Regelung · Netzintelligenz · KI-Orchestrierung — über Software, Hardware und Energiesysteme hinweg.',
+    role: 'ITk Fachspezialist, DB InfraGO AG · Frankfurt am Main',
+    tagline: 'Physikalisch beschränkte Regelung · Netzdigitalisierung.',
     email: 'E-Mail',
     website: 'Website',
     githubLabel: 'Code',
-    networkLabel: 'Das Grimaldi-Netzwerk',
+    networkLabel: 'Weitere Domains',
     saveContact: 'Kontakt speichern (vCard)',
-    connect: 'Gespräch beginnen',
+    connect: 'E-Mail',
     scanToShare: 'Scannen, um diese Karte zu teilen',
-    backHome: 'Zum vollständigen Portfolio →',
-    availability: 'Verfügbar für Beratung · In Europa ansässig',
+    backHome: 'igrimaldi.engineering',
+    availability: 'Frankfurt am Main',
   },
 };
 
@@ -1212,14 +1212,12 @@ function detectLocale(): Locale {
   if (typeof window === 'undefined') return 'en';
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === 'en' || stored === 'es' || stored === 'de' || stored === 'zh') return stored;
+    if (stored === 'en' || stored === 'de') return stored;
   } catch {
     /* storage unavailable — fall through to language sniff */
   }
   const lang = window.navigator.language.toLowerCase();
-  if (lang.startsWith('es')) return 'es';
   if (lang.startsWith('de')) return 'de';
-  if (lang.startsWith('zh')) return 'zh';
   return 'en';
 }
 

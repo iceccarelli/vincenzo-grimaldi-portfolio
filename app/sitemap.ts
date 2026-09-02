@@ -12,13 +12,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     entry('', 1),
-    entry('/work', 0.9, 'weekly'),
+    entry('/work', 0.9),
     ...caseStudies.map((c) => entry(`/work/${c.slug}`, 0.8)),
-    entry('/capabilities', 0.8),
-    entry('/simulator', 0.7),
-    entry('/payments', 0.9),
-    entry('/connect', 0.9),
-    entry('/card', 0.6, 'yearly'),
+    entry('/simulator', 0.8),
+    entry('/connect', 0.7),
+    entry('/card', 0.5, 'yearly'),
     entry('/impressum', 0.3, 'yearly'),
     entry('/datenschutz', 0.3, 'yearly'),
   ];

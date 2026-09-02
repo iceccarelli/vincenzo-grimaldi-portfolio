@@ -1,81 +1,81 @@
 /**
- * work.ts — procurement-grade case studies behind /work/[slug].
- * Facts only; every claim is either verifiable in a public repo/deployment
- * or scoped as a design statement. No employer data.
+ * work.ts — the entries behind /work and /work/[slug].
+ *
+ * Rules for this file:
+ *   1. Every entry names its public artifact (repository, deployment or
+ *      document). If nothing is public, it is a research note, not work.
+ *   2. Every number is either produced by a public artifact or absent.
+ *   3. No employer data, systems or internals — ever.
  */
+
+import { THESIS_DEMO } from './site';
 
 export type CaseStudy = {
   slug: string;
   name: string;
   title: string;
+  /** Short qualifier shown next to the name in lists. */
+  kind: string;
   description: string;
   problem: string;
   approach: string;
-  outcome: string;
+  validation: string;
+  limits: string;
   stack: string[];
   repo?: string;
   live?: string;
+  /** Printed in mono under the entry. Only paths a visitor can open. */
+  paths: string[];
 };
 
 export const caseStudies: CaseStudy[] = [
   {
     slug: 'cim-threma',
-    name: 'CIM–ThreMA Ontology Simulator',
-    title: 'CIM–ThreMA Cross-Domain Ontology Simulator',
+    name: 'CIM–ThreMA cross-domain ontology',
+    title: 'CIM–ThreMA cross-domain ontology — thesis write-up',
+    kind: 'M.Sc. thesis, RWTH Aachen, 2025',
     description:
-      'Public implementation of the 2025 RWTH Aachen M.Sc. thesis: a cross-domain ontology linking grid topology (CIM/CGMES) with threat modelling (ThreMA), validated on an IEEE 9-bus cyber testbed.',
+      'A cross-domain ontology linking grid topology (CIM/CGMES) with a threat-modelling ontology (ThreMA), so that security analysis can follow topology changes instead of being re-derived by hand. Implemented as a runnable simulator on an IEEE 9-bus cyber-physical testbed.',
     problem:
-      'Grid engineering models (CIM) and OT threat models (ThreMA) have no shared semantics, so security analysis cannot follow topology changes automatically.',
+      'Grid engineering models (CIM/CGMES) and OT threat models (ThreMA) carry no shared semantics. When the topology changes, the threat analysis does not follow; it is redone manually or not at all. For a substation-scale system that gap is where errors live.',
     approach:
-      'Five formal semantic mappings between the two ontologies; four documented attack scenarios on an IEEE 9-bus cyber-physical testbed; a Q-learning security agent; a cross-domain signal-to-noise metric to score mapping quality.',
-    outcome:
-      'A browsable simulator anyone can open and run. The full mapping catalogue and scenario definitions ship in the deployment.',
-    stack: ['Python', 'PINNs', 'Reinforcement Learning', 'CIM/CGMES', 'ThreMA'],
-    live: 'https://physics-informed.vercel.app/',
-  },
-  {
-    slug: 'palletizer-os',
-    name: 'Palletizer OS',
-    title: 'Palletizer OS — deterministic end-of-line palletizing',
-    description:
-      'Hardware-agnostic software foundation for end-of-line palletizing: control loops, safety logic, mixed-SKU planning and fleet telemetry, with a live optimizer.',
-    problem:
-      'Palletizing cells couple planning, safety and motion in vendor-locked PLC stacks; changing SKU mix means re-engineering the cell.',
-    approach:
-      'Deterministic control core with explicit safety interlocks, a mixed-SKU packing optimizer exposed as a service, and fleet telemetry designed for OT network constraints.',
-    outcome:
-      'Public repository and a live optimizer deployment. Code, not claims: the planner is inspectable and runnable.',
-    stack: ['Python', 'Robotics', 'Optimization'],
-    repo: 'https://github.com/iceccarelli/palletizer',
-    live: 'https://palletizer-app.vercel.app',
+      'Five formal semantic mappings between the CIM and ThreMA ontologies, with the grid side expressed in CGMES profiles. The mappings are exercised on an IEEE 9-bus cyber-physical testbed with four documented attack scenarios. A Q-learning agent acts as the security decision layer over the joint model; a cross-domain signal-to-noise metric scores how much of each mapping survives the translation.',
+    validation:
+      'Validation is confined to the IEEE 9-bus testbed and the four scenarios defined in the thesis. The mapping catalogue, the scenario definitions and the agent configuration ship in the public deployment so that the results can be re-run rather than quoted. Figures are stated in the thesis, not on this site.',
+    limits:
+      'A research artifact. The testbed is small, the scenario set is closed, and the reinforcement-learning layer is a proof of feasibility, not a certified controller. Nothing here has been assessed against a functional-safety or security standard, and no such claim is made.',
+    stack: ['CIM / CGMES', 'ThreMA', 'IEEE 9-bus', 'Q-learning', 'Python'],
+    live: THESIS_DEMO,
+    paths: ['physics-informed.vercel.app', 'repo path not public'],
   },
   {
     slug: 'bahn-project-manager',
     name: 'Bahn Project Manager',
-    title: 'Bahn Project Manager — rail infrastructure portfolio platform',
+    title: 'Bahn Project Manager — public-dataset portfolio application',
+    kind: 'Public-dataset portfolio application',
     description:
-      'Platform for managing rail infrastructure and station-development projects across 14 technical departments, driven by a 1,298-project public dataset.',
+      'A portfolio application over an open 1,298-project rail-infrastructure dataset: typed data model, department-level roll-ups, dependency views and a test suite. Built on public data only; no employer systems, data or processes are involved.',
     problem:
-      'Infrastructure project portfolios live in spreadsheets split by department; cross-departmental dependencies and budget rollups are invisible.',
+      'Infrastructure project portfolios tend to live in spreadsheets split by department. Cross-departmental dependencies and roll-ups are invisible until someone reconciles them by hand.',
     approach:
-      'Typed data model over a 1,298-project dataset, department-level rollups, dependency views, built test-first with Vitest. Built on public data only — no employer systems or internal data involved.',
-    outcome: 'Public repository with the full data model and test suite.',
-    stack: ['TypeScript', 'React 19', 'Vite', 'Vitest'],
+      'A typed model over the public dataset, roll-ups per technical department, dependency views, and a Vitest suite written before the views. The value is the data model and the tests, both of which are inspectable.',
+    validation:
+      'The repository is public and the test suite runs on a clone. There is no deployment claim and no operational claim: it is an application built to show how such a portfolio should be modelled.',
+    limits:
+      'A public-dataset exercise, not an enterprise system. It reflects no internal process of any operator and is not connected to any.',
+    stack: ['TypeScript', 'React', 'Vite', 'Vitest'],
     repo: 'https://github.com/iceccarelli/bahn-project-manager',
+    paths: ['github.com/iceccarelli/bahn-project-manager'],
   },
-  {
-    slug: 'gridos',
-    name: 'GridOS',
-    title: 'GridOS — DER middleware and control surface',
-    description:
-      'Distributed-energy-resource middleware: protocol ingest (Modbus, OPC-UA), MILP dispatch, anomaly detection and an MPC forecast loop.',
-    problem:
-      'DER fleets speak incompatible protocols and are dispatched by heuristics that ignore network constraints.',
-    approach:
-      'FastAPI service layer that normalizes Modbus/OPC-UA ingest, a MILP dispatch core, anomaly detection on telemetry, and a model-predictive forecast loop.',
-    outcome: 'Private codebase; architecture and interface specifications available under NDA.',
-    stack: ['FastAPI', 'Modbus', 'OPC-UA', 'MILP'],
-  },
+];
+
+export type ResearchNote = { name: string; line: string };
+
+/** Private codebases. Listed so that nothing is claimed for them. */
+export const researchNotes: ResearchNote[] = [
+  { name: 'GridOS', line: 'DER middleware notes: protocol ingest, dispatch, forecast loop. Private, unpublished.' },
+  { name: 'DERIM', line: 'DER integration middleware notes, grid-aware coordination. Private, unpublished.' },
+  { name: 'NeuralBridge', line: 'Orchestration notes for model-in-the-loop control. Private, unpublished.' },
 ];
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {

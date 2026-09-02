@@ -1,72 +1,46 @@
 import type { Metadata } from 'next';
-import CalEmbed from '../components/CalEmbed';
 import ContactForm from '../components/ContactForm';
-import { FaqJsonLd, type Faq } from '../components/JsonLd';
-import { EMAIL, OFFER } from '../lib/site';
+import { EMAIL } from '../lib/site';
+import { copy } from '../lib/copy';
 
 export const metadata: Metadata = {
-  title: 'Book a Consultation',
+  title: 'Contact',
   description:
-    'Book a 60-minute engineering consultation (€280) or send a message. Grid intelligence, physics-informed AI, OT security, deterministic control.',
+    'Advisory enquiries on safety-critical grid and traction systems. Name, organisation, constraint, email. No booking widget, no price.',
   alternates: { canonical: '/connect' },
 };
 
 export const revalidate = 3600;
 
-const faqs: Faq[] = [
-  {
-    q: 'What does a consultation cover?',
-    a: 'A focused 60-minute session on your grid, control or cyber-physical systems problem: architecture review, feasibility, risk, or a concrete implementation plan. You receive written notes afterwards.',
-  },
-  {
-    q: 'How is the consultation paid?',
-    a: `€${OFFER.consult.price} per 60 minutes, payable by card via Stripe when checkout is enabled, otherwise by invoice.`,
-  },
-  {
-    q: 'What is the advisory retainer?',
-    a: `€${Number(OFFER.retainer.price).toLocaleString('en-IE')} per month: recurring architecture and review capacity, asynchronous questions, and a monthly deep-dive session.`,
-  },
-  {
-    q: 'Is this connected to Deutsche Bahn?',
-    a: 'No. Advisory work is independent and outside the scope of my role at DB InfraGO AG. No employer data, systems or confidential information are used.',
-  },
-];
+type Props = { searchParams?: { sent?: string } };
 
-export default function ConnectPage() {
-  const calUrl = process.env.NEXT_PUBLIC_CAL_URL || '';
+/**
+ * /connect — the contact page. Same four-field form as the homepage.
+ * `?sent=` carries the result of a JavaScript-free submission back from
+ * /api/contact so the page can say what happened.
+ */
+export default function ConnectPage({ searchParams }: Props) {
+  const c = copy.en;
+  const sent = searchParams?.sent;
 
   return (
-    <main className="content-sheet route-page">
-      <section className="section-shell content-section" id="connect">
-        <div className="glass-panel cta-panel spotlight-border">
-          <div>
-            <span className="section-kicker">Connect</span>
-            <h1>Book a consultation</h1>
-            <p className="section-intro">
-              Pick a slot directly, or send a message with context. Direct email
-              always works: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-            </p>
-          </div>
+    <main className="doc">
+      <section className="blk blk-first" id="connect">
+        <h1 className="h1">{c.contact.title}</h1>
+        <p className="lead">{c.contact.intro}</p>
+        <p>
+          {c.contact.direct} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        </p>
 
-          <CalEmbed calUrl={calUrl} label={`Open the calendar — €${OFFER.consult.price} / 60 min`} />
-
-          <ContactForm />
-        </div>
-
-        <div className="glass-panel cta-panel spotlight-border" style={{ marginTop: '2rem' }}>
-          <h2>Frequently asked</h2>
-          <div className="faq-list">
-            {faqs.map((f) => (
-              <details key={f.q} className="faq-item">
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
+        {sent === 'ok' && <p className="form-ok" role="status">{c.form.sent}</p>}
+        {sent === 'error' && <p className="form-err" role="alert">{c.form.error}</p>}
+        {sent === 'unconfigured' && (
+          <p className="form-err" role="alert">
+            {c.form.error}
+          </p>
+        )}
+        {sent !== 'ok' && <ContactForm />}
       </section>
-
-      <FaqJsonLd faqs={faqs} />
     </main>
   );
 }

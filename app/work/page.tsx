@@ -1,43 +1,56 @@
 import type { Metadata } from 'next';
-import { caseStudies } from '../lib/work';
+import { caseStudies, researchNotes } from '../lib/work';
+import { copy } from '../lib/copy';
 
 export const metadata: Metadata = {
   title: 'Work',
   description:
-    'Shipped systems with inspectable proof: CIM–ThreMA ontology simulator, Palletizer OS, Bahn Project Manager, GridOS. Public repositories and live deployments where available.',
+    'Work with a public artifact behind each entry: the CIM–ThreMA thesis simulator and write-up, and a public-dataset portfolio application. Private codebases are listed as research notes, not products.',
   alternates: { canonical: '/work' },
 };
 
 export const revalidate = 3600;
 
+/**
+ * /work — a list, server-rendered in English. Each entry names its public
+ * artifact in mono under the title. Private work is a note, not a card.
+ */
 export default function WorkPage() {
+  const c = copy.en.work;
   return (
-    <main className="content-sheet route-page">
-      <section className="section-shell content-section">
-        <span className="section-kicker">Work</span>
-        <h1>Shipped systems, with proof</h1>
-        <p className="section-intro" style={{ maxWidth: '680px' }}>
-          Every entry states what is public (repository, live deployment) and
-          what is private. Claims without an inspectable artifact are marked as
-          design statements.
-        </p>
+    <main className="doc">
+      <section className="blk blk-first">
+        <h1 className="h1">{c.title}</h1>
+        <p className="lead">{c.intro}</p>
 
-        <div className="work-grid">
-          {caseStudies.map((c) => (
-            <a key={c.slug} className="work-card glass-panel spotlight-border" href={`/work/${c.slug}`}>
-              <h2 className="work-card-title">{c.name}</h2>
-              <p>{c.description}</p>
-              <span className="work-card-stack">
-                {c.stack.slice(0, 4).map((s) => (
-                  <span key={s} className="metric-pill">{s}</span>
+        <ol className="entries">
+          {caseStudies.map((w) => (
+            <li key={w.slug} className="entry">
+              <h2>
+                <a href={`/work/${w.slug}`}>{w.name}</a>
+              </h2>
+              <p className="entry-kind">{w.kind}</p>
+              <p>{w.description}</p>
+              <p className="path-line">
+                {w.paths.map((p) => (
+                  <code key={p} className="path">{p}</code>
                 ))}
-              </span>
-              <span className="work-card-more">
-                Case study →
-              </span>
-            </a>
+              </p>
+            </li>
           ))}
-        </div>
+        </ol>
+      </section>
+
+      <section className="blk" aria-labelledby="notes">
+        <h2 id="notes" className="blk-h">{c.notesHeading}</h2>
+        <p className="blk-intro">{c.notesIntro}</p>
+        <ul className="notes">
+          {researchNotes.map((n) => (
+            <li key={n.name}>
+              <span className="notes-name">{n.name}</span> — {n.line}
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   );

@@ -1,98 +1,34 @@
 'use client';
 
-import SocialBar from './SocialBar';
-import BrandMark from './BrandMark';
 import { useLanguage } from '../lib/i18n';
-import { extra } from '../lib/uiStrings';
-import { CONFLICT_DE, CONFLICT_EN } from '../lib/site';
+import { pick } from '../lib/copy';
+import { CONFLICT_DE, CONFLICT_EN, EMAIL, GITHUB, LINKEDIN, SITE_NAME } from '../lib/site';
 
 /**
- * AWS-style dark columnar footer, fully localised: CTA topline, four link
- * columns, back-to-top, legal bar with social icons. Client component so
- * every string follows the active locale.
+ * Footer — one row of plain links, the independence sentence, the year.
+ * No columns, no call to action, no status dot.
  */
 export default function SiteFooter() {
-  const { t, locale } = useLanguage();
-  const x = extra[locale];
+  const { locale } = useLanguage();
+  const c = pick(locale);
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="site-footer">
-      <div className="section-shell">
-        <div className="footer-topline">
-          <a className="footer-cta" href="/connect">
-            {t.footer.cta}
-          </a>
-        </div>
-
-        <div className="footer-content">
-          {/* Column 1 – Entity */}
-          <div className="footer-column">
-            <div className="brand-lockup" style={{ marginBottom: '1rem' }}>
-              <BrandMark size={42} />
-              <span className="brand-copy"><strong style={{ color: '#ffffff' }}>Vincenzo Grimaldi</strong></span>
-            </div>
-            <p style={{ lineHeight: 1.6, fontSize: '0.9rem' }}>
-              {t.footer.role}
-              <br />
-              {t.footer.roleSub}
-            </p>
-          </div>
-
-          {/* Column 2 – Platform */}
-          <div className="footer-column">
-            <h2>{t.footer.platform}</h2>
-            <div className="footer-links">
-              <a className="footer-link" href="/capabilities">{t.nav.capabilities}</a>
-              <a className="footer-link" href="/work">{t.footer.workRegistry}</a>
-              <a className="footer-link" href="/capabilities#physics-informed">{t.footer.physicsInformed}</a>
-              <a className="footer-link" href="/simulator">{t.footer.liveSimulator}</a>
-              <a className="footer-link" href="/payments">{t.nav.payments}</a>
-              <a className="footer-link" href="/connect">{t.nav.connect}</a>
-              <a className="footer-link" href="/card">{t.card.kicker}</a>
-            </div>
-          </div>
-
-          {/* Column 3 – The Grimaldi Network */}
-          <div className="footer-column">
-            <h2>{t.footer.network}</h2>
-            <div className="footer-links">
-              <a className="footer-link" href="https://igrimaldi.engineering">igrimaldi.engineering — {t.footer.netSoftware}</a>
-              <a className="footer-link" href="https://engineeringgrimaldi.com" target="_blank" rel="noopener noreferrer">engineeringgrimaldi.com — {t.footer.netHardware}</a>
-              <a className="footer-link" href="https://grimaldi.ca" target="_blank" rel="noopener noreferrer">grimaldi.ca — {t.footer.netPersonal}</a>
-              <a className="footer-link" href="https://github.com/iceccarelli" target="_blank" rel="noopener noreferrer">GitHub — iceccarelli</a>
-            </div>
-          </div>
-
-          {/* Column 4 – Status */}
-          <div className="footer-column">
-            <h2>{t.footer.status}</h2>
-            <div className="footer-status" style={{ marginBottom: '1rem' }}>
-              <span className="live-dot" />
-              <span>{t.footer.available}</span>
-            </div>
-            <p style={{ fontSize: '0.88rem', lineHeight: 1.55 }}>{t.footer.europe}</p>
-            <a className="footer-link" href="mailto:vincenzo@igrimaldi.engineering" style={{ marginTop: '0.75rem', display: 'inline-block' }}>
-              vincenzo@igrimaldi.engineering →
-            </a>
-          </div>
-        </div>
-
-        <div className="footer-backtotop">
-          <a href="#top">{t.footer.backToTop}</a>
-        </div>
-
-        <p className="footer-conflict">
-          {locale === 'de' ? CONFLICT_DE : CONFLICT_EN}
+    <footer className="ftr">
+      <div className="ftr-in">
+        <nav className="ftr-links" aria-label="Footer">
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+          <a href={GITHUB} rel="noopener noreferrer">GitHub</a>
+          <a href={LINKEDIN} rel="noopener noreferrer">LinkedIn</a>
+          <a href="/impressum">{c.footer.imprint}</a>
+          <a href="/datenschutz">{c.footer.privacy}</a>
+          <a href="https://engineeringgrimaldi.com" rel="noopener noreferrer">engineeringgrimaldi.com</a>
+          <a href="https://grimaldi.ca" rel="noopener noreferrer">grimaldi.ca</a>
+        </nav>
+        <p className="ftr-note">{locale === 'de' ? CONFLICT_DE : CONFLICT_EN}</p>
+        <p className="ftr-rights">
+          © {year} {SITE_NAME}. {c.footer.rights}
         </p>
-
-        <div className="footer-legal">
-          <span>{t.footer.rights}</span>
-          <span className="footer-legal-links">
-            <a className="footer-link" href="/impressum">{x.imprint}</a>
-            <a className="footer-link" href="/datenschutz">{x.privacy}</a>
-          </span>
-          <SocialBar />
-        </div>
       </div>
     </footer>
   );

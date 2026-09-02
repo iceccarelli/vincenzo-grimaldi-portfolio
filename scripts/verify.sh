@@ -16,18 +16,18 @@ for k in strict-transport-security x-content-type-options referrer-policy \
 done
 if grep -qi 'access-control-allow-origin: \*' <<<"$H"; then
   bad "ACAO:* on document — the app never sets this; source is upstream"
-  printf '       attribute it: curl -sI %s/ | grep -i access-control\n' "$BASE"
-  printf '       then compare the raw deployment URL (bypasses DNS proxies):\n'
-  printf '       vercel inspect --logs \$(vercel ls --prod -1) # or curl -sI https://<deployment>.vercel.app/\n'
 else ok "no ACAO:*"; fi
 
 echo "▸ crawl surface"
-for p in / /work /work/cim-threma /work/palletizer-os /work/bahn-project-manager \
-         /work/gridos /capabilities /simulator /payments /connect /card \
+for p in / /work /work/cim-threma /work/bahn-project-manager /simulator /connect /card \
          /impressum /datenschutz /llms.txt /robots.txt /sitemap.xml \
          /favicon.ico /apple-touch-icon.png /site.webmanifest /.well-known/security.txt; do
   c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
   [ "$c" = 200 ] && ok "200 $p" || bad "$c $p"
+done
+for p in /payments /capabilities; do
+  c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
+  [ "$c" = 308 ] || [ "$c" = 301 ] && ok "$c $p (parked → redirect)" || bad "$c $p should redirect"
 done
 c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/__definitely_not_a_route__")
 [ "$c" = 404 ] && ok "404 on unknown route" || bad "unknown route returned $c"
@@ -39,26 +39,45 @@ HTML=$(curl -sS "$BASE/")
 [ "$(grep -c 'name="keywords"' <<<"$HTML")" -eq 0 ] && ok "no meta keywords" || bad "meta keywords present"
 [ "$(grep -c 'hreflang' <<<"$HTML")"        -eq 0 ] && ok "no hreflang"      || bad "hreflang present"
 [ "$(grep -c '@graph' <<<"$HTML")"          -ge 1 ] && ok "JSON-LD @graph"   || bad "JSON-LD @graph missing"
-grep -q 'href="/connect"' <<<"$HTML" && ok "hero CTA -> /connect" || bad "hero CTA not booking-first"
 
-# Readiness = your dashboard work. Auto-runs against https:// targets; force with READINESS=1.
+echo "▸ home contract (what a JS-off reader sees)"
+grep -q 'Vincenzo Ceccarelli Grimaldi' <<<"$HTML" && ok "name in HTML" || bad "name missing from HTML"
+grep -q 'ITk Fachspezialist' <<<"$HTML" && ok "role in HTML" || bad "role missing from HTML"
+grep -q 'Frankfurt am Main' <<<"$HTML" && ok "city in HTML" || bad "city missing from HTML"
+A=$(grep -o 'class="artifact"' <<<"$HTML" | wc -l | tr -d ' ')
+[ "$A" -eq 3 ] && ok "exactly three artifacts" || bad "artifact count is $A, expected 3"
+grep -q 'name="constraint"' <<<"$HTML" && ok "enquiry form present" || bad "enquiry form missing"
+grep -q 'href="/simulator"' <<<"$HTML" && ok "simulator door linked" || bad "simulator door not linked"
+
+echo "▸ honesty contract"
+# Words that must not appear on this host. Case-insensitive, whole HTML.
+for w in 'buy\b' 'retainer' 'waitlist' 'stripe' 'cal\.com' 'palletiz' 'forge' 'hardwood' \
+         'peru' 'settle securely' 'EUR\b' '€' 'SIL-4' 'ASIL-D' 'sub-8' 'curtailment' \
+         'Enterprise platform' 'FF8A00' '2F5D50' 'carousel' 'network'; do
+  if grep -qiE "$w" <<<"$HTML"; then bad "banned token on /: $w"; else ok "no '$w' on /"; fi
+done
+for p in /work /simulator /connect /llms.txt; do
+  B=$(curl -sS "$BASE$p")
+  for w in 'retainer' 'stripe' 'palletiz' 'forge' 'hardwood' 'EUR\b' '€' 'Enterprise platform'; do
+    grep -qiE "$w" <<<"$B" && bad "banned token on $p: $w"
+  done
+done
+ok "no banned tokens on /work /simulator /connect /llms.txt"
+grep -qiE 'github\.com/iceccarelli/(GridOS|neuralbridge|derim-middleware|robot-lidar-fusion|physics-informed)' <<<"$HTML" \
+  && bad "homepage links a GitHub path that 404s" || ok "no 404 GitHub paths on /"
+# Zero payment / booking scripts anywhere on the landing.
+grep -qiE 'js\.stripe\.com|buy\.stripe\.com|app\.cal\.com|embed\.cal\.com' <<<"$HTML" \
+  && bad "third-party payment/booking script on landing" || ok "zero payment scripts on landing"
+
+# Readiness = operator work. Auto-runs against https:// targets; force with READINESS=1.
 if [ "${READINESS:-0}" = 1 ] || [[ "$BASE" == https://* ]]; then
-echo "▸ legal / commercial readiness"
+echo "▸ legal readiness"
 for p in /impressum /datenschutz; do
   if curl -sS "$BASE$p" | grep -q 'TODO_OPERATOR'; then bad "$p still has TODO_OPERATOR placeholders"
   else ok "$p complete"; fi
 done
-if curl -sS "$BASE/payments" | grep -q 'buy.stripe.com'; then ok "Stripe Payment Links wired"
-else bad "payments CTAs are not Stripe links (STRIPE_PAYMENT_LINK_* unset or empty)"; fi
-# Fail-safe assertion: with no Stripe link the page must NOT advertise card
-# schemes / SEPA / wallets. This is the anti-lying invariant.
-if curl -sS "$BASE/payments" | grep -q 'buy.stripe.com' || ! curl -sS "$BASE/payments" | grep -q 'Apple Pay'; then
-  ok "no false payment-method claims"
-else bad "payment-method chips shown without a real checkout"; fi
-if curl -sS "$BASE/connect" | grep -qE 'cal\.com'; then ok "Cal.com booking wired"
-else bad "no booking calendar on /connect (NEXT_PUBLIC_CAL_URL unset or empty)"; fi
 else
-echo "▸ legal / commercial readiness  (skipped — run against https:// or set READINESS=1)"
+echo "▸ legal readiness  (skipped — run against https:// or set READINESS=1)"
 fi
 
 echo

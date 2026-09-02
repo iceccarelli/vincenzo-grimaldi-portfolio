@@ -10,18 +10,18 @@ export const metadata: Metadata = {
 
 /**
  * /datenschutz — DSGVO privacy notice. Structure matches what the site
- * ACTUALLY does after this hardening pass: Vercel hosting + server logs,
- * opt-in Vercel Analytics, first-party contact form relayed via Resend,
- * Cal.com booking embed, Stripe Payment Links (external navigation).
+ * ACTUALLY does: Vercel hosting + server logs, opt-in Vercel Analytics,
+ * a first-party enquiry form relayed via Resend. No booking widget, no
+ * payment provider, no other third party.
  *
  * OPERATOR ACTION REQUIRED: fill TODO_OPERATOR address; have the text
  * reviewed — this is a working skeleton, not legal advice.
  */
 export default function DatenschutzPage() {
   return (
-    <main className="content-sheet">
-      <section className="section-shell content-section legal-page">
-        <h1>Datenschutzerklärung</h1>
+    <main className="doc">
+      <section className="blk blk-first legal">
+        <h1 className="h1">Datenschutzerklärung</h1>
 
         <h2>1. Verantwortlicher</h2>
         <p>
@@ -53,9 +53,9 @@ export default function DatenschutzPage() {
           zurückgesetzt werden.
         </p>
 
-        <h2>4. Kontaktformular</h2>
+        <h2>4. Anfrageformular</h2>
         <p>
-          Angaben aus dem Kontaktformular (Name, E-Mail, Firma, Nachricht)
+          Angaben aus dem Anfrageformular (Name, Organisation, Randbedingung, E-Mail)
           werden zur Bearbeitung der Anfrage verarbeitet und über den
           E-Mail-Dienst Resend (Resend, Inc., USA) an den Verantwortlichen
           zugestellt. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO
@@ -63,24 +63,7 @@ export default function DatenschutzPage() {
           die Bearbeitung nicht mehr erforderlich sind.
         </p>
 
-        <h2>5. Terminbuchung (Cal.com)</h2>
-        <p>
-          Für die Terminbuchung wird ein Einbettung von Cal.com (Cal.com, Inc.)
-          verwendet. Beim Laden des Buchungs-Widgets werden Verbindungsdaten an
-          Cal.com übermittelt; bei einer Buchung zusätzlich die von Ihnen
-          eingegebenen Daten. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
-        </p>
-
-        <h2>6. Zahlungen (Stripe)</h2>
-        <p>
-          Zahlungen werden über Stripe Payment Links abgewickelt (Stripe
-          Payments Europe, Ltd., Irland). Beim Klick auf einen Zahlungs-Button
-          verlassen Sie diese Website; die Verarbeitung Ihrer Zahlungsdaten
-          erfolgt ausschließlich bei Stripe nach deren Datenschutzerklärung.
-          Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
-        </p>
-
-        <h2>7. Ihre Rechte</h2>
+        <h2>5. Ihre Rechte</h2>
         <p>
           Sie haben das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16),
           Löschung (Art. 17), Einschränkung (Art. 18), Datenübertragbarkeit

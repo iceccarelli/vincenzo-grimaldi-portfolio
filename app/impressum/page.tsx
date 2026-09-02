@@ -17,9 +17,9 @@ export const metadata: Metadata = {
  */
 export default function ImpressumPage() {
   return (
-    <main className="content-sheet">
-      <section className="section-shell content-section legal-page">
-        <h1>Impressum</h1>
+    <main className="doc">
+      <section className="blk blk-first legal">
+        <h1 className="h1">Impressum</h1>
 
         <h2>Angaben gemäß § 5 DDG</h2>
         <p>

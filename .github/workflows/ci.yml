@@ -39,8 +39,8 @@ jobs:
 
       # scripts/verify.sh is the SINGLE source of truth for the acceptance
       # contract — the same command runs locally and against production.
-      # On localhost it asserts code contracts only; readiness (legal fields,
-      # Stripe links) is asserted separately against the live https origin.
+      # On localhost it asserts code contracts only; readiness (legal fields)
+      # is asserted separately against the live https origin.
       - name: Acceptance contract
         run: npm run verify
 
@@ -59,9 +59,8 @@ jobs:
             http://localhost:3000/ \
             http://localhost:3000/work \
             http://localhost:3000/work/cim-threma \
-            http://localhost:3000/capabilities \
+            http://localhost:3000/work/bahn-project-manager \
             http://localhost:3000/simulator \
-            http://localhost:3000/payments \
             http://localhost:3000/connect \
             http://localhost:3000/card \
             http://localhost:3000/impressum \

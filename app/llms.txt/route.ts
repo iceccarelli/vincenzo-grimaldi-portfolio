@@ -1,48 +1,54 @@
-import { SITE_URL, EMAIL } from '../lib/site';
-import { caseStudies } from '../lib/work';
+import { SITE_URL, EMAIL, SITE_NAME, CITY, ROLE_TITLE, EMPLOYER, THESIS_DEMO, GITHUB, LINKEDIN } from '../lib/site';
+import { caseStudies, researchNotes } from '../lib/work';
 
 export const dynamic = 'force-static';
 
 /**
  * /llms.txt — machine-readable site brief for AI crawlers and agents
- * (https://llmstxt.org). Served as a route handler so it stays in sync
- * with the work registry at build time.
+ * (https://llmstxt.org). Generated from the work list at build time.
+ * There is no commercial section: nothing on this host is for sale.
  */
 export function GET() {
   const work = caseStudies
-    .map((c) => `- [${c.name}](${SITE_URL}/work/${c.slug}): ${c.description}`)
+    .map((c) => `- [${c.name}](${SITE_URL}/work/${c.slug}): ${c.kind}. ${c.description}`)
     .join('\n');
+  const notes = researchNotes.map((n) => `- ${n.name}: ${n.line}`).join('\n');
 
-  const body = `# Vincenzo Grimaldi — Engineering
+  const body = `# ${SITE_NAME}
 
-> Independent engineering advisory for safety-critical grids and cyber-physical
-> systems: physics-informed AI, deterministic control, OT security.
-> Operator: Vincenzo Grimaldi (legal name Vincenzo Ceccarelli Grimaldi),
-> Frankfurt am Main, Germany. Contact: ${EMAIL}.
-> Advisory work is independent and outside the scope of the operator's
-> employment at DB InfraGO AG; no employer data is used.
+> ${SITE_NAME}, ${CITY}, Germany. Physics-constrained control · grid
+> digitalisation. ${ROLE_TITLE} at ${EMPLOYER}: traction HV digitisation,
+> IT/OT, KRITIS-class governance. Contact: ${EMAIL}.
+> Everything on this site is independent of, and outside the scope of, that
+> role. No employer data, systems or confidential information are used or
+> described. Nothing on this site is for sale.
 
-## Offers
+## Entity disambiguation
 
-- Engineering consultation, 60 minutes, EUR 280 — book at ${SITE_URL}/connect
-- Advisory retainer, EUR 3,200 / month — details at ${SITE_URL}/payments
+- This is an individual engineer in Frankfurt am Main, not a shipping line,
+  a law firm, a wealth manager or a restaurant.
+- Public code: ${GITHUB}. Only repositories linked from /work are public.
+- Thesis simulator deployment: ${THESIS_DEMO} (repository path not public).
 
 ## Work
 
 ${work}
 
+## Research notes (not products)
+
+${notes}
+
 ## Pages
 
-- [Capabilities](${SITE_URL}/capabilities): capability register with provenance
-- [Thesis simulator](${SITE_URL}/simulator): CIM–ThreMA ontology simulator (RWTH Aachen M.Sc. thesis)
-- [Payments](${SITE_URL}/payments): offers and payment options
-- [Connect](${SITE_URL}/connect): booking calendar and contact form
-- [Business card](${SITE_URL}/card): vCard, QR, verified profiles
+- [Home](${SITE_URL}/): name, one line, three artifacts, selected work, enquiry form
+- [Thesis simulator](${SITE_URL}/simulator): door to the CIM–ThreMA simulator deployment
+- [Contact](${SITE_URL}/connect): advisory enquiry — name, organisation, constraint, email
+- [Card](${SITE_URL}/card): vCard, QR, verified profiles
 
 ## Profiles
 
-- GitHub: https://github.com/iceccarelli
-- LinkedIn: https://www.linkedin.com/in/vincenzo-ceccarelli-grimaldi-2912b42a0
+- GitHub: ${GITHUB}
+- LinkedIn: ${LINKEDIN}
 `;
 
   return new Response(body, {

@@ -7,14 +7,14 @@ import type { ReactNode } from 'react';
  * The page itself is a client component (it renders in the visitor's chosen
  * locale), so title, description, canonical, Open Graph and the ProfilePage
  * JSON-LD live here. The Person node is complete — image, jobTitle, sameAs
- * across the whole network — so that search engines and AI agents resolve
+ * across all domains — so that search engines and AI agents resolve
  * "Vincenzo Grimaldi" to this card in one read.
  */
 
 const URL = 'https://igrimaldi.engineering/card';
-const TITLE = 'Vincenzo Grimaldi — Digital Business Card';
+const TITLE = 'Vincenzo Ceccarelli Grimaldi — Card';
 const DESCRIPTION =
-  'The digital business card of Vincenzo Grimaldi: Physics-Informed Cyber-Physical Systems Engineer. Email, GitHub, LinkedIn, the three-domain Grimaldi Network, downloadable vCard and shareable QR.';
+  'Vincenzo Ceccarelli Grimaldi, Frankfurt am Main. Physics-constrained control · grid digitalisation. Email, GitHub, LinkedIn, vCard and QR.';
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -44,10 +44,11 @@ const profileSchema = {
   mainEntity: {
     '@type': 'Person',
     '@id': 'https://igrimaldi.engineering/#person',
-    name: 'Vincenzo Grimaldi',
+    name: 'Vincenzo Ceccarelli Grimaldi',
+    alternateName: 'Vincenzo Grimaldi',
     url: 'https://igrimaldi.engineering/',
     image: 'https://igrimaldi.engineering/vincenzo_grimaldi_headshot.jpg',
-    jobTitle: 'Physics-Informed Cyber-Physical Systems Engineer',
+    jobTitle: 'Engineer — physics-constrained control and grid digitalisation',
     email: 'mailto:vincenzo@igrimaldi.engineering',
     worksFor: { '@type': 'Organization', name: 'DB InfraGO AG' },
     alumniOf: { '@type': 'Organization', name: 'RWTH Aachen University' },

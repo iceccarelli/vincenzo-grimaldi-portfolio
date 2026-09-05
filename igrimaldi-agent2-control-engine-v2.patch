@@ -1,0 +1,2349 @@
+From 365ede731591b8002f94b62d12b064fed454078e Mon Sep 17 00:00:00 2001
+From: Vincenzo Ceccarelli Grimaldi <vince.ceccarelli@gmail.com>
+Date: Sat, 5 Sep 2026 19:21:15 +0000
+Subject: [PATCH] feat(engine): visual layer, register rail, evidence,
+ execution tooling (v2)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Visuals, all computed from the registers at render time (no chart lib):
+- StackDiagram   eleven layers + occupants per layer (hatched = not built),
+                 deterministic-gate bracket; on / (compact) and /architecture
+- MissionCoverage entry × stage grid from `stages`; 4 of 7 stages covered,
+                 ACT/RECOVER/LEARN empty and counted as gaps
+- DependencyGraph layered graph from `dependsOn`, crossing-reduced ordering
+- KpiCoverage    12 hatched cells on / replacing the full table
+- Timeline       dated evidence (PyPI releases, commit, decisions, due
+                 dates) with source per event + data table; lane layout
+- EvidenceGrid   16 palletizer test modules mapped onto the stack layers
+- StatusBar      status distribution as labelled segments
+- ContractFlow   three clusters, four versioned contracts as arrows
+Every figure carries <title>+<desc>; axe 0 violations at 1280/390.
+
+Information model: RegistryEntry gains stages, layers, dependsOn (closed
+vocabularies MISSION, LAYERS in types.ts); evidence.ts adds the dated
+timeline + test map; registry/[id] shows depends-on / used-by / stages /
+layers. Simulation and controller descriptions corrected to what the
+repo contains (OPC UA robot mock, UR bridge example).
+
+Consistency: SubNav register rail on every register page with
+aria-current; KPI rows addressable (#kpi-<id>); card tagline aligned in
+all four dictionaries; /registry#deps linked from /constitution;
+responsive stacked tables below 640 px; print stylesheet for /report.
+
+Execution stack: GITHUB_TOKEN support in github.ts (fail-safe unchanged);
+/api/cluster/registry now static + /api/cluster/registry/[id] (SSG) and
+exposes missionCoverage + dependencyEdges; /report.md (latest report as
+Markdown); scripts/new-week.mjs scaffolds the next report with TODO
+bodies that verify.sh refuses to ship.
+
+verify.sh: 126 contracts (+ visual contract: figures present, every svg
+described, rail current-marker on all register pages, no TODO on
+/report; register JSON: no dangling dependsOn, known stages/layers).
+Build 59 pages; typecheck, lint clean.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_012rRJtPoNRDnM1hw2xBUnW6
+---
+ README.md                                  |  24 +-
+ app/api/cluster/registry/[id]/route.ts     |  18 +
+ app/api/cluster/registry/route.ts          |  21 +-
+ app/architecture/page.tsx                  |   4 +
+ app/components/HomeLanding.tsx             |  12 +-
+ app/components/cluster/ContractFlow.tsx    | 118 ++++++
+ app/components/cluster/DependencyGraph.tsx | 135 +++++++
+ app/components/cluster/EvidenceGrid.tsx    |  41 +++
+ app/components/cluster/KpiCoverage.tsx     |  39 ++
+ app/components/cluster/KpiTable.tsx        |   8 +-
+ app/components/cluster/MissionCoverage.tsx |  67 ++++
+ app/components/cluster/RegistryTable.tsx   |   8 +-
+ app/components/cluster/StackDiagram.tsx    | 138 +++++++
+ app/components/cluster/StatusBar.tsx       |  28 ++
+ app/components/cluster/SubNav.tsx          |  34 ++
+ app/components/cluster/Timeline.tsx        | 144 ++++++++
+ app/constitution/page.tsx                  |   4 +-
+ app/contracts/page.tsx                     |   4 +
+ app/decisions/page.tsx                     |   2 +
+ app/globals.css                            | 395 +++++++++++++++++++++
+ app/lib/cluster/evidence.ts                |  52 +++
+ app/lib/cluster/github.ts                  |  12 +-
+ app/lib/cluster/registry.ts                |  34 +-
+ app/lib/cluster/stack.ts                   |  25 +-
+ app/lib/cluster/types.ts                   |  28 ++
+ app/lib/i18n.tsx                           |   8 +-
+ app/palletizer/page.tsx                    |  14 +
+ app/registry/[id]/page.tsx                 |  31 +-
+ app/registry/page.tsx                      |  11 +
+ app/report.md/route.ts                     |  27 ++
+ app/report/page.tsx                        |   2 +
+ app/research/page.tsx                      |   2 +
+ scripts/new-week.mjs                       |  50 +++
+ scripts/verify.sh                          |  44 ++-
+ 34 files changed, 1532 insertions(+), 52 deletions(-)
+ create mode 100644 app/api/cluster/registry/[id]/route.ts
+ create mode 100644 app/components/cluster/ContractFlow.tsx
+ create mode 100644 app/components/cluster/DependencyGraph.tsx
+ create mode 100644 app/components/cluster/EvidenceGrid.tsx
+ create mode 100644 app/components/cluster/KpiCoverage.tsx
+ create mode 100644 app/components/cluster/MissionCoverage.tsx
+ create mode 100644 app/components/cluster/StackDiagram.tsx
+ create mode 100644 app/components/cluster/StatusBar.tsx
+ create mode 100644 app/components/cluster/SubNav.tsx
+ create mode 100644 app/components/cluster/Timeline.tsx
+ create mode 100644 app/lib/cluster/evidence.ts
+ create mode 100644 app/report.md/route.ts
+ create mode 100644 scripts/new-week.mjs
+
+diff --git a/README.md b/README.md
+index efa75db..55b4349 100644
+--- a/README.md
++++ b/README.md
+@@ -25,6 +25,10 @@ Operated by Vincenzo Ceccarelli Grimaldi, Frankfurt am Main. Everything here is
+ | Grid / traction-power work (thesis simulator, public-dataset app) | [/work](https://igrimaldi.engineering/work), [/simulator](https://igrimaldi.engineering/simulator) | — |
+ | Machine brief for AI agents | [/llms.txt](https://igrimaldi.engineering/llms.txt) | — |
+ 
++## Visuals — drawn from the registers, never pasted
++
++Every picture is computed at render time from `app/lib/cluster/*.ts`, so it cannot drift from the data: the eleven-layer **stack diagram** with what occupies each layer today (hatched = not built) and the deterministic gate bracket; the **mission coverage** grid (which entry's existing code covers PERCEIVE → LEARN — ACT, RECOVER and LEARN are empty, honestly); the **dependency graph** computed from `dependsOn`; the **KPI strip** (12 hatched cells until a number exists); the **evidence timeline** (PyPI releases, commits, decisions, due dates — each with its source) and the **test-suite map** onto the stack; the **status distribution bar**; the **contract flow** between the three clusters. All SVG/HTML, no chart library, every figure with a text description, axe-clean at 1280 and 390 px.
++
+ ## Rules the code enforces
+ 
+ - **Closed vocabulary.** A status is one of `CORE MODULE RESEARCH INTERNAL EXPERIMENT ARCHIVE` (`app/lib/cluster/types.ts`). A seventh is a compile error and a `verify.sh` failure.
+@@ -33,13 +37,15 @@ Operated by Vincenzo Ceccarelli Grimaldi, Frankfurt am Main. Everything here is
+ - **Boundaries stay outside.** FloorForge, PaintForge and DryForge appear only as boundaries owned by Operations; `verify.sh` fails if one gains a register page.
+ - **Probabilistic ≠ deterministic.** Every physical action passes `PLAN → SIMULATE → VALIDATE → AUTHORIZE → EXECUTE → VERIFY`; no agent tool exists that bypasses it (`app/lib/cluster/stack.ts`).
+ - **No commerce, no performance marketing.** `scripts/verify.sh` bans payment scripts, prices, and unbenchmarked phrases on every register page.
+-- **Fail-safe live data.** Public repositories refresh last-commit dates from GitHub at build/ISR time; any error falls back to the dated snapshot, labelled `snapshot`.
++- **Fail-safe live data.** Public repositories refresh last-commit dates from GitHub at build/ISR time; any error falls back to the dated snapshot, labelled `snapshot`. Set `GITHUB_TOKEN` (fine-grained, no scopes) in Vercel to lift the anonymous 60 req/h limit.
++- **Graph integrity.** `verify.sh` fails on a dangling `dependsOn`, an unknown mission stage or stack layer, a figure without a `<desc>`, or a `TODO` left by the weekly scaffold.
+ 
+ ## Where things live
+ 
+ ```
+ app/lib/cluster/
+-  types.ts        closed vocabularies and register types
++  types.ts        closed vocabularies (statuses, mission stages, stack layers) and register types
++  evidence.ts     dated timeline (with sources) + test-suite map
+   registry.ts     repository register + boundaries (snapshot date inside)
+   kpis.ts         12 palletizing KPIs, 6 LiDAR metrics — definitions and measurements
+   stack.ts        11-layer stack, mission, gate, agent tools, abstraction tests
+@@ -49,16 +55,22 @@ app/lib/cluster/
+   contracts.ts    cross-cluster event contracts as JSON Schema
+   constitution.ts Group Constitution + mandate text
+   github.ts       fail-safe live metadata
+-app/api/cluster/  JSON routes for every register
++app/api/cluster/  JSON routes for every register (+ /api/cluster/registry/<id>)
++app/report.md/    latest weekly report as Markdown
++app/components/cluster/  StatusBadge, Pipeline, RegistryTable, KpiTable, SubNav, StackDiagram,
++                  MissionCoverage, DependencyGraph, KpiCoverage, Timeline, ContractFlow, EvidenceGrid, StatusBar
++scripts/new-week.mjs  scaffold next week's report (12 headings, TODO bodies that verify.sh refuses to ship)
+ app/lib/work.ts   grid / traction-power case studies (kept)
+ scripts/verify.sh acceptance contract (same command locally and against production)
+ ```
+ 
+ ## Weekly cycle
+ 
+-1. Edit the registers in `app/lib/cluster/*.ts` (new report at the top of `report.ts`; new decisions with reversal conditions; kill-register states only with a matching decision).
+-2. `npm run build && npm run start & sleep 6 && npm run verify`.
+-3. Push. CI runs typecheck, lint, build, `verify.sh`, axe on 18 routes, and Lighthouse.
++1. `node scripts/new-week.mjs` — scaffolds the next report at the top of `report.ts`. Replace every `TODO`.
++2. Edit the other registers as needed (`decisions.ts` with reversal conditions; kill-register states only with a matching decision; `kpis.ts` a `measured` object only with `source` + `date`; `evidence.ts` for dated events with sources).
++3. `npm run build && npm run start & sleep 6 && npm run verify`.
++4. Push. CI runs typecheck, lint, build, `verify.sh` (126 contracts), axe on 18 routes, Lighthouse on 6.
++5. Paste `/report.md` into the CEO mail; the same words are on `/report` and `/api/cluster/report`.
+ 
+ ## Run locally
+ 
+diff --git a/app/api/cluster/registry/[id]/route.ts b/app/api/cluster/registry/[id]/route.ts
+new file mode 100644
+index 0000000..941829a
+--- /dev/null
++++ b/app/api/cluster/registry/[id]/route.ts
+@@ -0,0 +1,18 @@
++import { json, GENERATOR } from '../../_json';
++import { getEntry, registry } from '../../../../lib/cluster/registry';
++import { liveMetadata } from '../../../../lib/cluster/github';
++
++export const revalidate = 3600;
++
++export function generateStaticParams() {
++  return registry.map((r) => ({ id: r.id }));
++}
++
++/** /api/cluster/registry/[id] — one register entry with live activity. */
++export async function GET(_req: Request, { params }: { params: { id: string } }) {
++  const e = getEntry(params.id);
++  if (!e) return json({ error: 'not found', id: params.id }, 404);
++  const meta = (await liveMetadata())[e.id];
++  const usedBy = registry.filter((r) => r.dependsOn.includes(e.id)).map((r) => r.id);
++  return json({ ...GENERATOR, entry: { ...e, activity: meta, usedBy } });
++}
+diff --git a/app/api/cluster/registry/route.ts b/app/api/cluster/registry/route.ts
+index fbb4ad9..1063453 100644
+--- a/app/api/cluster/registry/route.ts
++++ b/app/api/cluster/registry/route.ts
+@@ -1,28 +1,29 @@
+-import type { NextRequest } from 'next/server';
+ import { json, GENERATOR } from '../_json';
+ import { registry, boundaries, REGISTRY_SNAPSHOT_DATE } from '../../../lib/cluster/registry';
+-import { STATUSES } from '../../../lib/cluster/types';
++import { STATUSES, MISSION, LAYERS } from '../../../lib/cluster/types';
+ import { liveMetadata } from '../../../lib/cluster/github';
++import { SITE_URL } from '../../../lib/site';
+ 
+ export const revalidate = 3600;
+ 
+ /**
+  * /api/cluster/registry — the register with live GitHub metadata merged in
+- * (fail-safe to the dated snapshot). `?id=` returns one entry.
++ * (fail-safe to the dated snapshot). Static, regenerated hourly. One entry:
++ * /api/cluster/registry/<id>.
+  */
+-export async function GET(req: NextRequest) {
++export async function GET() {
+   const meta = await liveMetadata();
+-  const id = req.nextUrl.searchParams.get('id');
+-  const entries = registry.map((e) => ({ ...e, activity: meta[e.id] }));
+-  if (id) {
+-    const one = entries.find((e) => e.id === id);
+-    return one ? json({ ...GENERATOR, entry: one }) : json({ error: 'not found', id }, 404);
+-  }
++  const entries = registry.map((e) => ({ ...e, activity: meta[e.id], url: `${SITE_URL}/registry/${e.id}` }));
++  const edges = registry.flatMap((e) => e.dependsOn.map((d) => ({ from: d, to: e.id })));
+   return json({
+     ...GENERATOR,
+     snapshotDate: REGISTRY_SNAPSHOT_DATE,
+     allowedStatuses: STATUSES,
++    missionStages: MISSION,
++    stackLayers: LAYERS,
+     counts: Object.fromEntries(STATUSES.map((s) => [s, registry.filter((r) => r.cluster === 'physical-ai' && r.status === s).length])),
++    missionCoverage: Object.fromEntries(MISSION.map((s) => [s, registry.filter((r) => r.cluster === 'physical-ai' && r.stages.includes(s)).map((r) => r.id)])),
++    dependencyEdges: edges,
+     entries,
+     boundaries,
+   });
+diff --git a/app/architecture/page.tsx b/app/architecture/page.tsx
+index ea5871f..a1925d7 100644
+--- a/app/architecture/page.tsx
++++ b/app/architecture/page.tsx
+@@ -1,5 +1,7 @@
+ import type { Metadata } from 'next';
+ import Pipeline from '../components/cluster/Pipeline';
++import SubNav from '../components/cluster/SubNav';
++import StackDiagram from '../components/cluster/StackDiagram';
+ import { stack, gate, mission, agentTools, abstractionTests, abstractionCandidates } from '../lib/cluster/stack';
+ 
+ export const metadata: Metadata = {
+@@ -26,6 +28,7 @@ const natureLabel: Record<string, string> = {
+ export default function ArchitecturePage() {
+   return (
+     <main className="doc doc-wide">
++      <SubNav current="/architecture" />
+       <section className="blk blk-first">
+         <p className="kicker">Physical AI & Robotics · architecture</p>
+         <h1 className="h1">Target architecture</h1>
+@@ -34,6 +37,7 @@ export default function ArchitecturePage() {
+           column “today” says where each layer exists — or that it does not.
+         </p>
+         <Pipeline stages={mission} label="Mission" compact />
++        <StackDiagram />
+       </section>
+ 
+       <section className="blk" aria-labelledby="stack">
+diff --git a/app/components/HomeLanding.tsx b/app/components/HomeLanding.tsx
+index b7df477..f4eeb6c 100644
+--- a/app/components/HomeLanding.tsx
++++ b/app/components/HomeLanding.tsx
+@@ -4,8 +4,12 @@ import Image from 'next/image';
+ import ContactForm from './ContactForm';
+ import Pipeline from './cluster/Pipeline';
+ import RegistryTable from './cluster/RegistryTable';
+-import KpiTable from './cluster/KpiTable';
+ import StatusBadge from './cluster/StatusBadge';
++import SubNav from './cluster/SubNav';
++import MissionCoverage from './cluster/MissionCoverage';
++import KpiCoverage from './cluster/KpiCoverage';
++import StackDiagram from './cluster/StackDiagram';
++import StatusBar from './cluster/StatusBar';
+ import { useLanguage } from '../lib/i18n';
+ import { pick } from '../lib/copy';
+ import { CITY, SITE_NAME } from '../lib/site';
+@@ -53,6 +57,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
+ 
+   return (
+     <main className="doc doc-wide">
++      <SubNav current="/" />
+       <section className="blk blk-first" aria-labelledby="mandate">
+         <p className="kicker">{c.home.kicker}</p>
+         <h1 id="mandate" className="h1 mandate">{c.home.mandate}</h1>
+@@ -62,6 +67,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
+       <section className="blk" aria-labelledby="mission">
+         <h2 id="mission" className="blk-h">{c.home.missionHeading}</h2>
+         <Pipeline stages={mission} label="Mission" />
++        <MissionCoverage compact />
+         <p className="fine">{firstPrinciple.lead}</p>
+         <ul className="inline-list">
+           {firstPrinciple.conditions.map((x) => (
+@@ -89,6 +95,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
+       <section className="blk" aria-labelledby="registry">
+         <h2 id="registry" className="blk-h">{c.home.registryHeading}</h2>
+         <p className="blk-intro">{c.home.registryIntro}</p>
++        <StatusBar />
+         <RegistryTable entries={owned} meta={meta} compact />
+         <p className="blk-more">
+           <a href="/registry">{c.home.registryAll} →</a> · <a href="/api/cluster/registry">JSON</a>
+@@ -98,7 +105,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
+       <section className="blk" aria-labelledby="first">
+         <h2 id="first" className="blk-h">{c.home.firstTargetHeading}</h2>
+         <p className="blk-intro">{c.home.firstTargetIntro}</p>
+-        <KpiTable kpis={palletizerKpis} caption="Palletizing KPIs" />
++        <KpiCoverage kpis={palletizerKpis} href="/palletizer" title="Palletizing KPIs" />
+         <p className="blk-more">
+           <a href="/palletizer">{c.home.firstTargetAll} →</a> · <a href="/api/cluster/kpis">JSON</a>
+         </p>
+@@ -108,6 +115,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
+         <h2 id="gate" className="blk-h">{c.home.gateHeading}</h2>
+         <p className="blk-intro">{c.home.gateIntro}</p>
+         <Pipeline stages={gate} label="Safety gate" deterministicFrom={1} />
++        <StackDiagram compact />
+         <div className="two-col">
+           <div>
+             <h3 className="sub-h">Agents may</h3>
+diff --git a/app/components/cluster/ContractFlow.tsx b/app/components/cluster/ContractFlow.tsx
+new file mode 100644
+index 0000000..d013d1b
+--- /dev/null
++++ b/app/components/cluster/ContractFlow.tsx
+@@ -0,0 +1,118 @@
++import { contracts } from '../../lib/cluster/contracts';
++import type { Cluster } from '../../lib/cluster/types';
++
++/**
++ * ContractFlow — the three clusters as boxes and every versioned contract as
++ * a labelled arrow between them. Drawn from contracts.ts, so a new contract
++ * appears here without touching the picture.
++ */
++const W = 760;
++const H = 340;
++const BOX_W = 200;
++const BOX_H = 56;
++
++const pos: Record<Cluster, { x: number; y: number; label: string }> = {
++  energy: { x: 40, y: 40, label: 'Energy Intelligence' },
++  operations: { x: W - 40 - BOX_W, y: 40, label: 'Operations & Commercial' },
++  'physical-ai': { x: (W - BOX_W) / 2, y: H - 40 - BOX_H, label: 'Physical AI & Robotics' },
++};
++
++type Pt = { x: number; y: number };
++
++/** Point where the ray p→q leaves the axis-aligned box of cluster `k`. */
++function exitPoint(p: Pt, q: Pt, k: Cluster): Pt {
++  const r = pos[k];
++  const dx = q.x - p.x;
++  const dy = q.y - p.y;
++  let t = Infinity;
++  if (dx !== 0) t = Math.min(t, ((dx > 0 ? r.x + BOX_W : r.x) - p.x) / dx);
++  if (dy !== 0) t = Math.min(t, ((dy > 0 ? r.y + BOX_H : r.y) - p.y) / dy);
++  return { x: p.x + dx * t, y: p.y + dy * t };
++}
++
++function edgeGeometry(from: Cluster, to: Cluster, off: number) {
++  const a = pos[from];
++  const b = pos[to];
++  const ca = { x: a.x + BOX_W / 2, y: a.y + BOX_H / 2 };
++  const cb = { x: b.x + BOX_W / 2, y: b.y + BOX_H / 2 };
++  const dx = cb.x - ca.x;
++  const dy = cb.y - ca.y;
++  const len = Math.hypot(dx, dy) || 1;
++  // canonical normal: independent of direction so parallel edges of a pair split symmetrically
++  const canon = from < to ? 1 : -1;
++  const nx = (-dy / len) * canon;
++  const ny = (dx / len) * canon;
++  const pa = { x: ca.x + nx * off, y: ca.y + ny * off };
++  const pb = { x: cb.x + nx * off, y: cb.y + ny * off };
++  const s = exitPoint(pa, pb, from);
++  const e = exitPoint(pb, pa, to);
++  // pull the arrow tip back so the marker sits on the border
++  const ux = (e.x - s.x) / (Math.hypot(e.x - s.x, e.y - s.y) || 1);
++  const uy = (e.y - s.y) / (Math.hypot(e.x - s.x, e.y - s.y) || 1);
++  return { x1: s.x, y1: s.y, x2: e.x - ux * 2, y2: e.y - uy * 2, canon };
++}
++
++export default function ContractFlow() {
++  // offset parallel/opposite edges between the same pair
++  const seen = new Map<string, number>();
++  return (
++    <figure className="fig">
++      <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-labelledby="cf-title cf-desc" style={{ width: '100%', height: 'auto', maxWidth: W }}>
++        <title id="cf-title">Cross-cluster contract flow</title>
++        <desc id="cf-desc">{contracts.map((c) => `${c.id} v${c.version} from ${c.producer} to ${c.consumer}`).join('. ')}</desc>
++        <defs>
++          <marker id="cf-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto">
++            <path d="M0,0 L8,4 L0,8 z" fill="#141414" />
++          </marker>
++        </defs>
++        {contracts.map((c) => {
++          const key = [c.producer, c.consumer].sort().join('|');
++          const n = seen.get(key) ?? 0;
++          seen.set(key, n + 1);
++          const pairCount = contracts.filter((k) => [k.producer, k.consumer].sort().join('|') === key).length;
++          // parallel edges between the same pair are pushed apart along the
++          // pair's canonical normal and their labels sit at different points
++          // along the line, measured in the canonical direction.
++          const off = pairCount > 1 ? (n - (pairCount - 1) / 2) * 48 : 0;
++          const { x1, y1, x2, y2, canon } = edgeGeometry(c.producer, c.consumer, off);
++          const tCanon = pairCount > 1 ? 0.3 + (n / (pairCount - 1)) * 0.28 : 0.5;
++          const t = canon === 1 ? tCanon : 1 - tCanon;
++          const mx = x1 + (x2 - x1) * t;
++          const my = y1 + (y2 - y1) * t;
++          const labelW = `${c.id} v${c.version}`.length * 6.6 + 16;
++          return (
++            <g key={c.id}>
++              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#141414" strokeWidth="1.25" markerEnd="url(#cf-arrow)" />
++              <a href={`/contracts#${c.id}`}>
++                <rect x={mx - labelW / 2} y={my - 12} width={labelW} height={22} fill="#FFFCF7" stroke="#DDD9CE" />
++                <text x={mx} y={my + 3} fontSize="10.5" fontFamily="IBM Plex Mono, monospace" fill="#141414" textAnchor="middle">
++                  {c.id} v{c.version}
++                </text>
++              </a>
++              <title>{`${c.id} v${c.version}: ${c.producer} → ${c.consumer}. ${c.summary}`}</title>
++            </g>
++          );
++        })}
++        {(Object.keys(pos) as Cluster[]).map((k) => {
++          const p = pos[k];
++          const here = k === 'physical-ai';
++          return (
++            <g key={k}>
++              <rect x={p.x} y={p.y} width={BOX_W} height={BOX_H} fill={here ? '#141414' : '#FFFCF7'} stroke="#141414" strokeWidth="1.25" />
++              <text x={p.x + BOX_W / 2} y={p.y + 24} fontSize="13" fontFamily="IBM Plex Sans, Inter, system-ui, sans-serif" fontWeight={600} fill={here ? '#F7F6F2' : '#141414'} textAnchor="middle">
++                {p.label}
++              </text>
++              <text x={p.x + BOX_W / 2} y={p.y + 42} fontSize="9.5" fontFamily="IBM Plex Mono, monospace" fill={here ? '#DDD9CE' : '#5A584F'} textAnchor="middle" letterSpacing="0.08em">
++                {here ? 'THIS HOST' : k.toUpperCase()}
++              </text>
++            </g>
++          );
++        })}
++      </svg>
++      <figcaption>
++        Every arrow is a versioned JSON-Schema event. There is no shared database and no shared domain logic; none of
++        the three systems requires the others to function.
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/app/components/cluster/DependencyGraph.tsx b/app/components/cluster/DependencyGraph.tsx
+new file mode 100644
+index 0000000..a6c31b5
+--- /dev/null
++++ b/app/components/cluster/DependencyGraph.tsx
+@@ -0,0 +1,135 @@
++import { registry } from '../../lib/cluster/registry';
++import type { RegistryEntry } from '../../lib/cluster/types';
++
++/**
++ * DependencyGraph — the register's `dependsOn` edges as a layered
++ * left-to-right graph. Level = longest path from a root. Computed at
++ * render time from the register, so the picture cannot drift from the data.
++ * Node fill follows the status badge (ink = CORE, rhine outline = MODULE,
++ * dashed = RESEARCH, fault outline = EXPERIMENT, muted = INTERNAL) and the
++ * status word is printed in every node, so colour is never the only cue.
++ */
++const NODE_W = 178;
++const NODE_H = 40;
++const COL_GAP = 90;
++const ROW_GAP = 14;
++const PAD = 12;
++
++function levelOf(e: RegistryEntry, byId: Map<string, RegistryEntry>, memo: Map<string, number>): number {
++  if (memo.has(e.id)) return memo.get(e.id)!;
++  const deps = e.dependsOn.map((d) => byId.get(d)).filter(Boolean) as RegistryEntry[];
++  const lv = deps.length ? Math.max(...deps.map((d) => levelOf(d, byId, memo))) + 1 : 0;
++  memo.set(e.id, lv);
++  return lv;
++}
++
++export default function DependencyGraph() {
++  const nodes = registry;
++  const byId = new Map(nodes.map((n) => [n.id, n]));
++  const memo = new Map<string, number>();
++  const levels = nodes.map((n) => levelOf(n, byId, memo));
++  const maxLevel = Math.max(...levels);
++  const cols: RegistryEntry[][] = Array.from({ length: maxLevel + 1 }, () => []);
++  nodes.forEach((n, i) => cols[levels[i]].push(n));
++  // Column 0: most-depended-on first, then status rank. Later columns:
++  // ordered by the position of their dependencies in the previous column
++  // (fewer crossings), then status rank.
++  const statusRank: Record<string, number> = { CORE: 0, MODULE: 1, RESEARCH: 2, INTERNAL: 3, EXPERIMENT: 4, ARCHIVE: 5 };
++  const dependants = (id: string) => nodes.filter((n) => n.dependsOn.includes(id)).length;
++  cols[0].sort((a, b) => dependants(b.id) - dependants(a.id) || statusRank[a.status] - statusRank[b.status] || a.id.localeCompare(b.id));
++  for (let ci = 1; ci < cols.length; ci++) {
++    const prev = cols[ci - 1].map((n) => n.id);
++    const anchor = (n: RegistryEntry) => {
++      const idx = n.dependsOn.map((d) => prev.indexOf(d)).filter((i) => i >= 0);
++      return idx.length ? idx.reduce((x, y) => x + y, 0) / idx.length : prev.length;
++    };
++    cols[ci].sort((a, b) => anchor(a) - anchor(b) || statusRank[a.status] - statusRank[b.status] || a.id.localeCompare(b.id));
++  }
++  const tallest = Math.max(...cols.map((c) => c.length));
++  const W = PAD * 2 + cols.length * NODE_W + (cols.length - 1) * COL_GAP;
++  const H = PAD * 2 + tallest * NODE_H + (tallest - 1) * ROW_GAP;
++  const pos = new Map<string, { x: number; y: number }>();
++  cols.forEach((c, ci) => {
++    const colH = c.length * NODE_H + (c.length - 1) * ROW_GAP;
++    const y0 = PAD + (H - PAD * 2 - colH) / 2;
++    c.forEach((n, ri) => pos.set(n.id, { x: PAD + ci * (NODE_W + COL_GAP), y: y0 + ri * (NODE_H + ROW_GAP) }));
++  });
++
++  const style = (s: RegistryEntry['status']) => {
++    switch (s) {
++      case 'CORE':
++        return { fill: '#141414', stroke: '#141414', text: '#F7F6F2', dash: undefined };
++      case 'MODULE':
++        return { fill: '#FFFCF7', stroke: '#1E3A5F', text: '#141414', dash: undefined };
++      case 'RESEARCH':
++        return { fill: '#FFFCF7', stroke: '#141414', text: '#141414', dash: '4 3' };
++      case 'EXPERIMENT':
++        return { fill: '#FFFCF7', stroke: '#8B1E2D', text: '#141414', dash: undefined };
++      case 'INTERNAL':
++        return { fill: '#F7F6F2', stroke: '#5A584F', text: '#5A584F', dash: undefined };
++      default:
++        return { fill: '#F7F6F2', stroke: '#DDD9CE', text: '#5A584F', dash: undefined };
++    }
++  };
++
++  const edges = nodes.flatMap((n) => n.dependsOn.filter((d) => pos.has(d)).map((d) => ({ from: d, to: n.id })));
++
++  return (
++    <figure className="fig">
++      <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-labelledby="dep-title dep-desc" style={{ width: '100%', height: 'auto', maxWidth: W }}>
++        <title id="dep-title">Dependency graph of the register</title>
++        <desc id="dep-desc">{edges.map((e) => `${e.to} depends on ${e.from}`).join('. ') || 'No edges.'}</desc>
++        <defs>
++          <marker id="dep-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="7" markerHeight="7" orient="auto">
++            <path d="M0,0 L8,4 L0,8 z" fill="#5A584F" />
++          </marker>
++        </defs>
++        {edges.map((e) => {
++          const a = pos.get(e.from)!;
++          const b = pos.get(e.to)!;
++          const x1 = a.x + NODE_W;
++          const y1 = a.y + NODE_H / 2;
++          const x2 = b.x;
++          const y2 = b.y + NODE_H / 2;
++          const cx = (x1 + x2) / 2;
++          return (
++            <path
++              key={`${e.from}->${e.to}`}
++              d={`M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2 - 1} ${y2}`}
++              fill="none"
++              stroke="#5A584F"
++              strokeWidth="1.25"
++              markerEnd="url(#dep-arrow)"
++            >
++              <title>{`${e.to} → depends on → ${e.from}`}</title>
++            </path>
++          );
++        })}
++        {nodes.map((n) => {
++          const p = pos.get(n.id)!;
++          const s = style(n.status);
++          return (
++            <a key={n.id} href={`/registry/${n.id}`}>
++              <g>
++                <rect x={p.x} y={p.y} width={NODE_W} height={NODE_H} fill={s.fill} stroke={s.stroke} strokeWidth="1.25" strokeDasharray={s.dash} />
++                <text x={p.x + 10} y={p.y + 17} fontSize="11.5" fontFamily="IBM Plex Mono, monospace" fill={s.text}>
++                  {n.id.length > 22 ? n.id.slice(0, 21) + '…' : n.id}
++                </text>
++                <text x={p.x + 10} y={p.y + 31} fontSize="9" fontFamily="IBM Plex Mono, monospace" fill={s.text} letterSpacing="0.08em" opacity="0.85">
++                  {n.status}
++                  {n.cluster !== 'physical-ai' ? ` · ${n.cluster.toUpperCase()}` : ''}
++                </text>
++                <title>{`${n.id} [${n.status}] — ${n.technicalRole}`}</title>
++              </g>
++            </a>
++          );
++        })}
++      </svg>
++      <figcaption>
++        Arrows point from a dependency to the entry that needs it. Columns are dependency depth. NeuralBridge is drawn
++        because inspection depends on its authorisation interface; it is owned by the Energy cluster and consumed by
++        contract only.
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/app/components/cluster/EvidenceGrid.tsx b/app/components/cluster/EvidenceGrid.tsx
+new file mode 100644
+index 0000000..0ad20e4
+--- /dev/null
++++ b/app/components/cluster/EvidenceGrid.tsx
+@@ -0,0 +1,41 @@
++import { stack } from '../../lib/cluster/stack';
++import { palletizerTests, EVIDENCE_SNAPSHOT } from '../../lib/cluster/evidence';
++
++/**
++ * EvidenceGrid — the palletizer test suite mapped onto the stack layers.
++ * A layer with modules has test evidence behind it; a layer without says
++ * "no test evidence". Module names are the files under tests/.
++ */
++export default function EvidenceGrid() {
++  return (
++    <figure className="fig">
++      <ol className="evgrid" aria-label="Test modules by stack layer">
++        {stack.map((l) => {
++          const mods = palletizerTests.filter((t) => t.layer === l.key);
++          return (
++            <li key={l.key} className={mods.length ? 'evrow' : 'evrow evrow-empty'}>
++              <span className="evrow-layer">{l.name}</span>
++              <span className="evrow-mods">
++                {mods.length ? (
++                  mods.map((m) => (
++                    <code key={m.name} className="path" title={m.note}>
++                      test_{m.name}.py{m.note ? ` · ${m.note}` : ''}
++                    </code>
++                  ))
++                ) : (
++                  <span className="muted">no test evidence</span>
++                )}
++              </span>
++              <span className="evrow-n num">{mods.length || '—'}</span>
++            </li>
++          );
++        })}
++      </ol>
++      <figcaption>
++        {EVIDENCE_SNAPSHOT.testModules} test modules and {EVIDENCE_SNAPSHOT.pythonModulesOutsideWeb} Python modules
++        outside <code className="path">web/</code> at the {EVIDENCE_SNAPSHOT.date} commit ({EVIDENCE_SNAPSHOT.source}).
++        Perception, world model, simulator, actuation, failure analysis and learning have no tests in this repository.
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/app/components/cluster/KpiCoverage.tsx b/app/components/cluster/KpiCoverage.tsx
+new file mode 100644
+index 0000000..3fd46df
+--- /dev/null
++++ b/app/components/cluster/KpiCoverage.tsx
+@@ -0,0 +1,39 @@
++import type { Kpi } from '../../lib/cluster/types';
++
++/**
++ * KpiCoverage — the KPI set as a strip of cells. A measured KPI shows its
++ * value and unit in ink; an unmeasured one shows a dash on a hatched cell.
++ * The count in the heading is the only number that exists today.
++ */
++export default function KpiCoverage({ kpis, href, title }: { kpis: Kpi[]; href: string; title: string }) {
++  const measured = kpis.filter((k) => k.measured).length;
++  return (
++    <figure className="fig">
++      <ul className="kpistrip" aria-label={`${title}: ${measured} of ${kpis.length} measured`}>
++        {kpis.map((k) => (
++          <li key={k.id} className={k.measured ? 'kpicell kpicell-on' : 'kpicell'}>
++            <a href={`${href}#kpi-${k.id}`}>
++              <span className="kpicell-name">{k.name}</span>
++              <span className="kpicell-val">
++                {k.measured ? (
++                  <>
++                    <strong>{k.measured.value}</strong> <span className="muted">{k.measured.unit}</span>
++                  </>
++                ) : (
++                  <>
++                    <span aria-hidden="true">—</span> <span className="muted src">unmeasured</span>
++                  </>
++                )}
++              </span>
++              <span className="kpicell-unit">{k.unit}</span>
++            </a>
++          </li>
++        ))}
++      </ul>
++      <figcaption>
++        {title}: <strong>{measured}</strong> of {kpis.length} measured. Hatched = no public artifact or dated report has
++        produced the number yet.
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/app/components/cluster/KpiTable.tsx b/app/components/cluster/KpiTable.tsx
+index d11cdac..1a4b3fd 100644
+--- a/app/components/cluster/KpiTable.tsx
++++ b/app/components/cluster/KpiTable.tsx
+@@ -23,14 +23,14 @@ export default function KpiTable({ kpis, caption }: { kpis: Kpi[]; caption: stri
+         </thead>
+         <tbody>
+           {kpis.map((k) => (
+-            <tr key={k.id}>
++            <tr key={k.id} id={`kpi-${k.id}`}>
+               <th scope="row">
+                 {k.name}
+                 <br />
+                 <code className="path">{k.unit}</code>
+               </th>
+-              <td>{k.definition}</td>
+-              <td className="num">
++              <td data-label="Definition">{k.definition}</td>
++              <td className="num" data-label="Measured">
+                 {k.measured ? (
+                   <>
+                     <strong>{k.measured.value}</strong> {k.measured.unit}
+@@ -46,7 +46,7 @@ export default function KpiTable({ kpis, caption }: { kpis: Kpi[]; caption: stri
+                   </>
+                 )}
+               </td>
+-              <td>{k.method}</td>
++              <td data-label="Method">{k.method}</td>
+             </tr>
+           ))}
+         </tbody>
+diff --git a/app/components/cluster/MissionCoverage.tsx b/app/components/cluster/MissionCoverage.tsx
+new file mode 100644
+index 0000000..6d73255
+--- /dev/null
++++ b/app/components/cluster/MissionCoverage.tsx
+@@ -0,0 +1,67 @@
++import { MISSION } from '../../lib/cluster/types';
++import { owned } from '../../lib/cluster/registry';
++
++/**
++ * MissionCoverage — which register entries cover which mission stage with
++ * code that exists today. A filled cell is a claim the entry's public
++ * artifact can back; an empty stage column is a gap, stated as a number.
++ * An HTML table: the picture and the accessible structure are the same thing.
++ */
++export default function MissionCoverage({ compact = false }: { compact?: boolean }) {
++  const rows = compact ? owned.filter((e) => e.stages.length > 0 || e.status === 'CORE') : owned;
++  const totals = MISSION.map((s) => owned.filter((e) => e.stages.includes(s)).length);
++  const covered = totals.filter((t) => t > 0).length;
++
++  return (
++    <figure className="fig">
++      <div className="tbl-wrap" tabIndex={0}>
++        <table className="tbl cov">
++          <caption>
++            Mission coverage — {covered} of {MISSION.length} stages have code behind them
++          </caption>
++          <thead>
++            <tr>
++              <th scope="col">Entry</th>
++              {MISSION.map((s) => (
++                <th key={s} scope="col" className="cov-h">
++                  {s}
++                </th>
++              ))}
++            </tr>
++          </thead>
++          <tbody>
++            {rows.map((e) => (
++              <tr key={e.id}>
++                <th scope="row">
++                  <a href={`/registry/${e.id}`}>{e.id}</a>
++                </th>
++                {MISSION.map((s) => {
++                  const on = e.stages.includes(s);
++                  return (
++                    <td key={s} className={on ? 'cov-on' : 'cov-off'}>
++                      <span aria-label={`${s}: ${on ? 'covered' : 'not covered'}`}>{on ? '■' : '·'}</span>
++                    </td>
++                  );
++                })}
++              </tr>
++            ))}
++          </tbody>
++          <tfoot>
++            <tr>
++              <th scope="row">entries per stage</th>
++              {totals.map((t, i) => (
++                <td key={MISSION[i]} className={t ? 'num' : 'num cov-gap'}>
++                  {t}
++                </td>
++              ))}
++            </tr>
++          </tfoot>
++        </table>
++      </div>
++      <figcaption>
++        ■ = the entry’s existing public code covers the stage. ACT, RECOVER and LEARN have no code behind them in this
++        cluster; that is the honest shape of the work so far.
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/app/components/cluster/RegistryTable.tsx b/app/components/cluster/RegistryTable.tsx
+index 5ba49fb..c051543 100644
+--- a/app/components/cluster/RegistryTable.tsx
++++ b/app/components/cluster/RegistryTable.tsx
+@@ -43,10 +43,10 @@ export default function RegistryTable({
+                   <br />
+                   <code className="path">{e.repository}</code>
+                 </th>
+-                <td>
++                <td data-label="Status">
+                   <StatusBadge status={e.status} />
+                 </td>
+-                <td>
++                <td data-label="Public artifact">
+                   {first ? (
+                     <a href={first.url} rel="noopener noreferrer">
+                       {first.label}
+@@ -56,7 +56,7 @@ export default function RegistryTable({
+                   )}
+                   {e.artifacts.length > 1 && <span className="muted"> +{e.artifacts.length - 1}</span>}
+                 </td>
+-                <td>
++                <td data-label="Last commit">
+                   {last ? (
+                     <>
+                       <time dateTime={last}>{last}</time>
+@@ -66,7 +66,7 @@ export default function RegistryTable({
+                     <span className="muted">not public</span>
+                   )}
+                 </td>
+-                {!compact && <td>{e.technicalRole}</td>}
++                {!compact && <td data-label="Role">{e.technicalRole}</td>}
+               </tr>
+             );
+           })}
+diff --git a/app/components/cluster/StackDiagram.tsx b/app/components/cluster/StackDiagram.tsx
+new file mode 100644
+index 0000000..84a97e2
+--- /dev/null
++++ b/app/components/cluster/StackDiagram.tsx
+@@ -0,0 +1,138 @@
++import { stack } from '../../lib/cluster/stack';
++import { owned } from '../../lib/cluster/registry';
++import type { LayerKey } from '../../lib/cluster/types';
++
++/**
++ * StackDiagram — the eleven layers as one column, with what occupies each
++ * layer today drawn beside it. Nature is encoded three ways at once: the
++ * word in the left band, the fill (ink = deterministic, outline =
++ * probabilistic, hatch = physical, dotted = telemetry) and the row order.
++ * A layer nothing occupies is drawn hatched and says "not built".
++ * Pure SVG, server-rendered, no script.
++ */
++const W = 900;
++const ROW = 52;
++const PAD = 16;
++const LEFT = 150; // nature band + layer name column
++const NAME_W = 200;
++const CHIP_W = 124;
++const CHIP_GAP = 8;
++const H = PAD * 2 + stack.length * ROW + 34;
++
++const byLayer: Record<LayerKey, string[]> = Object.fromEntries(
++  stack.map((l) => [l.key, owned.filter((e) => e.layers.includes(l.key)).map((e) => e.id)]),
++) as Record<LayerKey, string[]>;
++
++export default function StackDiagram({ compact = false }: { compact?: boolean }) {
++  const gateFrom = stack.findIndex((l) => l.key === 'simulator');
++  const gateTo = stack.findIndex((l) => l.key === 'controller');
++  return (
++    <figure className="fig">
++      <svg
++        className="svg-stack"
++        viewBox={`0 0 ${W} ${H}`}
++        role="img"
++        aria-labelledby="stack-title stack-desc"
++        style={{ width: '100%', height: 'auto', maxWidth: compact ? 760 : W }}
++      >
++        <title id="stack-title">Target stack: eleven layers and what occupies each today</title>
++        <desc id="stack-desc">
++          {stack.map((l) => `${l.name}: ${byLayer[l.key].length ? byLayer[l.key].join(', ') : 'not built'}`).join('. ')}
++        </desc>
++        <defs>
++          <pattern id="stk-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
++            <line x1="0" y1="0" x2="0" y2="6" stroke="#DDD9CE" strokeWidth="2" />
++          </pattern>
++        </defs>
++
++        {stack.map((l, i) => {
++          const y = PAD + i * ROW;
++          const occupants = byLayer[l.key];
++          const det = l.nature === 'deterministic';
++          const fill = det ? '#141414' : l.nature === 'physical' ? 'url(#stk-hatch)' : '#FFFCF7';
++          const stroke = det ? '#141414' : l.nature === 'telemetry' ? '#5A584F' : '#141414';
++          const dash = l.nature === 'telemetry' ? '3 3' : undefined;
++          return (
++            <g key={l.key}>
++              {/* nature band */}
++              <text x={PAD} y={y + 30} fontSize="10" fontFamily="IBM Plex Mono, monospace" fill="#5A584F" letterSpacing="0.06em">
++                {l.nature.toUpperCase()}
++              </text>
++              {/* layer box */}
++              <rect x={LEFT} y={y + 6} width={NAME_W} height={ROW - 12} fill={fill} stroke={stroke} strokeWidth="1.25" strokeDasharray={dash} />
++              <text
++                x={LEFT + 12}
++                y={y + 31}
++                fontSize="13.5"
++                fontFamily="IBM Plex Sans, Inter, system-ui, sans-serif"
++                fontWeight={600}
++                fill={det ? '#F7F6F2' : '#141414'}
++              >
++                {String(i + 1).padStart(2, '0')} {l.key === 'safety' ? 'Safety / constraints' : l.name}
++              </text>
++              {/* connector to next */}
++              {i < stack.length - 1 && (
++                <line x1={LEFT + NAME_W / 2} y1={y + ROW - 6} x2={LEFT + NAME_W / 2} y2={y + ROW + 6} stroke="#5A584F" strokeWidth="1" />
++              )}
++              {/* occupants */}
++              {occupants.length ? (
++                occupants.map((id, k) => (
++                  <g key={id}>
++                    <rect x={LEFT + NAME_W + 24 + k * (CHIP_W + CHIP_GAP)} y={y + 14} width={CHIP_W} height={24} fill="#FFFCF7" stroke="#DDD9CE" />
++                    <text x={LEFT + NAME_W + 24 + k * (CHIP_W + CHIP_GAP) + 8} y={y + 30} fontSize="10.5" fontFamily="IBM Plex Mono, monospace" fill="#141414">
++                      {id.length > 17 ? id.slice(0, 16) + '…' : id}
++                    </text>
++                    <title>{id}</title>
++                  </g>
++                ))
++              ) : (
++                <g>
++                  <rect x={LEFT + NAME_W + 24} y={y + 14} width={CHIP_W} height={24} fill="url(#stk-hatch)" stroke="#DDD9CE" />
++                  <text x={LEFT + NAME_W + 32} y={y + 30} fontSize="10.5" fontFamily="IBM Plex Mono, monospace" fill="#5A584F">
++                    not built
++                  </text>
++                </g>
++              )}
++            </g>
++          );
++        })}
++
++        {/* gate bracket */}
++        <g>
++          <path
++            d={`M ${LEFT - 14} ${PAD + gateFrom * ROW + 6} h -8 V ${PAD + gateTo * ROW + ROW - 6} h 8`}
++            fill="none"
++            stroke="#1E3A5F"
++            strokeWidth="1.5"
++          />
++          <text
++            x={LEFT - 30}
++            y={PAD + ((gateFrom + gateTo + 1) / 2) * ROW}
++            fontSize="10"
++            fontFamily="IBM Plex Mono, monospace"
++            fill="#1E3A5F"
++            textAnchor="middle"
++            transform={`rotate(-90 ${LEFT - 30} ${PAD + ((gateFrom + gateTo + 1) / 2) * ROW})`}
++            letterSpacing="0.08em"
++          >
++            GATE · MODELS STOP HERE
++          </text>
++        </g>
++
++        {/* legend */}
++        <g fontSize="10" fontFamily="IBM Plex Mono, monospace" fill="#5A584F">
++          <rect x={LEFT} y={H - 24} width="14" height="10" fill="#FFFCF7" stroke="#141414" />
++          <text x={LEFT + 20} y={H - 15}>probabilistic — proposes</text>
++          <rect x={LEFT + 190} y={H - 24} width="14" height="10" fill="#141414" />
++          <text x={LEFT + 210} y={H - 15}>deterministic — refuses</text>
++          <rect x={LEFT + 380} y={H - 24} width="14" height="10" fill="url(#stk-hatch)" stroke="#DDD9CE" />
++          <text x={LEFT + 400} y={H - 15}>not built / physical</text>
++        </g>
++      </svg>
++      <figcaption>
++        Layers a register entry occupies today are named beside it; hatched means nothing in the cluster occupies that
++        layer yet. The bracket marks the deterministic gate.
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/app/components/cluster/StatusBar.tsx b/app/components/cluster/StatusBar.tsx
+new file mode 100644
+index 0000000..3fe46b1
+--- /dev/null
++++ b/app/components/cluster/StatusBar.tsx
+@@ -0,0 +1,28 @@
++import { STATUSES } from '../../lib/cluster/types';
++import { owned } from '../../lib/cluster/registry';
++
++/**
++ * StatusBar — the register's status distribution as one segmented bar.
++ * Each segment carries its word and count; the segment styles mirror the
++ * badges (ink = CORE, rhine = MODULE, dashed = RESEARCH, fault = EXPERIMENT).
++ */
++export default function StatusBar() {
++  const counts = STATUSES.map((s) => ({ s, n: owned.filter((r) => r.status === s).length })).filter((x) => x.n > 0);
++  const total = counts.reduce((a, x) => a + x.n, 0);
++  return (
++    <figure className="fig fig-tight">
++      <ul className="stbar" aria-label={`Status distribution: ${counts.map((c) => `${c.s} ${c.n}`).join(', ')} of ${total} entries`}>
++        {counts.map((c) => (
++          <li key={c.s} style={{ flexGrow: c.n }}>
++            <a href={`/registry#st-${c.s}`} className={`stbar-seg st-${c.s.toLowerCase()}`}>
++              <span>{c.s}</span> <strong>{c.n}</strong>
++            </a>
++          </li>
++        ))}
++      </ul>
++      <figcaption>
++        {total} entries owned by this cluster. Widths are counts; every segment links to its section of the register.
++      </figcaption>
++    </figure>
++  );
++}
+diff --git a/app/components/cluster/SubNav.tsx b/app/components/cluster/SubNav.tsx
+new file mode 100644
+index 0000000..b52c8c1
+--- /dev/null
++++ b/app/components/cluster/SubNav.tsx
+@@ -0,0 +1,34 @@
++/**
++ * SubNav — the register rail shown on every register page. Same order
++ * everywhere; the current register is marked with aria-current.
++ */
++export const REGISTERS: { href: string; label: string }[] = [
++  { href: '/', label: 'Cockpit' },
++  { href: '/registry', label: 'Register' },
++  { href: '/architecture', label: 'Architecture' },
++  { href: '/palletizer', label: 'Palletizer' },
++  { href: '/decisions', label: 'Decisions' },
++  { href: '/report', label: 'Report' },
++  { href: '/research', label: 'Research' },
++  { href: '/contracts', label: 'Contracts' },
++  { href: '/constitution', label: 'Constitution' },
++];
++
++export default function SubNav({ current }: { current: string }) {
++  return (
++    <nav className="subnav" aria-label="Registers">
++      <ol>
++        {REGISTERS.map((r) => (
++          <li key={r.href}>
++            <a href={r.href} aria-current={r.href === current ? 'page' : undefined}>
++              {r.label}
++            </a>
++          </li>
++        ))}
++      </ol>
++      <a className="subnav-json" href="/api/cluster">
++        JSON
++      </a>
++    </nav>
++  );
++}
+diff --git a/app/components/cluster/Timeline.tsx b/app/components/cluster/Timeline.tsx
+new file mode 100644
+index 0000000..6396ff3
+--- /dev/null
++++ b/app/components/cluster/Timeline.tsx
+@@ -0,0 +1,144 @@
++import { timeline } from '../../lib/cluster/evidence';
++import type { TimelineEvent } from '../../lib/cluster/types';
++
++/**
++ * Timeline — dated events on one axis. Marker shape encodes kind (● release,
++ * ○ commit, ◆ decision, ◇ due) and the kind word is in every tooltip, so
++ * shape is never the only cue. Labels are laid out into lanes so nothing
++ * overlaps; the source of each date is in the table below the figure.
++ */
++const W = 960;
++const AXIS_Y = 150;
++const PAD_X = 40;
++const LANE_H = 24;
++
++const day = (iso: string) => Math.round(new Date(iso + 'T00:00:00Z').getTime() / 86400000);
++
++function shortLabel(e: TimelineEvent) {
++  const s = e.label.split(' — ')[0].split(' (')[0].split(': ')[0].split('; ')[0];
++  return s.length > 40 ? s.slice(0, 39) + '…' : s;
++}
++
++export default function Timeline({ events = timeline }: { events?: TimelineEvent[] }) {
++  const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
++  const d0 = day(sorted[0].date) - 10;
++  const d1 = day(sorted[sorted.length - 1].date) + 10;
++  const x = (iso: string) => PAD_X + ((day(iso) - d0) / (d1 - d0)) * (W - PAD_X * 2);
++
++  // lane assignment: labels ~ 6.3px per char; labels in the right third are
++  // right-anchored so nothing leaves the canvas. Each lane tracks occupied
++  // intervals; a label takes the first lane where its interval is free.
++  const lanes: number[] = [];
++  const anchorEnd: boolean[] = [];
++  const laneIntervals: [number, number][][] = [];
++  sorted.forEach((e) => {
++    const cx = x(e.date);
++    const width = shortLabel(e).length * 6.3 + 12;
++    const end = cx + width > W - PAD_X;
++    const iv: [number, number] = end ? [cx - width, cx] : [cx, cx + width];
++    let lane = 0;
++    while ((laneIntervals[lane] ?? []).some(([a, b]) => iv[0] < b + 10 && iv[1] > a - 10)) lane++;
++    (laneIntervals[lane] ??= []).push(iv);
++    lanes.push(lane);
++    anchorEnd.push(end);
++  });
++  const maxLane = Math.max(...lanes);
++  const H = AXIS_Y + 60;
++  const top = AXIS_Y - 30 - maxLane * LANE_H;
++
++  // month ticks
++  const months: { x: number; label: string }[] = [];
++  const first = new Date(sorted[0].date + 'T00:00:00Z');
++  const cur = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth(), 1));
++  const last = new Date(sorted[sorted.length - 1].date + 'T00:00:00Z');
++  while (cur <= last) {
++    const iso = cur.toISOString().slice(0, 10);
++    if (day(iso) >= d0) months.push({ x: x(iso), label: cur.toLocaleString('en-GB', { month: 'short', timeZone: 'UTC' }) });
++    cur.setUTCMonth(cur.getUTCMonth() + 1);
++  }
++
++  const marker = (e: TimelineEvent, cx: number) => {
++    const s = 6;
++    switch (e.kind) {
++      case 'release':
++        return <circle cx={cx} cy={AXIS_Y} r={s} fill="#141414" />;
++      case 'commit':
++        return <circle cx={cx} cy={AXIS_Y} r={s} fill="#F7F6F2" stroke="#141414" strokeWidth="1.5" />;
++      case 'decision':
++        return <rect x={cx - s} y={AXIS_Y - s} width={s * 2} height={s * 2} fill="#1E3A5F" transform={`rotate(45 ${cx} ${AXIS_Y})`} />;
++      default:
++        return <rect x={cx - s} y={AXIS_Y - s} width={s * 2} height={s * 2} fill="#F7F6F2" stroke="#8B1E2D" strokeWidth="1.5" strokeDasharray="3 2" transform={`rotate(45 ${cx} ${AXIS_Y})`} />;
++    }
++  };
++
++  return (
++    <figure className="fig">
++      <svg viewBox={`0 ${top - 10} ${W} ${H - top + 10}`} role="img" aria-labelledby="tl-title tl-desc" style={{ width: '100%', height: 'auto' }}>
++        <title id="tl-title">Evidence timeline</title>
++        <desc id="tl-desc">{sorted.map((e) => `${e.date} ${e.kind}: ${e.label}`).join('. ')}</desc>
++        <line x1={PAD_X} y1={AXIS_Y} x2={W - PAD_X} y2={AXIS_Y} stroke="#DDD9CE" strokeWidth="1.5" />
++        {months.map((m) => (
++          <g key={m.label + m.x}>
++            <line x1={m.x} y1={AXIS_Y - 4} x2={m.x} y2={AXIS_Y + 4} stroke="#5A584F" />
++            <text x={m.x} y={AXIS_Y + 22} fontSize="10" fontFamily="IBM Plex Mono, monospace" fill="#5A584F" textAnchor="middle">
++              {m.label}
++            </text>
++          </g>
++        ))}
++        {sorted.map((e, i) => {
++          const cx = x(e.date);
++          const ly = AXIS_Y - 26 - lanes[i] * LANE_H;
++          return (
++            <g key={e.date + e.label}>
++              <line x1={cx} y1={ly + 4} x2={cx} y2={AXIS_Y - 8} stroke="#DDD9CE" strokeWidth="1" />
++              {marker(e, cx)}
++              <text x={cx} y={ly} fontSize="10.5" fontFamily="IBM Plex Mono, monospace" fill={e.kind === 'due' ? '#8B1E2D' : '#141414'} textAnchor={anchorEnd[i] ? 'end' : 'start'}>
++                {shortLabel(e)}
++              </text>
++              <title>{`${e.date} · ${e.kind} · ${e.label} (source: ${e.source})`}</title>
++            </g>
++          );
++        })}
++        <g fontSize="10" fontFamily="IBM Plex Mono, monospace" fill="#5A584F">
++          <circle cx={PAD_X + 6} cy={AXIS_Y + 38} r="5" fill="#141414" />
++          <text x={PAD_X + 16} y={AXIS_Y + 42}>release</text>
++          <circle cx={PAD_X + 86} cy={AXIS_Y + 38} r="5" fill="#F7F6F2" stroke="#141414" strokeWidth="1.5" />
++          <text x={PAD_X + 96} y={AXIS_Y + 42}>commit</text>
++          <rect x={PAD_X + 160} y={AXIS_Y + 33} width="10" height="10" fill="#1E3A5F" transform={`rotate(45 ${PAD_X + 165} ${AXIS_Y + 38})`} />
++          <text x={PAD_X + 176} y={AXIS_Y + 42}>decision</text>
++          <rect x={PAD_X + 250} y={AXIS_Y + 33} width="10" height="10" fill="#F7F6F2" stroke="#8B1E2D" strokeDasharray="3 2" transform={`rotate(45 ${PAD_X + 255} ${AXIS_Y + 38})`} />
++          <text x={PAD_X + 266} y={AXIS_Y + 42}>decision due</text>
++        </g>
++      </svg>
++      <details className="fig-data">
++        <summary>Dates and sources</summary>
++        <div className="tbl-wrap" tabIndex={0}>
++          <table className="tbl">
++            <thead>
++              <tr>
++                <th scope="col">Date</th>
++                <th scope="col">Kind</th>
++                <th scope="col">Event</th>
++                <th scope="col">Source</th>
++              </tr>
++            </thead>
++            <tbody>
++              {sorted.map((e) => (
++                <tr key={e.date + e.label}>
++                  <td>
++                    <time dateTime={e.date}>{e.date}</time>
++                  </td>
++                  <td>{e.kind}</td>
++                  <td>{e.label}</td>
++                  <td>
++                    <code className="path">{e.source}</code>
++                  </td>
++                </tr>
++              ))}
++            </tbody>
++          </table>
++        </div>
++      </details>
++    </figure>
++  );
++}
+diff --git a/app/constitution/page.tsx b/app/constitution/page.tsx
+index 4b3246a..d24b169 100644
+--- a/app/constitution/page.tsx
++++ b/app/constitution/page.tsx
+@@ -1,4 +1,5 @@
+ import type { Metadata } from 'next';
++import SubNav from '../components/cluster/SubNav';
+ import Pipeline from '../components/cluster/Pipeline';
+ import { clusters, constitution, newProjectGate, finalRules, firstPrinciple } from '../lib/cluster/constitution';
+ 
+@@ -19,6 +20,7 @@ export const revalidate = 3600;
+ export default function ConstitutionPage() {
+   return (
+     <main className="doc">
++      <SubNav current="/constitution" />
+       <section className="blk blk-first">
+         <p className="kicker">Group Constitution</p>
+         <h1 className="h1">Three clusters. One constitution.</h1>
+@@ -58,7 +60,7 @@ export default function ConstitutionPage() {
+         </ul>
+         <p className="fine">
+           On this host: <a href="/registry">registry</a>, <a href="/architecture">architecture map</a>,{' '}
+-          <a href="/registry">dependency graph (per entry)</a>, <a href="/decisions">decision log</a>,{' '}
++          <a href="/registry#deps">dependency graph</a>, <a href="/decisions">decision log</a>,{' '}
+           <a href="/decisions#kill">kill list</a>, <a href="/research">roadmap · research backlog</a>,{' '}
+           <a href="/research#customers">customer evidence</a>, <a href="/research#intelligence">competitive intelligence</a>,{' '}
+           <a href="/report">weekly KPI report</a>.
+diff --git a/app/contracts/page.tsx b/app/contracts/page.tsx
+index 483eadf..dd1c2eb 100644
+--- a/app/contracts/page.tsx
++++ b/app/contracts/page.tsx
+@@ -1,5 +1,7 @@
+ import type { Metadata } from 'next';
++import SubNav from '../components/cluster/SubNav';
+ import Pipeline from '../components/cluster/Pipeline';
++import ContractFlow from '../components/cluster/ContractFlow';
+ import { contracts } from '../lib/cluster/contracts';
+ 
+ export const metadata: Metadata = {
+@@ -21,6 +23,7 @@ const chain = ['Energy: anomaly', 'Operations: work order', 'Physical AI: inspec
+ export default function ContractsPage() {
+   return (
+     <main className="doc doc-wide">
++      <SubNav current="/contracts" />
+       <section className="blk blk-first">
+         <p className="kicker">Physical AI & Robotics · contracts</p>
+         <h1 className="h1">Cross-cluster contracts</h1>
+@@ -30,6 +33,7 @@ export default function ContractsPage() {
+           Operations. Index: <a href="/api/cluster/contracts">/api/cluster/contracts</a>.
+         </p>
+         <Pipeline stages={chain} label="Integration chain" compact />
++        <ContractFlow />
+       </section>
+ 
+       {contracts.map((c) => (
+diff --git a/app/decisions/page.tsx b/app/decisions/page.tsx
+index 5196721..e32c690 100644
+--- a/app/decisions/page.tsx
++++ b/app/decisions/page.tsx
+@@ -1,4 +1,5 @@
+ import type { Metadata } from 'next';
++import SubNav from '../components/cluster/SubNav';
+ import { StateChip } from '../components/cluster/StatusBadge';
+ import { decisions, killCriteria, killRegister } from '../lib/cluster/decisions';
+ 
+@@ -20,6 +21,7 @@ export default function DecisionsPage() {
+   const list = [...decisions].reverse();
+   return (
+     <main className="doc doc-wide">
++      <SubNav current="/decisions" />
+       <section className="blk blk-first">
+         <p className="kicker">Physical AI & Robotics · decisions</p>
+         <h1 className="h1">Decision log</h1>
+diff --git a/app/globals.css b/app/globals.css
+index 636d053..8f77df4 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -1391,3 +1391,398 @@ code {
+ .reg-compact tbody th {
+   min-width: 0;
+ }
++
++/* ============================================================================
++   Control engine v2 — register rail, figures, coverage grids, evidence,
++   status bar, print. Still paper and ink; hatch means "not built".
++   ========================================================================== */
++
++/* register rail */
++
++.subnav {
++  display: flex;
++  align-items: center;
++  gap: 1rem;
++  margin: -0.75rem 0 2rem;
++  padding: 0.35rem 0;
++  border-bottom: 1px solid var(--line);
++  font-size: 0.85rem;
++  overflow-x: auto;
++  -webkit-overflow-scrolling: touch;
++}
++
++.subnav ol {
++  list-style: none;
++  margin: 0;
++  padding: 0;
++  display: flex;
++  gap: 0.15rem;
++  flex: 1;
++}
++
++.subnav a {
++  display: inline-block;
++  padding: 0.35rem 0.6rem;
++  color: var(--muted);
++  white-space: nowrap;
++  border-bottom: 2px solid transparent;
++}
++
++.subnav a[aria-current='page'] {
++  color: var(--ink);
++  border-bottom-color: var(--ink);
++  font-weight: 600;
++}
++
++.subnav a:hover,
++.subnav a:focus-visible {
++  text-decoration: none;
++  color: var(--ink);
++}
++
++.subnav-json {
++  font-family: var(--mono);
++  font-size: 0.75rem;
++  letter-spacing: 0.06em;
++}
++
++/* figures */
++
++.fig {
++  margin: 1.25rem 0 0;
++}
++
++.fig-tight {
++  margin-top: 0.75rem;
++}
++
++.fig svg {
++  display: block;
++  background: var(--paper);
++}
++
++.fig figcaption {
++  font-size: 0.85rem;
++  color: var(--muted);
++  margin-top: 0.5rem;
++  max-width: 76ch;
++}
++
++.fig-data {
++  margin-top: 0.5rem;
++  font-size: 0.9rem;
++}
++
++.fig-data summary {
++  cursor: pointer;
++  color: var(--muted);
++  font-size: 0.85rem;
++}
++
++/* mission coverage */
++
++.cov {
++  min-width: 560px;
++}
++
++.cov .cov-h {
++  text-align: center;
++  font-family: var(--mono);
++  letter-spacing: 0.06em;
++}
++
++.cov td {
++  text-align: center;
++  font-size: 1.1rem;
++  line-height: 1;
++  width: 4.5rem;
++}
++
++.cov .cov-on {
++  color: var(--ink);
++}
++
++.cov .cov-off {
++  color: var(--line);
++}
++
++.cov tfoot th,
++.cov tfoot td {
++  border-top: 1px solid var(--ink);
++  border-bottom: 0;
++  font-size: 0.85rem;
++  color: var(--muted);
++  text-align: center;
++}
++
++.cov tfoot th {
++  text-align: left;
++  font-weight: 400;
++}
++
++.cov tfoot .cov-gap {
++  color: var(--fault);
++  font-weight: 600;
++}
++
++/* KPI strip */
++
++.kpistrip {
++  list-style: none;
++  margin: 0.75rem 0 0;
++  padding: 0;
++  display: grid;
++  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
++  gap: 1px;
++  background: var(--line);
++  border: 1px solid var(--line);
++}
++
++.kpicell a {
++  display: flex;
++  flex-direction: column;
++  gap: 0.2rem;
++  padding: 0.75rem 0.85rem;
++  min-height: 92px;
++  background:
++    repeating-linear-gradient(45deg, transparent 0 5px, var(--line) 5px 6px),
++    var(--panel);
++  color: var(--ink);
++}
++
++.kpicell-on a {
++  background: var(--panel);
++}
++
++.kpicell a:hover,
++.kpicell a:focus-visible {
++  text-decoration: none;
++  outline: 2px solid var(--ink);
++  outline-offset: -2px;
++}
++
++.kpicell-name {
++  font-size: 0.8rem;
++  letter-spacing: 0.02em;
++  color: var(--muted);
++}
++
++.kpicell-val {
++  font-family: var(--serif);
++  font-size: 1.5rem;
++  line-height: 1.1;
++}
++
++.kpicell-val .src {
++  font-family: var(--sans);
++  font-size: 0.75rem;
++}
++
++.kpicell-unit {
++  font-family: var(--mono);
++  font-size: 0.7rem;
++  color: var(--muted);
++}
++
++/* evidence grid */
++
++.evgrid {
++  list-style: none;
++  margin: 1rem 0 0;
++  padding: 0;
++  border-top: 1px solid var(--ink);
++}
++
++.evrow {
++  display: grid;
++  grid-template-columns: minmax(9rem, 12rem) 1fr 2.5rem;
++  gap: 0.5rem 1rem;
++  align-items: start;
++  padding: 0.55rem 0;
++  border-bottom: 1px solid var(--line);
++  font-size: 0.92rem;
++}
++
++.evrow-empty {
++  background: repeating-linear-gradient(45deg, transparent 0 5px, var(--line) 5px 6px);
++}
++
++.evrow-layer {
++  font-weight: 600;
++}
++
++.evrow-mods {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 0.35rem;
++}
++
++.evrow-mods .path {
++  white-space: normal;
++}
++
++.evrow-n {
++  text-align: right;
++  color: var(--muted);
++}
++
++@media (max-width: 560px) {
++  .evrow {
++    grid-template-columns: 1fr 2.5rem;
++  }
++  .evrow-mods {
++    grid-column: 1 / -1;
++  }
++}
++
++/* status distribution bar */
++
++.stbar {
++  list-style: none;
++  margin: 0.5rem 0 0;
++  padding: 0;
++  display: flex;
++  flex-wrap: wrap;
++  gap: 2px;
++}
++
++.stbar li {
++  flex-basis: 0;
++  min-width: 5.5rem;
++  display: flex;
++}
++
++.stbar-seg {
++  flex: 1;
++  padding: 0.45rem 0.6rem;
++  font-family: var(--mono);
++  font-size: 0.72rem;
++  letter-spacing: 0.06em;
++  border: 1px solid var(--line);
++  background: var(--panel);
++  color: var(--ink);
++  display: flex;
++  justify-content: space-between;
++  gap: 0.5rem;
++}
++
++.stbar-seg:hover,
++.stbar-seg:focus-visible {
++  text-decoration: none;
++  outline: 2px solid var(--ink);
++  outline-offset: -2px;
++}
++
++.stbar-seg.st-core {
++  background: var(--ink);
++  color: var(--paper);
++  border-color: var(--ink);
++}
++
++.stbar-seg.st-module {
++  border-color: var(--rhine);
++  color: var(--rhine);
++}
++
++.stbar-seg.st-research {
++  border-style: dashed;
++}
++
++.stbar-seg.st-experiment {
++  border-color: var(--fault);
++  color: var(--fault);
++}
++
++.path-line-inline {
++  display: inline-flex;
++  margin: 0;
++}
++
++/* responsive tables: below 640px the register and KPI tables stack */
++
++@media (max-width: 640px) {
++  .tbl.reg,
++  .tbl.kpi {
++    min-width: 0;
++  }
++  .tbl.reg thead,
++  .tbl.kpi thead {
++    position: absolute;
++    width: 1px;
++    height: 1px;
++    overflow: hidden;
++    clip: rect(0 0 0 0);
++  }
++  .tbl.reg tr,
++  .tbl.kpi tr {
++    display: block;
++    padding: 0.6rem 0;
++    border-bottom: 1px solid var(--line);
++  }
++  .tbl.reg th,
++  .tbl.reg td,
++  .tbl.kpi th,
++  .tbl.kpi td {
++    display: block;
++    border: 0;
++    padding: 0.15rem 0;
++    min-width: 0;
++  }
++  .tbl.reg tbody th,
++  .tbl.kpi tbody th {
++    min-width: 0;
++  }
++  .tbl.kpi tbody td::before,
++  .tbl.reg tbody td::before {
++    content: attr(data-label);
++    display: block;
++    font-size: 0.72rem;
++    letter-spacing: 0.06em;
++    text-transform: uppercase;
++    color: var(--muted);
++  }
++}
++
++/* print — the weekly report and the registers on paper */
++
++@media print {
++  .hdr,
++  .ftr,
++  .consent,
++  .subnav,
++  .blk-more,
++  .fig-data summary {
++    display: none !important;
++  }
++  .doc,
++  .doc-wide {
++    max-width: none;
++    padding: 0;
++  }
++  body {
++    font-size: 11pt;
++    background: #fff;
++  }
++  a {
++    color: inherit;
++  }
++  a[href^='http']::after {
++    content: ' (' attr(href) ')';
++    font-size: 0.8em;
++    color: #555;
++  }
++  .blk {
++    break-inside: avoid;
++    margin-top: 1.5rem;
++  }
++  .tbl-wrap {
++    overflow: visible;
++  }
++  .fig-data[open] {
++    display: block;
++  }
++  .st,
++  .pipe-stage {
++    border: 1px solid #000;
++  }
++}
+diff --git a/app/lib/cluster/evidence.ts b/app/lib/cluster/evidence.ts
+new file mode 100644
+index 0000000..61504ca
+--- /dev/null
++++ b/app/lib/cluster/evidence.ts
+@@ -0,0 +1,52 @@
++import type { EvidenceModule, TimelineEvent } from './types';
++
++/**
++ * evidence.ts — what has actually been done, with the source of each fact.
++ *
++ * Every event names where the date comes from (PyPI release JSON, a
++ * CHANGELOG entry, a GitHub commit, or this register). Nothing here is a
++ * plan except the two `due` markers, which are dates a decision is owed.
++ */
++
++export const timeline: TimelineEvent[] = [
++  { date: '2026-03-08', label: 'palletizer 0.1.0 — control stack, 40+ tests', kind: 'release', entry: 'palletizer', source: 'palletizer/CHANGELOG.md' },
++  { date: '2026-04-10', label: 'robot-lidar-fusion 0.1.0 on PyPI', kind: 'release', entry: 'robot-lidar-fusion', source: 'pypi.org/project/robot-lidar-fusion' },
++  { date: '2026-04-11', label: 'robot-lidar-fusion 0.2.1 on PyPI', kind: 'release', entry: 'robot-lidar-fusion', source: 'pypi.org/project/robot-lidar-fusion' },
++  { date: '2026-06-20', label: 'palletizer-full-stack 0.2.0 on PyPI', kind: 'release', entry: 'palletizer', source: 'pypi.org/project/palletizer-full-stack' },
++  { date: '2026-06-20', label: 'robot-lidar-fusion 0.4.0 on PyPI — SE(3) projection, KITTI loader, diagnostics CLI', kind: 'release', entry: 'robot-lidar-fusion', source: 'pypi.org/project/robot-lidar-fusion' },
++  { date: '2026-07-31', label: 'palletizer last public commit (construction pack, ROS 2 reference, README)', kind: 'commit', entry: 'palletizer', source: 'github.com/iceccarelli/palletizer' },
++  { date: '2026-09-05', label: 'Cluster control engine; decisions D-001…D-008; register snapshot', kind: 'decision', source: 'this register' },
++  { date: '2026-09-12', label: 'Kill decision due: K-001 construction pack, K-002 ai-agent-control', kind: 'due', source: '/decisions#kill' },
++  { date: '2026-09-19', label: 'Discovery target due: ten buyer conversations', kind: 'due', source: '/report#2026-W36' },
++];
++
++/**
++ * The palletizer test suite as a map onto the stack. Module names are the
++ * files under tests/ (test_<name>.py) at the 2026-07-31 commit. A layer with
++ * no module has no test evidence — that is the point of the picture.
++ */
++export const palletizerTests: EvidenceModule[] = [
++  { name: 'orchestrator', layer: 'controller', note: 'fixed-rate loop' },
++  { name: 'motion_controller', layer: 'motion-planner' },
++  { name: 'joint_synchronization', layer: 'controller' },
++  { name: 'gripper_controller', layer: 'controller' },
++  { name: 'planning', layer: 'task-planner' },
++  { name: 'optimizer', layer: 'task-planner', note: 'stability number' },
++  { name: 'native_invariants', layer: 'task-planner', note: 'C++ vs Python' },
++  { name: 'construction', layer: 'task-planner', note: 'EXPERIMENT' },
++  { name: 'hazard_manager', layer: 'safety' },
++  { name: 'fault_detection', layer: 'safety' },
++  { name: 'power', layer: 'safety', note: 'battery, thermal' },
++  { name: 'communication', layer: 'telemetry' },
++  { name: 'memory_management', layer: 'controller' },
++  { name: 'concurrency', layer: 'controller' },
++  { name: 'config', layer: 'controller' },
++  { name: 'mcp_server', layer: 'task-planner', note: 'agent tools' },
++];
++
++export const EVIDENCE_SNAPSHOT = {
++  date: '2026-07-31',
++  pythonModulesOutsideWeb: 84,
++  testModules: palletizerTests.length,
++  source: 'clone of github.com/iceccarelli/palletizer at the last public commit',
++};
+diff --git a/app/lib/cluster/github.ts b/app/lib/cluster/github.ts
+index 70cd7a7..17fe762 100644
+--- a/app/lib/cluster/github.ts
++++ b/app/lib/cluster/github.ts
+@@ -7,6 +7,11 @@ import type { RegistryEntry } from './types';
+  * Fail-safe by construction: any error, rate limit or timeout returns the
+  * dated snapshot from registry.ts, labelled as such. The page never breaks
+  * and never shows a live number it did not get.
++ *
++ * Unauthenticated GitHub allows 60 requests/hour per IP, which shared
++ * serverless egress can exhaust. Set GITHUB_TOKEN (a fine-grained token
++ * with no scopes — public metadata only) in the deployment to lift the
++ * limit to 5,000/hour. Absent token = same behaviour, more snapshots.
+  */
+ 
+ export type LiveMeta = {
+@@ -38,8 +43,13 @@ async function fetchOne(entry: RegistryEntry): Promise<LiveMeta> {
+   const ctrl = new AbortController();
+   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+   try {
++    const token = process.env.GITHUB_TOKEN;
+     const res = await fetch(`https://api.github.com/repos/${entry.github.owner}/${entry.github.name}`, {
+-      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'igrimaldi.engineering-control-engine' },
++      headers: {
++        Accept: 'application/vnd.github+json',
++        'User-Agent': 'igrimaldi.engineering-control-engine',
++        ...(token ? { Authorization: `Bearer ${token}` } : {}),
++      },
+       next: { revalidate: 3600 },
+       signal: ctrl.signal,
+     });
+diff --git a/app/lib/cluster/registry.ts b/app/lib/cluster/registry.ts
+index 9622278..e69114a 100644
+--- a/app/lib/cluster/registry.ts
++++ b/app/lib/cluster/registry.ts
+@@ -50,6 +50,9 @@ export const registry: RegistryEntry[] = [
+     regulatory: 'ISO 10218 / ISO/TS 15066 apply to any cell that executes; the software makes no certification claim.',
+     rationale:
+       'The only repository in the cluster with a public package, a test suite and a runnable optimizer. It is CORE because everything else in the cluster is measured against whether it makes this cheaper to deploy.',
++    stages: ['MODEL', 'PLAN', 'VERIFY'],
++    layers: ['world-model', 'task-planner', 'motion-planner', 'safety', 'controller', 'telemetry'],
++    dependsOn: [],
+   },
+   {
+     id: 'robot-lidar-fusion',
+@@ -79,6 +82,9 @@ export const registry: RegistryEntry[] = [
+     regulatory: 'None on its own; inherits the safety case of the cell that uses it.',
+     rationale:
+       'CORE as shared IP, not as a product. The GitHub repository is not public although the PyPI package is — the register says so instead of linking a path that returns 404.',
++    stages: ['PERCEIVE'],
++    layers: ['perception'],
++    dependsOn: [],
+   },
+   {
+     id: 'palletizer-simulation',
+@@ -86,11 +92,11 @@ export const registry: RegistryEntry[] = [
+     cluster: 'physical-ai',
+     status: 'MODULE',
+     description:
+-      'Digital simulation of the palletizing cell: physics demos in the browser and a simulation package in the core. The mandate requires simulation before hardware; this is where the KPI harness has to live.',
++      'Digital simulation of the palletizing cell: physics demos in the browser (React Three Fiber + Rapier) and an OPC UA robot mock in core/simulation. The mandate requires simulation before hardware; this is where the KPI harness has to live.',
+     language: ['TypeScript', 'Python'],
+     lastCommitSnapshot: '2026-07-31',
+     artifacts: [{ kind: 'github', url: 'https://github.com/iceccarelli/palletizer/tree/main/core/simulation', label: 'palletizer/core/simulation' }],
+-    architecture: 'Rapier physics in React Three Fiber for the browser; Python simulation package for headless runs.',
++    architecture: 'Rapier physics in React Three Fiber for the browser; core/simulation/opcua_robot_mock.py for headless runs. No KPI emitter yet.',
+     dependencies: ['palletizer'],
+     maturity: 'prototype',
+     businessHypothesis: 'A cycles/hour and intervention-rate number produced in simulation is the cheapest evidence a customer will accept before hardware.',
+@@ -104,6 +110,9 @@ export const registry: RegistryEntry[] = [
+     securityRisk: 'low',
+     regulatory: 'None.',
+     rationale: 'MODULE of palletizer, not a repository. Listed because the next experiment depends on it.',
++    stages: [],
++    layers: ['simulator'],
++    dependsOn: ['palletizer'],
+   },
+   {
+     id: 'palletizer-ros2',
+@@ -128,6 +137,9 @@ export const registry: RegistryEntry[] = [
+     securityRisk: 'medium',
+     regulatory: 'Any real actuation goes through the safety gate; the bridge itself is not a safety function.',
+     rationale: 'MODULE. No certified vendor driver exists and none is claimed.',
++    stages: [],
++    layers: ['controller'],
++    dependsOn: ['palletizer', 'robot-lidar-fusion'],
+   },
+   {
+     id: 'palletizer-mcp',
+@@ -152,6 +164,9 @@ export const registry: RegistryEntry[] = [
+     securityRisk: 'medium',
+     regulatory: 'Must never expose a tool that bypasses the safety gate.',
+     rationale: 'MODULE. Exists; tested (tests/test_mcp_server.py); bounded by the agent rules on /architecture.',
++    stages: ['PLAN'],
++    layers: ['task-planner'],
++    dependsOn: ['palletizer'],
+   },
+   {
+     id: 'palletizer-native',
+@@ -176,6 +191,9 @@ export const registry: RegistryEntry[] = [
+     securityRisk: 'low',
+     regulatory: 'None.',
+     rationale: 'MODULE. No speed-up figure is quoted because none is published.',
++    stages: ['PLAN'],
++    layers: ['task-planner'],
++    dependsOn: ['palletizer'],
+   },
+   {
+     id: 'palletizer-construction',
+@@ -200,6 +218,9 @@ export const registry: RegistryEntry[] = [
+     securityRisk: 'low',
+     regulatory: 'None.',
+     rationale: 'EXPERIMENT under kill-rule review: no customer, no measured task, no benchmark advantage. Decision required.',
++    stages: [],
++    layers: ['task-planner'],
++    dependsOn: ['palletizer'],
+   },
+   {
+     id: 'autonomous-inspection',
+@@ -225,6 +246,9 @@ export const registry: RegistryEntry[] = [
+     securityRisk: 'high',
+     regulatory: 'Work near HV assets is governed by the operator’s safety rules; nothing here involves employer systems or data.',
+     rationale: 'RESEARCH. Named in the mandate; no repository exists under this account as of the snapshot date, and the register says so.',
++    stages: [],
++    layers: [],
++    dependsOn: ['robot-lidar-fusion', 'neuralbridge-safety-runtime'],
+   },
+   {
+     id: 'ai-agent-control',
+@@ -250,6 +274,9 @@ export const registry: RegistryEntry[] = [
+     securityRisk: 'low',
+     regulatory: 'None.',
+     rationale: 'EXPERIMENT under kill-rule review. Fails five of six criteria on inspection; ARCHIVE unless a robotics module is extracted.',
++    stages: [],
++    layers: [],
++    dependsOn: [],
+   },
+   {
+     id: 'neuralbridge-safety-runtime',
+@@ -274,6 +301,9 @@ export const registry: RegistryEntry[] = [
+     securityRisk: 'high',
+     regulatory: 'Any safety claim belongs to its owner cluster, not to this register.',
+     rationale: 'INTERNAL and not ours. Listed so the dependency is explicit and nothing is claimed for it here.',
++    stages: [],
++    layers: ['safety'],
++    dependsOn: [],
+   },
+ ];
+ 
+diff --git a/app/lib/cluster/stack.ts b/app/lib/cluster/stack.ts
+index 219d583..187034b 100644
+--- a/app/lib/cluster/stack.ts
++++ b/app/lib/cluster/stack.ts
+@@ -1,4 +1,5 @@
+ import type { AgentTool, StackLayer } from './types';
++import { MISSION } from './types';
+ 
+ /**
+  * stack.ts — the target architecture and the safety gate.
+@@ -8,22 +9,22 @@ import type { AgentTool, StackLayer } from './types';
+  *   2. No LLM or learned model may bypass the safety controls.
+  */
+ 
+-export const mission = ['PERCEIVE', 'MODEL', 'PLAN', 'ACT', 'VERIFY', 'RECOVER', 'LEARN'] as const;
++export const mission = MISSION;
+ 
+ export const gate = ['PLAN', 'SIMULATE', 'VALIDATE', 'AUTHORIZE', 'EXECUTE', 'VERIFY'] as const;
+ 
+ export const stack: StackLayer[] = [
+-  { name: 'Perception', nature: 'probabilistic', role: 'Sensor fusion, detection, tracking, uncertainty.', today: 'robot-lidar-fusion 0.4.0 (projection, calibration, occlusion).' },
+-  { name: 'World model', nature: 'probabilistic', role: 'Scene state, object poses, pallet state, uncertainty over both.', today: 'Pallet state in palletizer planning; scene model not built.' },
+-  { name: 'Task planner', nature: 'probabilistic', role: 'Order sequencing, pattern selection, mixed-SKU placement.', today: 'palletizer optimizer, MissionPlanner, PatternManager.' },
+-  { name: 'Motion planner', nature: 'probabilistic', role: 'Collision-free trajectories for the chosen placement.', today: 'MotionController tests exist; no planner benchmark.' },
+-  { name: 'Simulator', nature: 'deterministic', role: 'Executes the plan in physics before any actuator moves.', today: 'core/simulation and browser Rapier demos; KPI harness pending.' },
+-  { name: 'Safety / constraint engine', nature: 'deterministic', role: 'Refuses anything outside limits. Cannot be argued with by a model.', today: 'HazardManager, FaultDetector; authorisation boundary by contract with NeuralBridge.' },
+-  { name: 'Robot controller', nature: 'deterministic', role: 'Vendor SDK or ROS 2 driver behind the RobotInterface.', today: 'RobotInterface abstraction; ROS 2 bridge examples; no certified vendor driver.' },
+-  { name: 'Actuation', nature: 'physical', role: 'Arm, gripper, conveyor.', today: 'None owned. Simulation first.' },
+-  { name: 'Telemetry', nature: 'telemetry', role: 'Every cycle, fault and intervention as a typed event.', today: 'CommunicationInterface publishes telemetry; KPI schema on /palletizer.' },
+-  { name: 'Failure analysis', nature: 'telemetry', role: 'Classify every failed pick and intervention by cause.', today: 'Not built.' },
+-  { name: 'Learning', nature: 'probabilistic', role: 'Improve planners from telemetry; never touch safety limits.', today: 'Not built. Research program on /research.' },
++  { key: 'perception', name: 'Perception', nature: 'probabilistic', role: 'Sensor fusion, detection, tracking, uncertainty.', today: 'robot-lidar-fusion 0.4.0 (projection, calibration, occlusion).' },
++  { key: 'world-model', name: 'World model', nature: 'probabilistic', role: 'Scene state, object poses, pallet state, uncertainty over both.', today: 'Pallet state in palletizer planning; scene model not built.' },
++  { key: 'task-planner', name: 'Task planner', nature: 'probabilistic', role: 'Order sequencing, pattern selection, mixed-SKU placement.', today: 'palletizer optimizer, MissionPlanner, PatternManager.' },
++  { key: 'motion-planner', name: 'Motion planner', nature: 'probabilistic', role: 'Collision-free trajectories for the chosen placement.', today: 'MotionController tests exist; no planner benchmark.' },
++  { key: 'simulator', name: 'Simulator', nature: 'deterministic', role: 'Executes the plan in physics before any actuator moves.', today: 'core/simulation (OPC UA robot mock) and browser Rapier demos; KPI harness pending.' },
++  { key: 'safety', name: 'Safety / constraint engine', nature: 'deterministic', role: 'Refuses anything outside limits. Cannot be argued with by a model.', today: 'HazardManager, FaultDetector; authorisation boundary by contract with NeuralBridge.' },
++  { key: 'controller', name: 'Robot controller', nature: 'deterministic', role: 'Vendor SDK or ROS 2 driver behind the RobotInterface.', today: 'RobotInterface abstraction; a UR bridge and ROS 2 bridge examples; no certified vendor driver.' },
++  { key: 'actuation', name: 'Actuation', nature: 'physical', role: 'Arm, gripper, conveyor.', today: 'None owned. Simulation first.' },
++  { key: 'telemetry', name: 'Telemetry', nature: 'telemetry', role: 'Every cycle, fault and intervention as a typed event.', today: 'CommunicationInterface publishes telemetry; KPI schema on /palletizer.' },
++  { key: 'failure-analysis', name: 'Failure analysis', nature: 'telemetry', role: 'Classify every failed pick and intervention by cause.', today: 'Not built.' },
++  { key: 'learning', name: 'Learning', nature: 'probabilistic', role: 'Improve planners from telemetry; never touch safety limits.', today: 'Not built. Research program on /research.' },
+ ];
+ 
+ /** What an agent may and may not do in this cluster. */
+diff --git a/app/lib/cluster/types.ts b/app/lib/cluster/types.ts
+index 74014f1..6356e12 100644
+--- a/app/lib/cluster/types.ts
++++ b/app/lib/cluster/types.ts
+@@ -18,6 +18,17 @@ export const CLUSTERS = ['energy', 'physical-ai', 'operations'] as const;
+ export type Cluster = (typeof CLUSTERS)[number];
+ 
+ export type Maturity = 'concept' | 'prototype' | 'alpha' | 'beta' | 'production';
++
++/** The seven mission stages. Coverage is claimed per entry, per stage. */
++export const MISSION = ['PERCEIVE', 'MODEL', 'PLAN', 'ACT', 'VERIFY', 'RECOVER', 'LEARN'] as const;
++export type MissionStage = (typeof MISSION)[number];
++
++/** The eleven stack layers, by stable key. */
++export const LAYERS = [
++  'perception', 'world-model', 'task-planner', 'motion-planner', 'simulator', 'safety',
++  'controller', 'actuation', 'telemetry', 'failure-analysis', 'learning',
++] as const;
++export type LayerKey = (typeof LAYERS)[number];
+ export type Grade = 'none' | 'low' | 'medium' | 'high';
+ 
+ export type PublicArtifact =
+@@ -55,8 +66,24 @@ export type RegistryEntry = {
+   regulatory: string;
+   /** Why the status is what it is. One sentence a CEO can check. */
+   rationale: string;
++  /** Mission stages this entry's EXISTING code covers. Empty = covers none yet. */
++  stages: MissionStage[];
++  /** Stack layers this entry occupies today. */
++  layers: LayerKey[];
++  /** Register ids this entry depends on (edges of the dependency graph). */
++  dependsOn: string[];
+ };
+ 
++export type TimelineEvent = {
++  date: string;
++  label: string;
++  kind: 'release' | 'commit' | 'decision' | 'due';
++  entry?: string;
++  source: string;
++};
++
++export type EvidenceModule = { name: string; layer: LayerKey; note?: string };
++
+ export type Measurement = {
+   value: number;
+   unit: string;
+@@ -77,6 +104,7 @@ export type Kpi = {
+ };
+ 
+ export type StackLayer = {
++  key: LayerKey;
+   name: string;
+   /** 'probabilistic' layers may propose; 'deterministic' layers may refuse. */
+   nature: 'probabilistic' | 'deterministic' | 'physical' | 'telemetry';
+diff --git a/app/lib/i18n.tsx b/app/lib/i18n.tsx
+index 57bae13..5dcdc52 100644
+--- a/app/lib/i18n.tsx
++++ b/app/lib/i18n.tsx
+@@ -419,7 +419,7 @@ const en: Dictionary = {
+   card: {
+     kicker: 'Digital business card',
+     role: 'ITk Fachspezialist, DB InfraGO AG · Frankfurt am Main',
+-    tagline: 'Physics-constrained control · grid digitalisation.',
++    tagline: 'Physical AI & Robotics — cluster control engine.',
+     email: 'Email',
+     website: 'Website',
+     githubLabel: 'Code',
+@@ -684,7 +684,7 @@ const es: Dictionary = {
+   card: {
+     kicker: 'Tarjeta de presentación digital',
+     role: 'Ingeniero de Sistemas Ciberfísicos Informados por la Física',
+-    tagline: 'Control determinista · Inteligencia de red · Orquestación de IA — en software, hardware y sistemas de energía.',
++    tagline: 'Physical AI & Robótica — instrumento de control del clúster.',
+     email: 'Correo',
+     website: 'Sitio web',
+     githubLabel: 'Código',
+@@ -949,7 +949,7 @@ const de: Dictionary = {
+   card: {
+     kicker: 'Digitale Visitenkarte',
+     role: 'ITk Fachspezialist, DB InfraGO AG · Frankfurt am Main',
+-    tagline: 'Physikalisch beschränkte Regelung · Netzdigitalisierung.',
++    tagline: 'Physical AI & Robotik — Steuerungsinstrument des Clusters.',
+     email: 'E-Mail',
+     website: 'Website',
+     githubLabel: 'Code',
+@@ -1191,7 +1191,7 @@ const zh: Dictionary = {
+   card: {
+     kicker: '数字名片',
+     role: '物理信息网络物理系统工程师',
+-    tagline: '确定性控制 · 电网智能 · AI 编排 — 横跨软件、硬件与能源系统。',
++    tagline: 'Physical AI 与机器人 — 集群控制引擎。',
+     email: '邮箱',
+     website: '网站',
+     githubLabel: '代码',
+diff --git a/app/palletizer/page.tsx b/app/palletizer/page.tsx
+index fb2dbac..d28ecb2 100644
+--- a/app/palletizer/page.tsx
++++ b/app/palletizer/page.tsx
+@@ -1,6 +1,9 @@
+ import type { Metadata } from 'next';
+ import KpiTable from '../components/cluster/KpiTable';
+ import StatusBadge from '../components/cluster/StatusBadge';
++import SubNav from '../components/cluster/SubNav';
++import Timeline from '../components/cluster/Timeline';
++import EvidenceGrid from '../components/cluster/EvidenceGrid';
+ import { SoftwareAppJsonLd } from '../components/JsonLd';
+ import { getEntry } from '../lib/cluster/registry';
+ import { palletizerKpis, lidarKpis } from '../lib/cluster/kpis';
+@@ -31,6 +34,7 @@ export default async function PalletizerPage() {
+ 
+   return (
+     <main className="doc doc-wide">
++      <SubNav current="/palletizer" />
+       <SoftwareAppJsonLd name="palletizer" description={pal.description} url={`${SITE_URL}/palletizer`} repo={gh.url} live={dep?.url} />
+       <section className="blk blk-first">
+         <p className="kicker">Physical AI & Robotics · first target</p>
+@@ -73,6 +77,16 @@ export default async function PalletizerPage() {
+         </ul>
+       </section>
+ 
++      <section className="blk" aria-labelledby="evidence">
++        <h2 id="evidence" className="blk-h">Evidence of work done</h2>
++        <p className="blk-intro">
++          Releases, commits and decisions with the source of every date; then the test suite mapped onto the stack.
++          This is the work that exists. It is deliberately drawn next to the KPIs that do not.
++        </p>
++        <Timeline />
++        <EvidenceGrid />
++      </section>
++
+       <section className="blk" aria-labelledby="kpis">
+         <h2 id="kpis" className="blk-h">The twelve KPIs</h2>
+         <KpiTable kpis={palletizerKpis} caption="Palletizing KPIs" />
+diff --git a/app/registry/[id]/page.tsx b/app/registry/[id]/page.tsx
+index 43c66c8..b70b336 100644
+--- a/app/registry/[id]/page.tsx
++++ b/app/registry/[id]/page.tsx
+@@ -1,6 +1,7 @@
+ import type { Metadata } from 'next';
+ import { notFound } from 'next/navigation';
+ import StatusBadge from '../../components/cluster/StatusBadge';
++import SubNav from '../../components/cluster/SubNav';
+ import { SoftwareAppJsonLd } from '../../components/JsonLd';
+ import { getEntry, registry } from '../../lib/cluster/registry';
+ import { liveMetadata } from '../../lib/cluster/github';
+@@ -36,6 +37,7 @@ export default async function EntryPage({ params }: Props) {
+   const meta = (await liveMetadata())[e.id];
+   const gh = e.artifacts.find((a) => a.kind === 'github');
+   const dep = e.artifacts.find((a) => a.kind === 'deployment');
++  const usedBy = registry.filter((r) => r.dependsOn.includes(e.id));
+ 
+   const rows: { k: string; v: React.ReactNode }[] = [
+     { k: 'Repository', v: <code className="path">{e.repository}</code> },
+@@ -56,6 +58,32 @@ export default async function EntryPage({ params }: Props) {
+       ),
+     },
+     { k: 'Architecture', v: e.architecture },
++    {
++      k: 'Depends on',
++      v: e.dependsOn.length ? (
++        <span className="path-line path-line-inline">
++          {e.dependsOn.map((d) => (
++            <a key={d} className="path" href={`/registry/${d}`}>{d}</a>
++          ))}
++        </span>
++      ) : (
++        '—'
++      ),
++    },
++    {
++      k: 'Used by',
++      v: usedBy.length ? (
++        <span className="path-line path-line-inline">
++          {usedBy.map((d) => (
++            <a key={d.id} className="path" href={`/registry/${d.id}`}>{d.id}</a>
++          ))}
++        </span>
++      ) : (
++        '—'
++      ),
++    },
++    { k: 'Mission stages covered', v: e.stages.length ? e.stages.join(' · ') : <span className="muted">none yet</span> },
++    { k: 'Stack layers occupied', v: e.layers.length ? e.layers.join(' · ') : <span className="muted">none</span> },
+     { k: 'Dependencies', v: e.dependencies.length ? e.dependencies.join(' · ') : '—' },
+     { k: 'Maturity', v: e.maturity },
+     { k: 'Business hypothesis', v: e.businessHypothesis },
+@@ -73,6 +101,7 @@ export default async function EntryPage({ params }: Props) {
+ 
+   return (
+     <main className="doc">
++      <SubNav current="/registry" />
+       {gh && (
+         <SoftwareAppJsonLd
+           name={e.id}
+@@ -116,7 +145,7 @@ export default async function EntryPage({ params }: Props) {
+           ))}
+         </dl>
+         <p className="blk-more">
+-          <a href={`/api/cluster/registry?id=${e.id}`}>JSON</a>
++          <a href={`/api/cluster/registry/${e.id}`}>JSON</a>
+         </p>
+       </section>
+     </main>
+diff --git a/app/registry/page.tsx b/app/registry/page.tsx
+index 0759b32..fe2d4b6 100644
+--- a/app/registry/page.tsx
++++ b/app/registry/page.tsx
+@@ -4,6 +4,9 @@ import StatusBadge from '../components/cluster/StatusBadge';
+ import { owned, boundaries, registry, REGISTRY_SNAPSHOT_DATE } from '../lib/cluster/registry';
+ import { STATUSES } from '../lib/cluster/types';
+ import { liveMetadata } from '../lib/cluster/github';
++import SubNav from '../components/cluster/SubNav';
++import StatusBar from '../components/cluster/StatusBar';
++import DependencyGraph from '../components/cluster/DependencyGraph';
+ 
+ export const metadata: Metadata = {
+   title: 'Repository register',
+@@ -31,6 +34,7 @@ export default async function RegistryPage() {
+   const meta = await liveMetadata();
+   return (
+     <main className="doc doc-wide">
++      <SubNav current="/registry" />
+       <section className="blk blk-first">
+         <p className="kicker">Physical AI & Robotics · register</p>
+         <h1 className="h1">Repository register</h1>
+@@ -39,6 +43,7 @@ export default async function RegistryPage() {
+           Snapshot {REGISTRY_SNAPSHOT_DATE}; commit dates refresh from GitHub where the repository is public.
+           Machine-readable copy: <a href="/api/cluster/registry">/api/cluster/registry</a>.
+         </p>
++        <StatusBar />
+         <dl className="defs">
+           {STATUSES.map((s) => (
+             <div key={s}>
+@@ -51,6 +56,12 @@ export default async function RegistryPage() {
+         </dl>
+       </section>
+ 
++      <section className="blk" aria-labelledby="deps">
++        <h2 id="deps" className="blk-h">Dependency graph</h2>
++        <p className="blk-intro">Computed from each entry’s <code className="path">dependsOn</code>. If it is not an arrow here, it is not a dependency.</p>
++        <DependencyGraph />
++      </section>
++
+       {STATUSES.filter((s) => registry.some((r) => r.status === s)).map((s) => (
+         <section key={s} className="blk" aria-labelledby={`st-${s}`}>
+           <h2 id={`st-${s}`} className="blk-h">
+diff --git a/app/report.md/route.ts b/app/report.md/route.ts
+new file mode 100644
+index 0000000..0d47880
+--- /dev/null
++++ b/app/report.md/route.ts
+@@ -0,0 +1,27 @@
++import { reports } from '../lib/cluster/report';
++import { SITE_URL } from '../lib/site';
++
++export const dynamic = 'force-static';
++
++/**
++ * /report.md — the latest weekly CEO report as Markdown, for pasting into
++ * mail or a document without reformatting. Same twelve sections, same words.
++ */
++export function GET() {
++  const r = reports[0];
++  const body = `# Physical AI & Robotics — weekly CEO report ${r.week}
++
++_${r.date} · ${SITE_URL}/report#${r.week} · JSON: ${SITE_URL}/api/cluster/report_
++
++${r.sections.map((s, i) => `## ${i + 1}. ${s.heading}\n\n${s.body}`).join('\n\n')}
++
++---
++Registers: ${SITE_URL}/registry · ${SITE_URL}/decisions · ${SITE_URL}/palletizer
++`;
++  return new Response(body, {
++    headers: {
++      'Content-Type': 'text/markdown; charset=utf-8',
++      'Cache-Control': 'public, max-age=3600, s-maxage=86400',
++    },
++  });
++}
+diff --git a/app/report/page.tsx b/app/report/page.tsx
+index 8b8ff26..9a5617c 100644
+--- a/app/report/page.tsx
++++ b/app/report/page.tsx
+@@ -1,4 +1,5 @@
+ import type { Metadata } from 'next';
++import SubNav from '../components/cluster/SubNav';
+ import { reports, REPORT_SECTIONS } from '../lib/cluster/report';
+ 
+ export const metadata: Metadata = {
+@@ -17,6 +18,7 @@ export const revalidate = 3600;
+ export default function ReportPage() {
+   return (
+     <main className="doc">
++      <SubNav current="/report" />
+       <section className="blk blk-first">
+         <p className="kicker">Physical AI & Robotics · weekly report</p>
+         <h1 className="h1">Weekly CEO report</h1>
+diff --git a/app/research/page.tsx b/app/research/page.tsx
+index f0995bf..7a5d307 100644
+--- a/app/research/page.tsx
++++ b/app/research/page.tsx
+@@ -1,4 +1,5 @@
+ import type { Metadata } from 'next';
++import SubNav from '../components/cluster/SubNav';
+ import { StateChip } from '../components/cluster/StatusBadge';
+ import {
+   researchProgram,
+@@ -26,6 +27,7 @@ export const revalidate = 3600;
+ export default function ResearchPage() {
+   return (
+     <main className="doc doc-wide">
++      <SubNav current="/research" />
+       <section className="blk blk-first">
+         <p className="kicker">Physical AI & Robotics · research and evidence</p>
+         <h1 className="h1">Research program</h1>
+diff --git a/scripts/new-week.mjs b/scripts/new-week.mjs
+new file mode 100644
+index 0000000..3ac5a48
+--- /dev/null
++++ b/scripts/new-week.mjs
+@@ -0,0 +1,50 @@
++#!/usr/bin/env node
++/**
++ * scripts/new-week.mjs — scaffold next week's CEO report at the top of
++ * app/lib/cluster/report.ts with the twelve headings in mandate order.
++ *
++ *   node scripts/new-week.mjs            # ISO week of today
++ *   node scripts/new-week.mjs 2026-W37   # explicit week
++ *
++ * Fills every section with "TODO" so the build cannot ship it silently:
++ * scripts/verify.sh fails on the token TODO anywhere on /report.
++ */
++import { readFileSync, writeFileSync } from 'node:fs';
++
++const file = new URL('../app/lib/cluster/report.ts', import.meta.url);
++const src = readFileSync(file, 'utf8');
++
++function isoWeek(d = new Date()) {
++  const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
++  const day = t.getUTCDay() || 7;
++  t.setUTCDate(t.getUTCDate() + 4 - day);
++  const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
++  const w = Math.ceil(((t - y0) / 86400000 + 1) / 7);
++  return `${t.getUTCFullYear()}-W${String(w).padStart(2, '0')}`;
++}
++
++const week = process.argv[2] ?? isoWeek();
++if (src.includes(`week: '${week}'`)) {
++  console.error(`report for ${week} already exists`);
++  process.exit(1);
++}
++const sections = [
++  'Customer signal', 'Hardware status', 'Robot performance', 'Simulation results', 'Benchmark results',
++  'Research developments', 'Competitive threats', 'ROI', 'Failures', 'Killed projects', 'Next experiment', 'Decision required',
++];
++const today = new Date().toISOString().slice(0, 10);
++const block = `  {
++    week: '${week}',
++    date: '${today}',
++    sections: [
++${sections.map((h) => `      { heading: '${h}', body: 'TODO' },`).join('\n')}
++    ],
++  },
++`;
++const marker = 'export const reports: WeeklyReport[] = [\n';
++if (!src.includes(marker)) {
++  console.error('marker not found in report.ts');
++  process.exit(1);
++}
++writeFileSync(file, src.replace(marker, marker + block));
++console.log(`scaffolded ${week} at the top of app/lib/cluster/report.ts — replace every TODO, then build and verify`);
+diff --git a/scripts/verify.sh b/scripts/verify.sh
+index 734bea2..b2bba04 100755
+--- a/scripts/verify.sh
++++ b/scripts/verify.sh
+@@ -30,8 +30,8 @@ for p in / /registry /registry/palletizer /registry/robot-lidar-fusion /architec
+          /work /work/cim-threma /work/bahn-project-manager /simulator /connect /card \
+          /impressum /datenschutz /llms.txt /robots.txt /sitemap.xml \
+          /favicon.ico /apple-touch-icon.png /site.webmanifest /.well-known/security.txt \
+-         /api/cluster /api/cluster/registry /api/cluster/kpis /api/cluster/decisions \
+-         /api/cluster/report /api/cluster/contracts /api/cluster/contracts/InspectionResult; do
++         /api/cluster /api/cluster/registry /api/cluster/registry/palletizer /api/cluster/kpis /api/cluster/decisions \
++         /api/cluster/report /api/cluster/contracts /api/cluster/contracts/InspectionResult /report.md; do
+   c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
+   [ "$c" = 200 ] && ok "200 $p" || bad "$c $p"
+ done
+@@ -74,6 +74,34 @@ grep -q 'Frankfurt am Main' <<<"$HTML" && ok "city in HTML" || bad "city missing
+ grep -q 'name="constraint"' <<<"$HTML" && ok "enquiry form present" || bad "enquiry form missing"
+ grep -q 'href="/work"' <<<"$HTML" && ok "grid work still reachable" || bad "/work not linked from /"
+ 
++echo "▸ visual contract (pictures are drawn from the registers, not pasted)"
++grep -q 'aria-labelledby="stack-title' <<<"$HTML" && ok "stack diagram on /" || bad "stack diagram missing on /"
++grep -q 'class="tbl cov"' <<<"$HTML" && ok "mission coverage on /" || bad "mission coverage missing on /"
++grep -q 'class="kpistrip"' <<<"$HTML" && ok "KPI strip on /" || bad "KPI strip missing on /"
++grep -q 'class="stbar"' <<<"$HTML" && ok "status bar on /" || bad "status bar missing on /"
++grep -q 'class="subnav"' <<<"$HTML" && ok "register rail on /" || bad "register rail missing on /"
++REG=$(curl -sS "$BASE/registry")
++grep -q 'aria-labelledby="dep-title' <<<"$REG" && ok "dependency graph on /registry" || bad "dependency graph missing"
++PAL=$(curl -sS "$BASE/palletizer")
++grep -q 'aria-labelledby="tl-title' <<<"$PAL" && ok "evidence timeline on /palletizer" || bad "timeline missing"
++grep -q 'class="evgrid"' <<<"$PAL" && ok "evidence grid on /palletizer" || bad "evidence grid missing"
++grep -q 'id="kpi-cycles-per-hour"' <<<"$PAL" && ok "KPI rows addressable" || bad "KPI row ids missing"
++CON=$(curl -sS "$BASE/contracts")
++grep -q 'aria-labelledby="cf-title' <<<"$CON" && ok "contract flow on /contracts" || bad "contract flow missing"
++for p in /registry /architecture /palletizer /decisions /report /research /contracts /constitution; do
++  curl -sS "$BASE$p" | grep -q "aria-current=\"page\"" || bad "register rail has no current marker on $p"
++done
++ok "register rail marks the current page everywhere"
++# A picture must have a text equivalent: every svg role=img carries a <desc>.
++for p in / /registry /palletizer /contracts /architecture; do
++  B=$(curl -sS "$BASE$p")
++  NI=$(grep -o '<svg[^>]*aria-labelledby=' <<<"$B" | wc -l | tr -d ' ')
++  ND=$(grep -o '<desc id=' <<<"$B" | wc -l | tr -d ' ')
++  [ "$NI" -eq "$ND" ] && ok "$NI figures with descriptions on $p" || bad "$p: $NI svg figures but $ND descriptions"
++done
++# The new-week scaffold leaves TODO markers; none may ship.
++grep -q '>TODO<' <<<"$(curl -sS "$BASE/report")" && bad "/report ships a TODO section" || ok "no TODO on /report"
++
+ echo "▸ closed vocabulary"
+ # Every status badge on every register page is one of the six allowed words.
+ for p in / /registry /palletizer; do
+@@ -96,10 +124,16 @@ if [ "$have_node" = 1 ]; then
+   done
+   RG=$(curl -sS "$BASE/api/cluster/registry")
+   node -e '
+-    const r=JSON.parse(process.argv[1]); const ok=new Set(r.allowedStatuses); let bad=0;
+-    for (const e of r.entries){ if(!ok.has(e.status)){bad++;console.error("status",e.id,e.status)} if(!e.rationale){bad++;console.error("no rationale",e.id)} }
++    const r=JSON.parse(process.argv[1]); const ok=new Set(r.allowedStatuses); const ids=new Set(r.entries.map(e=>e.id)); let bad=0;
++    for (const e of r.entries){
++      if(!ok.has(e.status)){bad++;console.error("status",e.id,e.status)}
++      if(!e.rationale){bad++;console.error("no rationale",e.id)}
++      for (const d of e.dependsOn) if(!ids.has(d)){bad++;console.error("dangling dependsOn",e.id,"->",d)}
++      for (const s of e.stages) if(!r.missionStages.includes(s)){bad++;console.error("unknown stage",e.id,s)}
++      for (const l of e.layers) if(!r.stackLayers.includes(l)){bad++;console.error("unknown layer",e.id,l)}
++    }
+     const hasForge=r.entries.some(e=>/forge/i.test(e.id)); if(hasForge){bad++;console.error("Forge app inside register")}
+-    process.exit(bad?1:0)' "$RG" && ok "register: closed statuses, rationale on every row, no Forge app inside" || bad "register JSON violates contract"
++    process.exit(bad?1:0)' "$RG" && ok "register: closed statuses, rationale, no dangling edges, known stages/layers, no Forge app" || bad "register JSON violates contract"
+ else
+   ok "node absent — JSON contracts skipped"
+ fi
+-- 
+2.43.0
+

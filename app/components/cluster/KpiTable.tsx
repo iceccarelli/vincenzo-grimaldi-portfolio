@@ -23,14 +23,14 @@ export default function KpiTable({ kpis, caption }: { kpis: Kpi[]; caption: stri
         </thead>
         <tbody>
           {kpis.map((k) => (
-            <tr key={k.id}>
+            <tr key={k.id} id={`kpi-${k.id}`}>
               <th scope="row">
                 {k.name}
                 <br />
                 <code className="path">{k.unit}</code>
               </th>
-              <td>{k.definition}</td>
-              <td className="num">
+              <td data-label="Definition">{k.definition}</td>
+              <td className="num" data-label="Measured">
                 {k.measured ? (
                   <>
                     <strong>{k.measured.value}</strong> {k.measured.unit}
@@ -46,7 +46,7 @@ export default function KpiTable({ kpis, caption }: { kpis: Kpi[]; caption: stri
                   </>
                 )}
               </td>
-              <td>{k.method}</td>
+              <td data-label="Method">{k.method}</td>
             </tr>
           ))}
         </tbody>

@@ -18,6 +18,17 @@ export const CLUSTERS = ['energy', 'physical-ai', 'operations'] as const;
 export type Cluster = (typeof CLUSTERS)[number];
 
 export type Maturity = 'concept' | 'prototype' | 'alpha' | 'beta' | 'production';
+
+/** The seven mission stages. Coverage is claimed per entry, per stage. */
+export const MISSION = ['PERCEIVE', 'MODEL', 'PLAN', 'ACT', 'VERIFY', 'RECOVER', 'LEARN'] as const;
+export type MissionStage = (typeof MISSION)[number];
+
+/** The eleven stack layers, by stable key. */
+export const LAYERS = [
+  'perception', 'world-model', 'task-planner', 'motion-planner', 'simulator', 'safety',
+  'controller', 'actuation', 'telemetry', 'failure-analysis', 'learning',
+] as const;
+export type LayerKey = (typeof LAYERS)[number];
 export type Grade = 'none' | 'low' | 'medium' | 'high';
 
 export type PublicArtifact =
@@ -55,7 +66,23 @@ export type RegistryEntry = {
   regulatory: string;
   /** Why the status is what it is. One sentence a CEO can check. */
   rationale: string;
+  /** Mission stages this entry's EXISTING code covers. Empty = covers none yet. */
+  stages: MissionStage[];
+  /** Stack layers this entry occupies today. */
+  layers: LayerKey[];
+  /** Register ids this entry depends on (edges of the dependency graph). */
+  dependsOn: string[];
 };
+
+export type TimelineEvent = {
+  date: string;
+  label: string;
+  kind: 'release' | 'commit' | 'decision' | 'due';
+  entry?: string;
+  source: string;
+};
+
+export type EvidenceModule = { name: string; layer: LayerKey; note?: string };
 
 export type Measurement = {
   value: number;
@@ -77,6 +104,7 @@ export type Kpi = {
 };
 
 export type StackLayer = {
+  key: LayerKey;
   name: string;
   /** 'probabilistic' layers may propose; 'deterministic' layers may refuse. */
   nature: 'probabilistic' | 'deterministic' | 'physical' | 'telemetry';

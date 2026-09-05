@@ -7,6 +7,11 @@ import type { RegistryEntry } from './types';
  * Fail-safe by construction: any error, rate limit or timeout returns the
  * dated snapshot from registry.ts, labelled as such. The page never breaks
  * and never shows a live number it did not get.
+ *
+ * Unauthenticated GitHub allows 60 requests/hour per IP, which shared
+ * serverless egress can exhaust. Set GITHUB_TOKEN (a fine-grained token
+ * with no scopes — public metadata only) in the deployment to lift the
+ * limit to 5,000/hour. Absent token = same behaviour, more snapshots.
  */
 
 export type LiveMeta = {
@@ -38,8 +43,13 @@ async function fetchOne(entry: RegistryEntry): Promise<LiveMeta> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
+    const token = process.env.GITHUB_TOKEN;
     const res = await fetch(`https://api.github.com/repos/${entry.github.owner}/${entry.github.name}`, {
-      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'igrimaldi.engineering-control-engine' },
+      headers: {
+        Accept: 'application/vnd.github+json',
+        'User-Agent': 'igrimaldi.engineering-control-engine',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
       next: { revalidate: 3600 },
       signal: ctrl.signal,
     });

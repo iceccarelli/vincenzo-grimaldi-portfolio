@@ -4,6 +4,9 @@ import StatusBadge from '../components/cluster/StatusBadge';
 import { owned, boundaries, registry, REGISTRY_SNAPSHOT_DATE } from '../lib/cluster/registry';
 import { STATUSES } from '../lib/cluster/types';
 import { liveMetadata } from '../lib/cluster/github';
+import SubNav from '../components/cluster/SubNav';
+import StatusBar from '../components/cluster/StatusBar';
+import DependencyGraph from '../components/cluster/DependencyGraph';
 
 export const metadata: Metadata = {
   title: 'Repository register',
@@ -31,6 +34,7 @@ export default async function RegistryPage() {
   const meta = await liveMetadata();
   return (
     <main className="doc doc-wide">
+      <SubNav current="/registry" />
       <section className="blk blk-first">
         <p className="kicker">Physical AI & Robotics · register</p>
         <h1 className="h1">Repository register</h1>
@@ -39,6 +43,7 @@ export default async function RegistryPage() {
           Snapshot {REGISTRY_SNAPSHOT_DATE}; commit dates refresh from GitHub where the repository is public.
           Machine-readable copy: <a href="/api/cluster/registry">/api/cluster/registry</a>.
         </p>
+        <StatusBar />
         <dl className="defs">
           {STATUSES.map((s) => (
             <div key={s}>
@@ -49,6 +54,12 @@ export default async function RegistryPage() {
             </div>
           ))}
         </dl>
+      </section>
+
+      <section className="blk" aria-labelledby="deps">
+        <h2 id="deps" className="blk-h">Dependency graph</h2>
+        <p className="blk-intro">Computed from each entry’s <code className="path">dependsOn</code>. If it is not an arrow here, it is not a dependency.</p>
+        <DependencyGraph />
       </section>
 
       {STATUSES.filter((s) => registry.some((r) => r.status === s)).map((s) => (

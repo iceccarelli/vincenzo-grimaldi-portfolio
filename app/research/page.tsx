@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import SubNav from '../components/cluster/SubNav';
 import { StateChip } from '../components/cluster/StatusBadge';
 import {
   researchProgram,
@@ -26,6 +27,7 @@ export const revalidate = 3600;
 export default function ResearchPage() {
   return (
     <main className="doc doc-wide">
+      <SubNav current="/research" />
       <section className="blk blk-first">
         <p className="kicker">Physical AI & Robotics · research and evidence</p>
         <h1 className="h1">Research program</h1>

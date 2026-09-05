@@ -30,8 +30,8 @@ for p in / /registry /registry/palletizer /registry/robot-lidar-fusion /architec
          /work /work/cim-threma /work/bahn-project-manager /simulator /connect /card \
          /impressum /datenschutz /llms.txt /robots.txt /sitemap.xml \
          /favicon.ico /apple-touch-icon.png /site.webmanifest /.well-known/security.txt \
-         /api/cluster /api/cluster/registry /api/cluster/kpis /api/cluster/decisions \
-         /api/cluster/report /api/cluster/contracts /api/cluster/contracts/InspectionResult; do
+         /api/cluster /api/cluster/registry /api/cluster/registry/palletizer /api/cluster/kpis /api/cluster/decisions \
+         /api/cluster/report /api/cluster/contracts /api/cluster/contracts/InspectionResult /report.md; do
   c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
   [ "$c" = 200 ] && ok "200 $p" || bad "$c $p"
 done
@@ -74,6 +74,34 @@ grep -q 'Frankfurt am Main' <<<"$HTML" && ok "city in HTML" || bad "city missing
 grep -q 'name="constraint"' <<<"$HTML" && ok "enquiry form present" || bad "enquiry form missing"
 grep -q 'href="/work"' <<<"$HTML" && ok "grid work still reachable" || bad "/work not linked from /"
 
+echo "▸ visual contract (pictures are drawn from the registers, not pasted)"
+grep -q 'aria-labelledby="stack-title' <<<"$HTML" && ok "stack diagram on /" || bad "stack diagram missing on /"
+grep -q 'class="tbl cov"' <<<"$HTML" && ok "mission coverage on /" || bad "mission coverage missing on /"
+grep -q 'class="kpistrip"' <<<"$HTML" && ok "KPI strip on /" || bad "KPI strip missing on /"
+grep -q 'class="stbar"' <<<"$HTML" && ok "status bar on /" || bad "status bar missing on /"
+grep -q 'class="subnav"' <<<"$HTML" && ok "register rail on /" || bad "register rail missing on /"
+REG=$(curl -sS "$BASE/registry")
+grep -q 'aria-labelledby="dep-title' <<<"$REG" && ok "dependency graph on /registry" || bad "dependency graph missing"
+PAL=$(curl -sS "$BASE/palletizer")
+grep -q 'aria-labelledby="tl-title' <<<"$PAL" && ok "evidence timeline on /palletizer" || bad "timeline missing"
+grep -q 'class="evgrid"' <<<"$PAL" && ok "evidence grid on /palletizer" || bad "evidence grid missing"
+grep -q 'id="kpi-cycles-per-hour"' <<<"$PAL" && ok "KPI rows addressable" || bad "KPI row ids missing"
+CON=$(curl -sS "$BASE/contracts")
+grep -q 'aria-labelledby="cf-title' <<<"$CON" && ok "contract flow on /contracts" || bad "contract flow missing"
+for p in /registry /architecture /palletizer /decisions /report /research /contracts /constitution; do
+  curl -sS "$BASE$p" | grep -q "aria-current=\"page\"" || bad "register rail has no current marker on $p"
+done
+ok "register rail marks the current page everywhere"
+# A picture must have a text equivalent: every svg role=img carries a <desc>.
+for p in / /registry /palletizer /contracts /architecture; do
+  B=$(curl -sS "$BASE$p")
+  NI=$(grep -o '<svg[^>]*aria-labelledby=' <<<"$B" | wc -l | tr -d ' ')
+  ND=$(grep -o '<desc id=' <<<"$B" | wc -l | tr -d ' ')
+  [ "$NI" -eq "$ND" ] && ok "$NI figures with descriptions on $p" || bad "$p: $NI svg figures but $ND descriptions"
+done
+# The new-week scaffold leaves TODO markers; none may ship.
+grep -q '>TODO<' <<<"$(curl -sS "$BASE/report")" && bad "/report ships a TODO section" || ok "no TODO on /report"
+
 echo "▸ closed vocabulary"
 # Every status badge on every register page is one of the six allowed words.
 for p in / /registry /palletizer; do
@@ -96,10 +124,16 @@ if [ "$have_node" = 1 ]; then
   done
   RG=$(curl -sS "$BASE/api/cluster/registry")
   node -e '
-    const r=JSON.parse(process.argv[1]); const ok=new Set(r.allowedStatuses); let bad=0;
-    for (const e of r.entries){ if(!ok.has(e.status)){bad++;console.error("status",e.id,e.status)} if(!e.rationale){bad++;console.error("no rationale",e.id)} }
+    const r=JSON.parse(process.argv[1]); const ok=new Set(r.allowedStatuses); const ids=new Set(r.entries.map(e=>e.id)); let bad=0;
+    for (const e of r.entries){
+      if(!ok.has(e.status)){bad++;console.error("status",e.id,e.status)}
+      if(!e.rationale){bad++;console.error("no rationale",e.id)}
+      for (const d of e.dependsOn) if(!ids.has(d)){bad++;console.error("dangling dependsOn",e.id,"->",d)}
+      for (const s of e.stages) if(!r.missionStages.includes(s)){bad++;console.error("unknown stage",e.id,s)}
+      for (const l of e.layers) if(!r.stackLayers.includes(l)){bad++;console.error("unknown layer",e.id,l)}
+    }
     const hasForge=r.entries.some(e=>/forge/i.test(e.id)); if(hasForge){bad++;console.error("Forge app inside register")}
-    process.exit(bad?1:0)' "$RG" && ok "register: closed statuses, rationale on every row, no Forge app inside" || bad "register JSON violates contract"
+    process.exit(bad?1:0)' "$RG" && ok "register: closed statuses, rationale, no dangling edges, known stages/layers, no Forge app" || bad "register JSON violates contract"
 else
   ok "node absent — JSON contracts skipped"
 fi

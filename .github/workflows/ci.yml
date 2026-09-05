@@ -57,6 +57,15 @@ jobs:
           "$DRIVER" --version
           npx --yes @axe-core/cli@4 --exit --chromedriver-path "$DRIVER" \
             http://localhost:3000/ \
+            http://localhost:3000/registry \
+            http://localhost:3000/registry/palletizer \
+            http://localhost:3000/architecture \
+            http://localhost:3000/palletizer \
+            http://localhost:3000/decisions \
+            http://localhost:3000/report \
+            http://localhost:3000/research \
+            http://localhost:3000/contracts \
+            http://localhost:3000/constitution \
             http://localhost:3000/work \
             http://localhost:3000/work/cim-threma \
             http://localhost:3000/work/bahn-project-manager \

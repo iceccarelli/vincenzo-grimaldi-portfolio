@@ -6,20 +6,31 @@ import { pick } from '../lib/copy';
 import { SITE_NAME } from '../lib/site';
 
 /**
- * Header — one quiet bar. Name on the left, three sections on the right,
- * a two-letter language toggle. On narrow screens the sections fold into a
+ * Header — one quiet bar. Name on the left, the registers on the right,
+ * a two-letter language toggle. On narrow screens everything folds into a
  * native <details> element, so the menu works with JavaScript disabled.
  *
- * No mega menu, no search, no call to action. The document is the header.
+ * No mega menu, no search, no call to action. The register is the header.
  */
 export default function Header() {
   const { locale } = useLanguage();
   const c = pick(locale);
 
   const items = [
+    { label: c.nav.registry, href: '/registry' },
+    { label: c.nav.architecture, href: '/architecture' },
+    { label: c.nav.decisions, href: '/decisions' },
+    { label: c.nav.report, href: '/report' },
     { label: c.nav.work, href: '/work' },
-    { label: c.nav.thesis, href: '/simulator' },
     { label: c.nav.contact, href: '/connect' },
+  ];
+  const more = [
+    { label: 'Palletizer', href: '/palletizer' },
+    { label: 'Research', href: '/research' },
+    { label: 'Contracts', href: '/contracts' },
+    { label: 'Constitution', href: '/constitution' },
+    { label: c.nav.thesis, href: '/simulator' },
+    { label: c.nav.card, href: '/card' },
   ];
 
   return (
@@ -27,6 +38,7 @@ export default function Header() {
       <div className="hdr-in">
         <a className="hdr-name" href="/">
           {SITE_NAME}
+          <span className="hdr-sub">{c.nav.cluster} · Physical AI</span>
         </a>
 
         <nav className="hdr-nav" aria-label="Primary">
@@ -46,7 +58,11 @@ export default function Header() {
                 {i.label}
               </a>
             ))}
-            <a href="/card">{c.nav.card}</a>
+            {more.map((i) => (
+              <a key={i.href} href={i.href}>
+                {i.label}
+              </a>
+            ))}
             <LanguageSwitcher />
           </div>
         </details>

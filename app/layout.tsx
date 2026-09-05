@@ -10,7 +10,7 @@ import './globals.css';
 
 const DEFAULT_TITLE = `${SITE_NAME} — ${ONE_LINE}`;
 const DESCRIPTION =
-  `${SITE_NAME}, ${CITY}. Physics-constrained control and grid digitalisation for safety-critical rail and OT systems: CIM/CGMES, IEC 61850, IT/OT, traction HV. Thesis simulator, write-up and public-dataset work.`;
+  `Control engine of the Physical AI & Robotics cluster, operated by ${SITE_NAME}, ${CITY}: repository register, target architecture, safety gate, palletizing KPIs, decision log, kill register, research program, weekly CEO report and cross-cluster contracts — as pages and as JSON. Robot-agnostic palletizing software first.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

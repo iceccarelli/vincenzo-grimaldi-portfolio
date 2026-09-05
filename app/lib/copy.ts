@@ -6,23 +6,64 @@ import type { Locale } from './i18n';
  * is what the server renders; German is adopted client-side after
  * hydration. The type forces both languages to carry the same keys.
  *
- * Vocabulary is deliberately narrow: CIM, CGMES, IEC 61850, IT/OT,
- * traction HV, KRITIS as context, verifiable, deterministic,
- * physics-informed as thesis language. Nothing is for sale here.
+ * The register contents (repository names, statuses, KPI definitions,
+ * decisions, reports) are technical records and stay in English in both
+ * views; only the chrome around them is translated. Nothing is for sale
+ * here and no number appears without a source.
  */
 
 export type Copy = {
-  nav: { work: string; thesis: string; contact: string; menu: string; card: string };
+  nav: {
+    cluster: string;
+    registry: string;
+    architecture: string;
+    decisions: string;
+    report: string;
+    work: string;
+    thesis: string;
+    contact: string;
+    menu: string;
+    card: string;
+  };
   home: {
-    oneLine: string;
+    kicker: string;
+    mandate: string;
+    lead: string;
+    missionHeading: string;
+    boardHeading: string;
+    boardAsOf: string;
+    board: {
+      repositories: string;
+      customers: string;
+      deployments: string;
+      kpisMeasured: string;
+      benchmarks: string;
+      decisions: string;
+      killReview: string;
+    };
+    registryHeading: string;
+    registryIntro: string;
+    registryAll: string;
+    firstTargetHeading: string;
+    firstTargetIntro: string;
+    firstTargetAll: string;
+    gateHeading: string;
+    gateIntro: string;
+    gateAll: string;
+    decisionsHeading: string;
+    decisionsAll: string;
+    reportHeading: string;
+    nextExperiment: string;
+    decisionRequired: string;
+    reportAll: string;
+    boundaryHeading: string;
+    boundaryIntro: string;
+    operatorHeading: string;
     roleLine: string;
     roleDetail: string;
-    artifactsHeading: string;
-    artifacts: { title: string; note: string; href: string; external?: boolean; label: string }[];
-    workHeading: string;
-    workAll: string;
     formHeading: string;
     formIntro: string;
+    thesisNote: string;
   };
   form: {
     name: string;
@@ -70,37 +111,64 @@ export type Copy = {
 };
 
 const en: Copy = {
-  nav: { work: 'Work', thesis: 'Thesis', contact: 'Contact', menu: 'Menu', card: 'Card' },
+  nav: {
+    cluster: 'Cluster',
+    registry: 'Registry',
+    architecture: 'Architecture',
+    decisions: 'Decisions',
+    report: 'Report',
+    work: 'Work',
+    thesis: 'Thesis',
+    contact: 'Contact',
+    menu: 'Menu',
+    card: 'Card',
+  },
   home: {
-    oneLine: 'Physics-constrained control · grid digitalisation',
+    kicker: 'Physical AI & Robotics · cluster control engine',
+    mandate: 'Prove whether physical autonomy can create a defensible second moat.',
+    lead:
+      'One place that states what this cluster owns, what it measures, what it has decided and what it has killed — as pages and as JSON. Robot-agnostic palletizing software first; everything else is judged by whether it makes that cheaper to deploy.',
+    missionHeading: 'Mission',
+    boardHeading: 'Status board',
+    boardAsOf: 'as of',
+    board: {
+      repositories: 'Register entries',
+      customers: 'Customers',
+      deployments: 'Deployments',
+      kpisMeasured: 'KPIs measured',
+      benchmarks: 'Benchmarks published',
+      decisions: 'Decisions logged',
+      killReview: 'Under kill review',
+    },
+    registryHeading: 'Repository register',
+    registryIntro:
+      'Six statuses, no seventh. Every row names a public artifact or says none. Last-commit dates are live from GitHub when reachable, otherwise the dated snapshot.',
+    registryAll: 'Full register with all fields',
+    firstTargetHeading: 'First target — palletizing',
+    firstTargetIntro:
+      'Twelve KPIs the mandate names. A dash means unmeasured; a target is never printed as a result. The simulator has to produce these before any hardware is touched.',
+    firstTargetAll: 'Palletizer register',
+    gateHeading: 'Safety gate',
+    gateIntro:
+      'Probabilistic intelligence proposes; deterministic safety refuses. No model, learned or language, reaches an actuator except through this gate, and no tool exists that bypasses it.',
+    gateAll: 'Target architecture',
+    decisionsHeading: 'Latest decisions',
+    decisionsAll: 'Decision log',
+    reportHeading: 'Weekly CEO report',
+    nextExperiment: 'Next experiment',
+    decisionRequired: 'Decision required',
+    reportAll: 'Full report',
+    boundaryHeading: 'Not in this cluster',
+    boundaryIntro:
+      'Applications that look physical and are not robotics products. They stay where they are until a robot executes a physical task under the gate.',
+    operatorHeading: 'Operator',
     roleLine: 'ITk Fachspezialist, DB InfraGO AG.',
     roleDetail: 'Traction HV digitisation. IT/OT. KRITIS-class governance.',
-    artifactsHeading: 'Artifacts',
-    artifacts: [
-      {
-        title: 'CIM–ThreMA simulator',
-        note: 'Runnable implementation of the M.Sc. thesis: grid topology (CIM/CGMES) linked to a threat ontology (ThreMA), exercised on an IEEE 9-bus testbed.',
-        href: '/simulator',
-        label: 'Open',
-      },
-      {
-        title: 'Thesis write-up',
-        note: 'Method, validation set-up and stated limits of the cross-domain ontology, written to be checked rather than believed.',
-        href: '/work/cim-threma',
-        label: 'Read',
-      },
-      {
-        title: 'Bahn Project Manager',
-        note: 'Public-dataset portfolio application. Typed data model and test suite over an open 1,298-project dataset. No employer systems involved.',
-        href: '/work/bahn-project-manager',
-        label: 'Inspect',
-      },
-    ],
-    workHeading: 'Selected work',
-    workAll: 'All work',
-    formHeading: 'Advisory enquiry',
+    formHeading: 'Enquiry',
     formIntro:
-      'One constraint, stated plainly, is enough to start. Replies come from the address in the footer.',
+      'System integrators, packaging companies, warehouses, inspection companies, utilities: one sentence about the task that costs you the most labour is enough to start. Replies come from the address in the footer.',
+    thesisNote:
+      'Grid and traction-power work — the CIM–ThreMA thesis simulator and the public-dataset application — stays under Work and Thesis.',
   },
   form: {
     name: 'Name',
@@ -159,43 +227,70 @@ const en: Copy = {
   },
   notFound: {
     title: 'Page not found',
-    body: 'That URL does not exist. The work list and the contact page do.',
+    body: 'That URL does not exist. The register, the work list and the contact page do.',
     cta: 'Home',
   },
 };
 
 const de: Copy = {
-  nav: { work: 'Arbeiten', thesis: 'Thesis', contact: 'Kontakt', menu: 'Menü', card: 'Karte' },
+  nav: {
+    cluster: 'Cluster',
+    registry: 'Register',
+    architecture: 'Architektur',
+    decisions: 'Entscheidungen',
+    report: 'Bericht',
+    work: 'Arbeiten',
+    thesis: 'Thesis',
+    contact: 'Kontakt',
+    menu: 'Menü',
+    card: 'Karte',
+  },
   home: {
-    oneLine: 'Physikalisch beschränkte Regelung · Netzdigitalisierung',
+    kicker: 'Physical AI & Robotik · Steuerungsinstrument des Clusters',
+    mandate: 'Nachweisen, ob physische Autonomie einen verteidigungsfähigen zweiten Burggraben schaffen kann.',
+    lead:
+      'Ein Ort, der festhält, was dieser Cluster besitzt, misst, entschieden und eingestellt hat — als Seiten und als JSON. Roboterunabhängige Palettiersoftware zuerst; alles andere wird daran gemessen, ob es deren Einsatz günstiger macht.',
+    missionHeading: 'Mission',
+    boardHeading: 'Statustafel',
+    boardAsOf: 'Stand',
+    board: {
+      repositories: 'Registereinträge',
+      customers: 'Kunden',
+      deployments: 'Inbetriebnahmen',
+      kpisMeasured: 'Gemessene KPIs',
+      benchmarks: 'Veröffentlichte Benchmarks',
+      decisions: 'Protokollierte Entscheidungen',
+      killReview: 'In Kill-Prüfung',
+    },
+    registryHeading: 'Repository-Register',
+    registryIntro:
+      'Sechs Status, kein siebter. Jede Zeile nennt ein öffentliches Artefakt oder „none“. Commit-Daten kommen live von GitHub, wenn erreichbar, sonst aus dem datierten Snapshot.',
+    registryAll: 'Vollständiges Register mit allen Feldern',
+    firstTargetHeading: 'Erstes Ziel — Palettieren',
+    firstTargetIntro:
+      'Zwölf KPIs, die das Mandat nennt. Ein Strich heißt ungemessen; ein Zielwert wird nie als Ergebnis gedruckt. Der Simulator muss diese Zahlen liefern, bevor Hardware angefasst wird.',
+    firstTargetAll: 'Palletizer-Register',
+    gateHeading: 'Sicherheitsschleuse',
+    gateIntro:
+      'Probabilistische Intelligenz schlägt vor; deterministische Sicherheit lehnt ab. Kein Modell — gelernt oder sprachlich — erreicht einen Aktor außer durch diese Schleuse, und es existiert kein Werkzeug, das sie umgeht.',
+    gateAll: 'Zielarchitektur',
+    decisionsHeading: 'Letzte Entscheidungen',
+    decisionsAll: 'Entscheidungsprotokoll',
+    reportHeading: 'Wöchentlicher CEO-Bericht',
+    nextExperiment: 'Nächstes Experiment',
+    decisionRequired: 'Entscheidung erforderlich',
+    reportAll: 'Vollständiger Bericht',
+    boundaryHeading: 'Nicht in diesem Cluster',
+    boundaryIntro:
+      'Anwendungen, die physisch wirken und keine Robotikprodukte sind. Sie bleiben, wo sie sind, bis ein Roboter eine physische Aufgabe unter der Schleuse ausführt.',
+    operatorHeading: 'Betreiber',
     roleLine: 'ITk Fachspezialist, DB InfraGO AG.',
     roleDetail: 'Digitalisierung von Bahnstrom-Hochspannungsanlagen. IT/OT. Governance auf KRITIS-Niveau.',
-    artifactsHeading: 'Artefakte',
-    artifacts: [
-      {
-        title: 'CIM–ThreMA-Simulator',
-        note: 'Lauffähige Umsetzung der Masterthesis: Netztopologie (CIM/CGMES) verknüpft mit einer Bedrohungsontologie (ThreMA), erprobt an einem IEEE-9-Bus-Testbed.',
-        href: '/simulator',
-        label: 'Öffnen',
-      },
-      {
-        title: 'Thesis-Ausarbeitung',
-        note: 'Methode, Validierungsaufbau und benannte Grenzen der domänenübergreifenden Ontologie — geschrieben, um geprüft zu werden.',
-        href: '/work/cim-threma',
-        label: 'Lesen',
-      },
-      {
-        title: 'Bahn Project Manager',
-        note: 'Portfolio-Anwendung auf öffentlichem Datensatz. Typisiertes Datenmodell und Testsuite über einen offenen Datensatz mit 1.298 Projekten. Keine Arbeitgebersysteme beteiligt.',
-        href: '/work/bahn-project-manager',
-        label: 'Ansehen',
-      },
-    ],
-    workHeading: 'Ausgewählte Arbeiten',
-    workAll: 'Alle Arbeiten',
-    formHeading: 'Beratungsanfrage',
+    formHeading: 'Anfrage',
     formIntro:
-      'Eine klar benannte Randbedingung genügt für den Anfang. Antworten kommen von der Adresse im Fußbereich.',
+      'Systemintegratoren, Verpacker, Lagerbetreiber, Inspektionsfirmen, Versorger: ein Satz über die Aufgabe, die Sie am meisten Arbeitszeit kostet, genügt. Antworten kommen von der Adresse im Fußbereich.',
+    thesisNote:
+      'Netz- und Bahnstromarbeit — der CIM–ThreMA-Thesis-Simulator und die Anwendung auf öffentlichem Datensatz — bleibt unter Arbeiten und Thesis.',
   },
   form: {
     name: 'Name',
@@ -254,7 +349,7 @@ const de: Copy = {
   },
   notFound: {
     title: 'Seite nicht gefunden',
-    body: 'Diese URL existiert nicht. Die Arbeitsliste und die Kontaktseite schon.',
+    body: 'Diese URL existiert nicht. Das Register, die Arbeitsliste und die Kontaktseite schon.',
     cta: 'Startseite',
   },
 };

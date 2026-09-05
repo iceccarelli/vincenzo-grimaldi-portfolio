@@ -13,10 +13,11 @@ import {
 /**
  * JsonLd.tsx — server-rendered structured data.
  *
- * One @graph with stable @ids: Person and WebSite. There is no
- * ProfessionalService node and no Offer on this host, because nothing is
- * for sale here. SoftwareApplication is emitted only on the work page
- * whose content it describes.
+ * One @graph with stable @ids: Person, WebSite and the register as a
+ * Dataset with its JSON distributions. There is no ProfessionalService
+ * node and no Offer on this host, because nothing is for sale here.
+ * SoftwareApplication is emitted only on the page whose content it
+ * describes.
  */
 
 const PERSON_ID = `${SITE_URL}/#person`;
@@ -43,21 +44,45 @@ const graph = {
       alumniOf: { '@type': 'Organization', name: 'RWTH Aachen University' },
       sameAs: SAME_AS,
       knowsAbout: [
-        'Common Information Model (CIM / CGMES)',
-        'IEC 61850',
-        'IT/OT convergence',
-        'Traction power supply',
+        'Industrial robotics software',
+        'Robot-agnostic palletizing',
+        'LiDAR–camera sensor fusion',
+        'Task and motion planning',
+        'Functional safety architecture for robots',
         'Physics-informed learning',
         'Deterministic control',
+        'Common Information Model (CIM / CGMES)',
+        'IT/OT convergence',
       ],
     },
     {
       '@type': 'WebSite',
       '@id': WEBSITE_ID,
       url: `${SITE_URL}/`,
-      name: SITE_NAME,
+      name: `${SITE_NAME} — Physical AI & Robotics cluster control engine`,
+      alternateName: SITE_NAME,
       publisher: { '@id': PERSON_ID },
       inLanguage: 'en',
+      about: {
+        '@type': 'Thing',
+        name: 'Physical AI & Robotics cluster',
+        description: 'Robot-agnostic palletizing software, LiDAR–camera fusion and autonomous electrical-infrastructure inspection, governed by a deterministic safety gate.',
+      },
+    },
+    {
+      '@type': 'Dataset',
+      '@id': `${SITE_URL}/#registry`,
+      name: 'Physical AI cluster repository register',
+      description: 'Machine-readable register of repositories, statuses, KPIs, decisions, kill register, weekly reports and cross-cluster contracts.',
+      url: `${SITE_URL}/registry`,
+      creator: { '@id': PERSON_ID },
+      license: 'https://creativecommons.org/licenses/by/4.0/',
+      distribution: [
+        { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${SITE_URL}/api/cluster/registry` },
+        { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${SITE_URL}/api/cluster/kpis` },
+        { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${SITE_URL}/api/cluster/decisions` },
+        { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${SITE_URL}/api/cluster/report` },
+      ],
     },
   ],
 };

@@ -37,9 +37,13 @@ const nextConfig = {
   async redirects() {
     return [
       { source: '/payments', destination: '/connect', permanent: true },
+      { source: '/cluster', destination: '/', permanent: true },
+      { source: '/cluster/:path*', destination: '/:path*', permanent: true },
+      { source: '/kill-list', destination: '/decisions#kill', permanent: true },
+      { source: '/roadmap', destination: '/research', permanent: true },
       { source: '/capabilities', destination: '/work', permanent: true },
       { source: '/capabilities/:path*', destination: '/work', permanent: true },
-      { source: '/work/palletizer-os', destination: '/work', permanent: true },
+      { source: '/work/palletizer-os', destination: '/palletizer', permanent: true },
       { source: '/work/gridos', destination: '/work', permanent: true },
     ];
   },

@@ -10,6 +10,12 @@
 
 import { THESIS_DEMO } from './site';
 
+/**
+ * These are the grid and traction-power entries. Robotics work is governed
+ * by the cluster register (app/lib/cluster/registry.ts) and rendered under
+ * /registry and /palletizer, not here.
+ */
+
 export type CaseStudy = {
   slug: string;
   name: string;
@@ -76,6 +82,7 @@ export const researchNotes: ResearchNote[] = [
   { name: 'GridOS', line: 'DER middleware notes: protocol ingest, dispatch, forecast loop. Private, unpublished.' },
   { name: 'DERIM', line: 'DER integration middleware notes, grid-aware coordination. Private, unpublished.' },
   { name: 'NeuralBridge', line: 'Orchestration notes for model-in-the-loop control. Private, unpublished.' },
+  { name: 'robot-lidar-fusion', line: 'Repository not public; the PyPI package is. Governed by the cluster register at /registry/robot-lidar-fusion.' },
 ];
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {

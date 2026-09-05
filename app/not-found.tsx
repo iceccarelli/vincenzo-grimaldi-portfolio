@@ -20,6 +20,7 @@ export default function NotFound() {
         <p className="lead">{c.notFound.body}</p>
         <p className="actions">
           <a className="btn" href="/">{c.notFound.cta}</a>
+          <a className="btn-quiet" href="/registry">/registry</a>
           <a className="btn-quiet" href="/work">/work</a>
           <a className="btn-quiet" href="/connect">/connect</a>
         </p>

@@ -50,6 +50,9 @@ export const registry: RegistryEntry[] = [
     regulatory: 'ISO 10218 / ISO/TS 15066 apply to any cell that executes; the software makes no certification claim.',
     rationale:
       'The only repository in the cluster with a public package, a test suite and a runnable optimizer. It is CORE because everything else in the cluster is measured against whether it makes this cheaper to deploy.',
+    stages: ['MODEL', 'PLAN', 'VERIFY'],
+    layers: ['world-model', 'task-planner', 'motion-planner', 'safety', 'controller', 'telemetry'],
+    dependsOn: [],
   },
   {
     id: 'robot-lidar-fusion',
@@ -79,6 +82,9 @@ export const registry: RegistryEntry[] = [
     regulatory: 'None on its own; inherits the safety case of the cell that uses it.',
     rationale:
       'CORE as shared IP, not as a product. The GitHub repository is not public although the PyPI package is — the register says so instead of linking a path that returns 404.',
+    stages: ['PERCEIVE'],
+    layers: ['perception'],
+    dependsOn: [],
   },
   {
     id: 'palletizer-simulation',
@@ -86,11 +92,11 @@ export const registry: RegistryEntry[] = [
     cluster: 'physical-ai',
     status: 'MODULE',
     description:
-      'Digital simulation of the palletizing cell: physics demos in the browser and a simulation package in the core. The mandate requires simulation before hardware; this is where the KPI harness has to live.',
+      'Digital simulation of the palletizing cell: physics demos in the browser (React Three Fiber + Rapier) and an OPC UA robot mock in core/simulation. The mandate requires simulation before hardware; this is where the KPI harness has to live.',
     language: ['TypeScript', 'Python'],
     lastCommitSnapshot: '2026-07-31',
     artifacts: [{ kind: 'github', url: 'https://github.com/iceccarelli/palletizer/tree/main/core/simulation', label: 'palletizer/core/simulation' }],
-    architecture: 'Rapier physics in React Three Fiber for the browser; Python simulation package for headless runs.',
+    architecture: 'Rapier physics in React Three Fiber for the browser; core/simulation/opcua_robot_mock.py for headless runs. No KPI emitter yet.',
     dependencies: ['palletizer'],
     maturity: 'prototype',
     businessHypothesis: 'A cycles/hour and intervention-rate number produced in simulation is the cheapest evidence a customer will accept before hardware.',
@@ -104,6 +110,9 @@ export const registry: RegistryEntry[] = [
     securityRisk: 'low',
     regulatory: 'None.',
     rationale: 'MODULE of palletizer, not a repository. Listed because the next experiment depends on it.',
+    stages: [],
+    layers: ['simulator'],
+    dependsOn: ['palletizer'],
   },
   {
     id: 'palletizer-ros2',
@@ -128,6 +137,9 @@ export const registry: RegistryEntry[] = [
     securityRisk: 'medium',
     regulatory: 'Any real actuation goes through the safety gate; the bridge itself is not a safety function.',
     rationale: 'MODULE. No certified vendor driver exists and none is claimed.',
+    stages: [],
+    layers: ['controller'],
+    dependsOn: ['palletizer', 'robot-lidar-fusion'],
   },
   {
     id: 'palletizer-mcp',
@@ -152,6 +164,9 @@ export const registry: RegistryEntry[] = [
     securityRisk: 'medium',
     regulatory: 'Must never expose a tool that bypasses the safety gate.',
     rationale: 'MODULE. Exists; tested (tests/test_mcp_server.py); bounded by the agent rules on /architecture.',
+    stages: ['PLAN'],
+    layers: ['task-planner'],
+    dependsOn: ['palletizer'],
   },
   {
     id: 'palletizer-native',
@@ -176,6 +191,9 @@ export const registry: RegistryEntry[] = [
     securityRisk: 'low',
     regulatory: 'None.',
     rationale: 'MODULE. No speed-up figure is quoted because none is published.',
+    stages: ['PLAN'],
+    layers: ['task-planner'],
+    dependsOn: ['palletizer'],
   },
   {
     id: 'palletizer-construction',
@@ -200,6 +218,9 @@ export const registry: RegistryEntry[] = [
     securityRisk: 'low',
     regulatory: 'None.',
     rationale: 'EXPERIMENT under kill-rule review: no customer, no measured task, no benchmark advantage. Decision required.',
+    stages: [],
+    layers: ['task-planner'],
+    dependsOn: ['palletizer'],
   },
   {
     id: 'autonomous-inspection',
@@ -225,6 +246,9 @@ export const registry: RegistryEntry[] = [
     securityRisk: 'high',
     regulatory: 'Work near HV assets is governed by the operator’s safety rules; nothing here involves employer systems or data.',
     rationale: 'RESEARCH. Named in the mandate; no repository exists under this account as of the snapshot date, and the register says so.',
+    stages: [],
+    layers: [],
+    dependsOn: ['robot-lidar-fusion', 'neuralbridge-safety-runtime'],
   },
   {
     id: 'ai-agent-control',
@@ -250,6 +274,9 @@ export const registry: RegistryEntry[] = [
     securityRisk: 'low',
     regulatory: 'None.',
     rationale: 'EXPERIMENT under kill-rule review. Fails five of six criteria on inspection; ARCHIVE unless a robotics module is extracted.',
+    stages: [],
+    layers: [],
+    dependsOn: [],
   },
   {
     id: 'neuralbridge-safety-runtime',
@@ -274,6 +301,9 @@ export const registry: RegistryEntry[] = [
     securityRisk: 'high',
     regulatory: 'Any safety claim belongs to its owner cluster, not to this register.',
     rationale: 'INTERNAL and not ours. Listed so the dependency is explicit and nothing is claimed for it here.',
+    stages: [],
+    layers: ['safety'],
+    dependsOn: [],
   },
 ];
 

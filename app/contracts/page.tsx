@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import SubNav from '../components/cluster/SubNav';
 import Pipeline from '../components/cluster/Pipeline';
+import ContractFlow from '../components/cluster/ContractFlow';
 import { contracts } from '../lib/cluster/contracts';
 
 export const metadata: Metadata = {
@@ -21,6 +23,7 @@ const chain = ['Energy: anomaly', 'Operations: work order', 'Physical AI: inspec
 export default function ContractsPage() {
   return (
     <main className="doc doc-wide">
+      <SubNav current="/contracts" />
       <section className="blk blk-first">
         <p className="kicker">Physical AI & Robotics · contracts</p>
         <h1 className="h1">Cross-cluster contracts</h1>
@@ -30,6 +33,7 @@ export default function ContractsPage() {
           Operations. Index: <a href="/api/cluster/contracts">/api/cluster/contracts</a>.
         </p>
         <Pipeline stages={chain} label="Integration chain" compact />
+        <ContractFlow />
       </section>
 
       {contracts.map((c) => (

@@ -1391,3 +1391,398 @@ code {
 .reg-compact tbody th {
   min-width: 0;
 }
+
+/* ============================================================================
+   Control engine v2 — register rail, figures, coverage grids, evidence,
+   status bar, print. Still paper and ink; hatch means "not built".
+   ========================================================================== */
+
+/* register rail */
+
+.subnav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: -0.75rem 0 2rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.85rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.subnav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0.15rem;
+  flex: 1;
+}
+
+.subnav a {
+  display: inline-block;
+  padding: 0.35rem 0.6rem;
+  color: var(--muted);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.subnav a[aria-current='page'] {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+  font-weight: 600;
+}
+
+.subnav a:hover,
+.subnav a:focus-visible {
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.subnav-json {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+
+/* figures */
+
+.fig {
+  margin: 1.25rem 0 0;
+}
+
+.fig-tight {
+  margin-top: 0.75rem;
+}
+
+.fig svg {
+  display: block;
+  background: var(--paper);
+}
+
+.fig figcaption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  max-width: 76ch;
+}
+
+.fig-data {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.fig-data summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* mission coverage */
+
+.cov {
+  min-width: 560px;
+}
+
+.cov .cov-h {
+  text-align: center;
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+}
+
+.cov td {
+  text-align: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  width: 4.5rem;
+}
+
+.cov .cov-on {
+  color: var(--ink);
+}
+
+.cov .cov-off {
+  color: var(--line);
+}
+
+.cov tfoot th,
+.cov tfoot td {
+  border-top: 1px solid var(--ink);
+  border-bottom: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.cov tfoot th {
+  text-align: left;
+  font-weight: 400;
+}
+
+.cov tfoot .cov-gap {
+  color: var(--fault);
+  font-weight: 600;
+}
+
+/* KPI strip */
+
+.kpistrip {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.kpicell a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 0.85rem;
+  min-height: 92px;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 5px, var(--line) 5px 6px),
+    var(--panel);
+  color: var(--ink);
+}
+
+.kpicell-on a {
+  background: var(--panel);
+}
+
+.kpicell a:hover,
+.kpicell a:focus-visible {
+  text-decoration: none;
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.kpicell-name {
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.kpicell-val {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.kpicell-val .src {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+}
+
+.kpicell-unit {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* evidence grid */
+
+.evgrid {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.evrow {
+  display: grid;
+  grid-template-columns: minmax(9rem, 12rem) 1fr 2.5rem;
+  gap: 0.5rem 1rem;
+  align-items: start;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.evrow-empty {
+  background: repeating-linear-gradient(45deg, transparent 0 5px, var(--line) 5px 6px);
+}
+
+.evrow-layer {
+  font-weight: 600;
+}
+
+.evrow-mods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.evrow-mods .path {
+  white-space: normal;
+}
+
+.evrow-n {
+  text-align: right;
+  color: var(--muted);
+}
+
+@media (max-width: 560px) {
+  .evrow {
+    grid-template-columns: 1fr 2.5rem;
+  }
+  .evrow-mods {
+    grid-column: 1 / -1;
+  }
+}
+
+/* status distribution bar */
+
+.stbar {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.stbar li {
+  flex-basis: 0;
+  min-width: 5.5rem;
+  display: flex;
+}
+
+.stbar-seg {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.stbar-seg:hover,
+.stbar-seg:focus-visible {
+  text-decoration: none;
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.stbar-seg.st-core {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.stbar-seg.st-module {
+  border-color: var(--rhine);
+  color: var(--rhine);
+}
+
+.stbar-seg.st-research {
+  border-style: dashed;
+}
+
+.stbar-seg.st-experiment {
+  border-color: var(--fault);
+  color: var(--fault);
+}
+
+.path-line-inline {
+  display: inline-flex;
+  margin: 0;
+}
+
+/* responsive tables: below 640px the register and KPI tables stack */
+
+@media (max-width: 640px) {
+  .tbl.reg,
+  .tbl.kpi {
+    min-width: 0;
+  }
+  .tbl.reg thead,
+  .tbl.kpi thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .tbl.reg tr,
+  .tbl.kpi tr {
+    display: block;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tbl.reg th,
+  .tbl.reg td,
+  .tbl.kpi th,
+  .tbl.kpi td {
+    display: block;
+    border: 0;
+    padding: 0.15rem 0;
+    min-width: 0;
+  }
+  .tbl.reg tbody th,
+  .tbl.kpi tbody th {
+    min-width: 0;
+  }
+  .tbl.kpi tbody td::before,
+  .tbl.reg tbody td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+/* print — the weekly report and the registers on paper */
+
+@media print {
+  .hdr,
+  .ftr,
+  .consent,
+  .subnav,
+  .blk-more,
+  .fig-data summary {
+    display: none !important;
+  }
+  .doc,
+  .doc-wide {
+    max-width: none;
+    padding: 0;
+  }
+  body {
+    font-size: 11pt;
+    background: #fff;
+  }
+  a {
+    color: inherit;
+  }
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #555;
+  }
+  .blk {
+    break-inside: avoid;
+    margin-top: 1.5rem;
+  }
+  .tbl-wrap {
+    overflow: visible;
+  }
+  .fig-data[open] {
+    display: block;
+  }
+  .st,
+  .pipe-stage {
+    border: 1px solid #000;
+  }
+}

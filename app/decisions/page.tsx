@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import SubNav from '../components/cluster/SubNav';
 import { StateChip } from '../components/cluster/StatusBadge';
 import { decisions, killCriteria, killRegister } from '../lib/cluster/decisions';
 
@@ -20,6 +21,7 @@ export default function DecisionsPage() {
   const list = [...decisions].reverse();
   return (
     <main className="doc doc-wide">
+      <SubNav current="/decisions" />
       <section className="blk blk-first">
         <p className="kicker">Physical AI & Robotics · decisions</p>
         <h1 className="h1">Decision log</h1>

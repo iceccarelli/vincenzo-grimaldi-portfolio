@@ -43,10 +43,10 @@ export default function RegistryTable({
                   <br />
                   <code className="path">{e.repository}</code>
                 </th>
-                <td>
+                <td data-label="Status">
                   <StatusBadge status={e.status} />
                 </td>
-                <td>
+                <td data-label="Public artifact">
                   {first ? (
                     <a href={first.url} rel="noopener noreferrer">
                       {first.label}
@@ -56,7 +56,7 @@ export default function RegistryTable({
                   )}
                   {e.artifacts.length > 1 && <span className="muted"> +{e.artifacts.length - 1}</span>}
                 </td>
-                <td>
+                <td data-label="Last commit">
                   {last ? (
                     <>
                       <time dateTime={last}>{last}</time>
@@ -66,7 +66,7 @@ export default function RegistryTable({
                     <span className="muted">not public</span>
                   )}
                 </td>
-                {!compact && <td>{e.technicalRole}</td>}
+                {!compact && <td data-label="Role">{e.technicalRole}</td>}
               </tr>
             );
           })}

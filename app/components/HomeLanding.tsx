@@ -4,8 +4,12 @@ import Image from 'next/image';
 import ContactForm from './ContactForm';
 import Pipeline from './cluster/Pipeline';
 import RegistryTable from './cluster/RegistryTable';
-import KpiTable from './cluster/KpiTable';
 import StatusBadge from './cluster/StatusBadge';
+import SubNav from './cluster/SubNav';
+import MissionCoverage from './cluster/MissionCoverage';
+import KpiCoverage from './cluster/KpiCoverage';
+import StackDiagram from './cluster/StackDiagram';
+import StatusBar from './cluster/StatusBar';
 import { useLanguage } from '../lib/i18n';
 import { pick } from '../lib/copy';
 import { CITY, SITE_NAME } from '../lib/site';
@@ -53,6 +57,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
 
   return (
     <main className="doc doc-wide">
+      <SubNav current="/" />
       <section className="blk blk-first" aria-labelledby="mandate">
         <p className="kicker">{c.home.kicker}</p>
         <h1 id="mandate" className="h1 mandate">{c.home.mandate}</h1>
@@ -62,6 +67,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
       <section className="blk" aria-labelledby="mission">
         <h2 id="mission" className="blk-h">{c.home.missionHeading}</h2>
         <Pipeline stages={mission} label="Mission" />
+        <MissionCoverage compact />
         <p className="fine">{firstPrinciple.lead}</p>
         <ul className="inline-list">
           {firstPrinciple.conditions.map((x) => (
@@ -89,6 +95,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
       <section className="blk" aria-labelledby="registry">
         <h2 id="registry" className="blk-h">{c.home.registryHeading}</h2>
         <p className="blk-intro">{c.home.registryIntro}</p>
+        <StatusBar />
         <RegistryTable entries={owned} meta={meta} compact />
         <p className="blk-more">
           <a href="/registry">{c.home.registryAll} →</a> · <a href="/api/cluster/registry">JSON</a>
@@ -98,7 +105,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
       <section className="blk" aria-labelledby="first">
         <h2 id="first" className="blk-h">{c.home.firstTargetHeading}</h2>
         <p className="blk-intro">{c.home.firstTargetIntro}</p>
-        <KpiTable kpis={palletizerKpis} caption="Palletizing KPIs" />
+        <KpiCoverage kpis={palletizerKpis} href="/palletizer" title="Palletizing KPIs" />
         <p className="blk-more">
           <a href="/palletizer">{c.home.firstTargetAll} →</a> · <a href="/api/cluster/kpis">JSON</a>
         </p>
@@ -108,6 +115,7 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
         <h2 id="gate" className="blk-h">{c.home.gateHeading}</h2>
         <p className="blk-intro">{c.home.gateIntro}</p>
         <Pipeline stages={gate} label="Safety gate" deterministicFrom={1} />
+        <StackDiagram compact />
         <div className="two-col">
           <div>
             <h3 className="sub-h">Agents may</h3>

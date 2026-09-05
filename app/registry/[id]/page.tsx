@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import StatusBadge from '../../components/cluster/StatusBadge';
+import SubNav from '../../components/cluster/SubNav';
 import { SoftwareAppJsonLd } from '../../components/JsonLd';
 import { getEntry, registry } from '../../lib/cluster/registry';
 import { liveMetadata } from '../../lib/cluster/github';
@@ -36,6 +37,7 @@ export default async function EntryPage({ params }: Props) {
   const meta = (await liveMetadata())[e.id];
   const gh = e.artifacts.find((a) => a.kind === 'github');
   const dep = e.artifacts.find((a) => a.kind === 'deployment');
+  const usedBy = registry.filter((r) => r.dependsOn.includes(e.id));
 
   const rows: { k: string; v: React.ReactNode }[] = [
     { k: 'Repository', v: <code className="path">{e.repository}</code> },
@@ -56,6 +58,32 @@ export default async function EntryPage({ params }: Props) {
       ),
     },
     { k: 'Architecture', v: e.architecture },
+    {
+      k: 'Depends on',
+      v: e.dependsOn.length ? (
+        <span className="path-line path-line-inline">
+          {e.dependsOn.map((d) => (
+            <a key={d} className="path" href={`/registry/${d}`}>{d}</a>
+          ))}
+        </span>
+      ) : (
+        '—'
+      ),
+    },
+    {
+      k: 'Used by',
+      v: usedBy.length ? (
+        <span className="path-line path-line-inline">
+          {usedBy.map((d) => (
+            <a key={d.id} className="path" href={`/registry/${d.id}`}>{d.id}</a>
+          ))}
+        </span>
+      ) : (
+        '—'
+      ),
+    },
+    { k: 'Mission stages covered', v: e.stages.length ? e.stages.join(' · ') : <span className="muted">none yet</span> },
+    { k: 'Stack layers occupied', v: e.layers.length ? e.layers.join(' · ') : <span className="muted">none</span> },
     { k: 'Dependencies', v: e.dependencies.length ? e.dependencies.join(' · ') : '—' },
     { k: 'Maturity', v: e.maturity },
     { k: 'Business hypothesis', v: e.businessHypothesis },
@@ -73,6 +101,7 @@ export default async function EntryPage({ params }: Props) {
 
   return (
     <main className="doc">
+      <SubNav current="/registry" />
       {gh && (
         <SoftwareAppJsonLd
           name={e.id}
@@ -116,7 +145,7 @@ export default async function EntryPage({ params }: Props) {
           ))}
         </dl>
         <p className="blk-more">
-          <a href={`/api/cluster/registry?id=${e.id}`}>JSON</a>
+          <a href={`/api/cluster/registry/${e.id}`}>JSON</a>
         </p>
       </section>
     </main>

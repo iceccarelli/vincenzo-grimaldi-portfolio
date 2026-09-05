@@ -1,4 +1,5 @@
 import type { AgentTool, StackLayer } from './types';
+import { MISSION } from './types';
 
 /**
  * stack.ts — the target architecture and the safety gate.
@@ -8,22 +9,22 @@ import type { AgentTool, StackLayer } from './types';
  *   2. No LLM or learned model may bypass the safety controls.
  */
 
-export const mission = ['PERCEIVE', 'MODEL', 'PLAN', 'ACT', 'VERIFY', 'RECOVER', 'LEARN'] as const;
+export const mission = MISSION;
 
 export const gate = ['PLAN', 'SIMULATE', 'VALIDATE', 'AUTHORIZE', 'EXECUTE', 'VERIFY'] as const;
 
 export const stack: StackLayer[] = [
-  { name: 'Perception', nature: 'probabilistic', role: 'Sensor fusion, detection, tracking, uncertainty.', today: 'robot-lidar-fusion 0.4.0 (projection, calibration, occlusion).' },
-  { name: 'World model', nature: 'probabilistic', role: 'Scene state, object poses, pallet state, uncertainty over both.', today: 'Pallet state in palletizer planning; scene model not built.' },
-  { name: 'Task planner', nature: 'probabilistic', role: 'Order sequencing, pattern selection, mixed-SKU placement.', today: 'palletizer optimizer, MissionPlanner, PatternManager.' },
-  { name: 'Motion planner', nature: 'probabilistic', role: 'Collision-free trajectories for the chosen placement.', today: 'MotionController tests exist; no planner benchmark.' },
-  { name: 'Simulator', nature: 'deterministic', role: 'Executes the plan in physics before any actuator moves.', today: 'core/simulation and browser Rapier demos; KPI harness pending.' },
-  { name: 'Safety / constraint engine', nature: 'deterministic', role: 'Refuses anything outside limits. Cannot be argued with by a model.', today: 'HazardManager, FaultDetector; authorisation boundary by contract with NeuralBridge.' },
-  { name: 'Robot controller', nature: 'deterministic', role: 'Vendor SDK or ROS 2 driver behind the RobotInterface.', today: 'RobotInterface abstraction; ROS 2 bridge examples; no certified vendor driver.' },
-  { name: 'Actuation', nature: 'physical', role: 'Arm, gripper, conveyor.', today: 'None owned. Simulation first.' },
-  { name: 'Telemetry', nature: 'telemetry', role: 'Every cycle, fault and intervention as a typed event.', today: 'CommunicationInterface publishes telemetry; KPI schema on /palletizer.' },
-  { name: 'Failure analysis', nature: 'telemetry', role: 'Classify every failed pick and intervention by cause.', today: 'Not built.' },
-  { name: 'Learning', nature: 'probabilistic', role: 'Improve planners from telemetry; never touch safety limits.', today: 'Not built. Research program on /research.' },
+  { key: 'perception', name: 'Perception', nature: 'probabilistic', role: 'Sensor fusion, detection, tracking, uncertainty.', today: 'robot-lidar-fusion 0.4.0 (projection, calibration, occlusion).' },
+  { key: 'world-model', name: 'World model', nature: 'probabilistic', role: 'Scene state, object poses, pallet state, uncertainty over both.', today: 'Pallet state in palletizer planning; scene model not built.' },
+  { key: 'task-planner', name: 'Task planner', nature: 'probabilistic', role: 'Order sequencing, pattern selection, mixed-SKU placement.', today: 'palletizer optimizer, MissionPlanner, PatternManager.' },
+  { key: 'motion-planner', name: 'Motion planner', nature: 'probabilistic', role: 'Collision-free trajectories for the chosen placement.', today: 'MotionController tests exist; no planner benchmark.' },
+  { key: 'simulator', name: 'Simulator', nature: 'deterministic', role: 'Executes the plan in physics before any actuator moves.', today: 'core/simulation (OPC UA robot mock) and browser Rapier demos; KPI harness pending.' },
+  { key: 'safety', name: 'Safety / constraint engine', nature: 'deterministic', role: 'Refuses anything outside limits. Cannot be argued with by a model.', today: 'HazardManager, FaultDetector; authorisation boundary by contract with NeuralBridge.' },
+  { key: 'controller', name: 'Robot controller', nature: 'deterministic', role: 'Vendor SDK or ROS 2 driver behind the RobotInterface.', today: 'RobotInterface abstraction; a UR bridge and ROS 2 bridge examples; no certified vendor driver.' },
+  { key: 'actuation', name: 'Actuation', nature: 'physical', role: 'Arm, gripper, conveyor.', today: 'None owned. Simulation first.' },
+  { key: 'telemetry', name: 'Telemetry', nature: 'telemetry', role: 'Every cycle, fault and intervention as a typed event.', today: 'CommunicationInterface publishes telemetry; KPI schema on /palletizer.' },
+  { key: 'failure-analysis', name: 'Failure analysis', nature: 'telemetry', role: 'Classify every failed pick and intervention by cause.', today: 'Not built.' },
+  { key: 'learning', name: 'Learning', nature: 'probabilistic', role: 'Improve planners from telemetry; never touch safety limits.', today: 'Not built. Research program on /research.' },
 ];
 
 /** What an agent may and may not do in this cluster. */

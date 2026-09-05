@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import SubNav from '../components/cluster/SubNav';
 import { reports, REPORT_SECTIONS } from '../lib/cluster/report';
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export const revalidate = 3600;
 export default function ReportPage() {
   return (
     <main className="doc">
+      <SubNav current="/report" />
       <section className="blk blk-first">
         <p className="kicker">Physical AI & Robotics · weekly report</p>
         <h1 className="h1">Weekly CEO report</h1>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import SubNav from '../components/cluster/SubNav';
 import Pipeline from '../components/cluster/Pipeline';
 import { clusters, constitution, newProjectGate, finalRules, firstPrinciple } from '../lib/cluster/constitution';
 
@@ -19,6 +20,7 @@ export const revalidate = 3600;
 export default function ConstitutionPage() {
   return (
     <main className="doc">
+      <SubNav current="/constitution" />
       <section className="blk blk-first">
         <p className="kicker">Group Constitution</p>
         <h1 className="h1">Three clusters. One constitution.</h1>
@@ -58,7 +60,7 @@ export default function ConstitutionPage() {
         </ul>
         <p className="fine">
           On this host: <a href="/registry">registry</a>, <a href="/architecture">architecture map</a>,{' '}
-          <a href="/registry">dependency graph (per entry)</a>, <a href="/decisions">decision log</a>,{' '}
+          <a href="/registry#deps">dependency graph</a>, <a href="/decisions">decision log</a>,{' '}
           <a href="/decisions#kill">kill list</a>, <a href="/research">roadmap · research backlog</a>,{' '}
           <a href="/research#customers">customer evidence</a>, <a href="/research#intelligence">competitive intelligence</a>,{' '}
           <a href="/report">weekly KPI report</a>.

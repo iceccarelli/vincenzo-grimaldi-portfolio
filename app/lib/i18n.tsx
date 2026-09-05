@@ -419,7 +419,7 @@ const en: Dictionary = {
   card: {
     kicker: 'Digital business card',
     role: 'ITk Fachspezialist, DB InfraGO AG · Frankfurt am Main',
-    tagline: 'Physics-constrained control · grid digitalisation.',
+    tagline: 'Physical AI & Robotics — cluster control engine.',
     email: 'Email',
     website: 'Website',
     githubLabel: 'Code',
@@ -684,7 +684,7 @@ const es: Dictionary = {
   card: {
     kicker: 'Tarjeta de presentación digital',
     role: 'Ingeniero de Sistemas Ciberfísicos Informados por la Física',
-    tagline: 'Control determinista · Inteligencia de red · Orquestación de IA — en software, hardware y sistemas de energía.',
+    tagline: 'Physical AI & Robótica — instrumento de control del clúster.',
     email: 'Correo',
     website: 'Sitio web',
     githubLabel: 'Código',
@@ -949,7 +949,7 @@ const de: Dictionary = {
   card: {
     kicker: 'Digitale Visitenkarte',
     role: 'ITk Fachspezialist, DB InfraGO AG · Frankfurt am Main',
-    tagline: 'Physikalisch beschränkte Regelung · Netzdigitalisierung.',
+    tagline: 'Physical AI & Robotik — Steuerungsinstrument des Clusters.',
     email: 'E-Mail',
     website: 'Website',
     githubLabel: 'Code',
@@ -1191,7 +1191,7 @@ const zh: Dictionary = {
   card: {
     kicker: '数字名片',
     role: '物理信息网络物理系统工程师',
-    tagline: '确定性控制 · 电网智能 · AI 编排 — 横跨软件、硬件与能源系统。',
+    tagline: 'Physical AI 与机器人 — 集群控制引擎。',
     email: '邮箱',
     website: '网站',
     githubLabel: '代码',

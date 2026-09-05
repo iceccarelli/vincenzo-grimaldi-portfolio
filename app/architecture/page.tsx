@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Pipeline from '../components/cluster/Pipeline';
+import SubNav from '../components/cluster/SubNav';
+import StackDiagram from '../components/cluster/StackDiagram';
 import { stack, gate, mission, agentTools, abstractionTests, abstractionCandidates } from '../lib/cluster/stack';
 
 export const metadata: Metadata = {
@@ -26,6 +28,7 @@ const natureLabel: Record<string, string> = {
 export default function ArchitecturePage() {
   return (
     <main className="doc doc-wide">
+      <SubNav current="/architecture" />
       <section className="blk blk-first">
         <p className="kicker">Physical AI & Robotics · architecture</p>
         <h1 className="h1">Target architecture</h1>
@@ -34,6 +37,7 @@ export default function ArchitecturePage() {
           column “today” says where each layer exists — or that it does not.
         </p>
         <Pipeline stages={mission} label="Mission" compact />
+        <StackDiagram />
       </section>
 
       <section className="blk" aria-labelledby="stack">

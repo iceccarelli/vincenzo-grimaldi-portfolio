@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import KpiTable from '../components/cluster/KpiTable';
 import StatusBadge from '../components/cluster/StatusBadge';
+import SubNav from '../components/cluster/SubNav';
+import Timeline from '../components/cluster/Timeline';
+import EvidenceGrid from '../components/cluster/EvidenceGrid';
 import { SoftwareAppJsonLd } from '../components/JsonLd';
 import { getEntry } from '../lib/cluster/registry';
 import { palletizerKpis, lidarKpis } from '../lib/cluster/kpis';
@@ -31,6 +34,7 @@ export default async function PalletizerPage() {
 
   return (
     <main className="doc doc-wide">
+      <SubNav current="/palletizer" />
       <SoftwareAppJsonLd name="palletizer" description={pal.description} url={`${SITE_URL}/palletizer`} repo={gh.url} live={dep?.url} />
       <section className="blk blk-first">
         <p className="kicker">Physical AI & Robotics · first target</p>
@@ -71,6 +75,16 @@ export default async function PalletizerPage() {
           <li>A certified vendor driver for any robot brand. “Robot-agnostic” is an interface, not a compatibility list.</li>
           <li>A simulation harness that writes the twelve KPIs as a versioned JSON snapshot (the next experiment).</li>
         </ul>
+      </section>
+
+      <section className="blk" aria-labelledby="evidence">
+        <h2 id="evidence" className="blk-h">Evidence of work done</h2>
+        <p className="blk-intro">
+          Releases, commits and decisions with the source of every date; then the test suite mapped onto the stack.
+          This is the work that exists. It is deliberately drawn next to the KPIs that do not.
+        </p>
+        <Timeline />
+        <EvidenceGrid />
       </section>
 
       <section className="blk" aria-labelledby="kpis">

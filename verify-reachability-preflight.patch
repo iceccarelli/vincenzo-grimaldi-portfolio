@@ -1,0 +1,66 @@
+From 7fe6f3e8629e6b4eaa8c9d352c1de48f8890950c Mon Sep 17 00:00:00 2001
+From: Vincenzo Ceccarelli Grimaldi <vince.ceccarelli@gmail.com>
+Date: Sun, 6 Sep 2026 08:03:48 +0000
+Subject: [PATCH] fix(verify): reachability preflight so an unreachable origin
+ reports one honest line
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Running `./scripts/verify.sh https://igrimaldi.engineering` from a Codespace
+that could not open :443 printed six "header missing" FAILs plus a cascade of
+`000` route FAILs — making a DNS/network/Vercel outage look like forty broken
+contracts in the code. The code was fine (build 59 pages, 126/126 local
+contracts).
+
+Add a single preflight request before the contract suite. If the origin does
+not answer (curl exit non-zero or HTTP 000): print one UNREACHABLE line, the
+host's resolved A records, the Vercel current-vs-legacy apex IP note
+(216.150.1.1 vs 76.76.21.21), how to confirm from another network and the
+Vercel dashboard, and exit 2 — a status distinct from a contract violation
+(exit 1). When the origin answers, the preflight is silent and the suite runs
+exactly as before (126 PASS locally).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_012rRJtPoNRDnM1hw2xBUnW6
+---
+ scripts/verify.sh | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/scripts/verify.sh b/scripts/verify.sh
+index b2bba04..13b8ec2 100755
+--- a/scripts/verify.sh
++++ b/scripts/verify.sh
+@@ -14,6 +14,29 @@ ok()  { printf '  \033[32mPASS\033[0m %s\n' "$1"; }
+ bad() { printf '  \033[31mFAIL\033[0m %s\n' "$1"; fail=1; }
+ have_node=0; command -v node >/dev/null 2>&1 && have_node=1
+ 
++# ── reachability preflight ────────────────────────────────────────────────
++# A connection failure must not masquerade as forty failing contracts. One
++# request decides whether the origin answers at all; if it does not, say why
++# in one line and stop. Distinguishes DNS/network/Vercel from the site code,
++# which is what a cascade of "header missing" FAILs hides.
++host=$(sed -E 's#^https?://##; s#/.*##; s#:.*##' <<<"$BASE")
++code=$(curl -sS -o /dev/null --max-time 25 -w '%{http_code}' "$BASE/" 2>/dev/null)
++cx=$?
++if [ "$code" = 000 ] || [ "$cx" -ne 0 ]; then
++  printf '  \033[31mUNREACHABLE\033[0m %s did not answer (curl exit %s)\n' "$BASE" "$cx"
++  echo   "  ── this is DNS / network / Vercel, not the site code ──"
++  if command -v getent >/dev/null 2>&1; then
++    ip=$(getent hosts "$host" 2>/dev/null | awk '{print $1}' | paste -sd, -)
++    echo "     $host resolves to: ${ip:-'(no A record)'}"
++    echo "     Vercel current apex IP is 216.150.1.1 (legacy 76.76.21.21)."
++    echo "     If the apex points at 76.76.21.21, update the A record and re-check."
++  fi
++  echo "     Confirm from another network (phone on cellular) and 'vercel ls' /"
++  echo "     the Vercel dashboard → Project → Domains before touching the repo."
++  echo "     The code itself is verified locally: run ./scripts/verify.sh with no URL."
++  exit 2
++fi
++
+ echo "▸ security headers  ($BASE)"
+ H=$(curl -sSI "$BASE/" 2>/dev/null)
+ for k in strict-transport-security x-content-type-options referrer-policy \
+-- 
+2.43.0
+

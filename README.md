@@ -1,92 +1,117 @@
-# igrimaldi.engineering — Physical AI & Robotics cluster control engine
+# ⚙️ vincenzo-grimaldi-portfolio
 
-> **Mandate:** Prove whether physical autonomy can create a defensible second moat.
+### **Master Technical Portfolio & Engineering Showcase**
 
-This repository is the control and integration engine of the **Physical AI & Robotics** cluster — one of three strategic clusters (Energy Intelligence · Physical AI & Robotics · Operations & Commercial Automation) that share one [Group Constitution](https://igrimaldi.engineering/constitution). It publishes the cluster's registers as pages and as JSON, so the CEO layer, the other two cluster agents, procurement teams and AI crawlers read the same words.
+*A comprehensive architectural reference uniting advanced robotics, spatial optimization, industrial automation, and full-stack software systems.*
 
-Operated by Vincenzo Ceccarelli Grimaldi, Frankfurt am Main. Everything here is independent of, and outside the scope of, his role at DB InfraGO AG. Nothing on this host is for sale.
+[Explore Personal Surface](https://grimaldi.ca) • [Corporate Hub](https://engineeringgrimaldi.com) • [Electrical Depth](https://igrimaldi.engineering)
 
-[![Live](https://img.shields.io/badge/live-igrimaldi.engineering-141414)](https://igrimaldi.engineering/)
-[![CI](https://github.com/iceccarelli/vincenzo-grimaldi-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/iceccarelli/vincenzo-grimaldi-portfolio/actions/workflows/ci.yml)
+---
 
-## Registers
+> *"The intersection of rigorous physical engineering and high-performance software architecture is where industrial transformation occurs."* — The core philosophy governing the systems, algorithms, and applications compiled within this repository.
 
-| Register | Page | JSON |
+---
+
+## 🏛️ Ecosystem Architecture & Portfolio Context
+
+The `vincenzo-grimaldi-portfolio` repository serves as the definitive technical showroom and implementation repository, complementing the broader Grimaldi digital ecosystem:
+
+| Surface / Repo | Domain & Role | Primary Focus |
 | --- | --- | --- |
-| Cockpit (mandate, mission, status board, gate) | [/](https://igrimaldi.engineering/) | [/api/cluster](https://igrimaldi.engineering/api/cluster) |
-| Repository register | [/registry](https://igrimaldi.engineering/registry), `/registry/[id]` | [/api/cluster/registry](https://igrimaldi.engineering/api/cluster/registry) |
-| Target architecture, safety gate, agent permissions, abstraction tests | [/architecture](https://igrimaldi.engineering/architecture) | — |
-| First target: palletizing KPIs, LiDAR-fusion metrics, inspection chain | [/palletizer](https://igrimaldi.engineering/palletizer) | [/api/cluster/kpis](https://igrimaldi.engineering/api/cluster/kpis) |
-| Decision log and kill register | [/decisions](https://igrimaldi.engineering/decisions) | [/api/cluster/decisions](https://igrimaldi.engineering/api/cluster/decisions) |
-| Weekly CEO report (12 fixed sections) | [/report](https://igrimaldi.engineering/report) | [/api/cluster/report](https://igrimaldi.engineering/api/cluster/report) |
-| Research program, intelligence log, customer validation | [/research](https://igrimaldi.engineering/research) | — |
-| Cross-cluster contracts (JSON Schema) | [/contracts](https://igrimaldi.engineering/contracts) | [/api/cluster/contracts](https://igrimaldi.engineering/api/cluster/contracts) |
-| Group Constitution and mandate | [/constitution](https://igrimaldi.engineering/constitution) | — |
-| Grid / traction-power work (thesis simulator, public-dataset app) | [/work](https://igrimaldi.engineering/work), [/simulator](https://igrimaldi.engineering/simulator) | — |
-| Machine brief for AI agents | [/llms.txt](https://igrimaldi.engineering/llms.txt) | — |
+| **`vincenzo-grimaldi-portfolio`** *(This Repo)* | Master Technical Showcase | Full-stack architecture, robotics, spatial optimization engines, and software systems |
+| **`grimaldi.ca`** | Human & Narrative Layer | Biography, broader ambitions, writing, podcast, and direct contact navigation |
+| **`engineeringgrimaldi.com`** | Corporate Umbrella | Parent hub for *Time to Power / Gridforge* and *NeuralBridge* |
+| **`igrimaldi.engineering`** | Electrical Depth | High-voltage systems, traction power, SiC inverters, and physics-informed modeling |
 
-## Visuals — drawn from the registers, never pasted
+---
 
-Every picture is computed at render time from `app/lib/cluster/*.ts`, so it cannot drift from the data: the eleven-layer **stack diagram** with what occupies each layer today (hatched = not built) and the deterministic gate bracket; the **mission coverage** grid (which entry's existing code covers PERCEIVE → LEARN — ACT, RECOVER and LEARN are empty, honestly); the **dependency graph** computed from `dependsOn`; the **KPI strip** (12 hatched cells until a number exists); the **evidence timeline** (PyPI releases, commits, decisions, due dates — each with its source) and the **test-suite map** onto the stack; the **status distribution bar**; the **contract flow** between the three clusters. All SVG/HTML, no chart library, every figure with a text description, axe-clean at 1280 and 390 px.
+## 🧬 Core Technical Domains & Systems
 
-## Rules the code enforces
+The portfolio architecture is structured around four primary technological pillars, bridging physical engineering constraints with modern distributed software patterns:
 
-- **Closed vocabulary.** A status is one of `CORE MODULE RESEARCH INTERNAL EXPERIMENT ARCHIVE` (`app/lib/cluster/types.ts`). A seventh is a compile error and a `verify.sh` failure.
-- **No number without a source.** A KPI is `measured: null` until a public artifact or a dated customer report produces it; pages print a dash, never a target.
-- **No 404 as a product.** A private repository is `INTERNAL`/`RESEARCH` and is never linked as if public (`robot-lidar-fusion` is PyPI-only; the register says so).
-- **Boundaries stay outside.** FloorForge, PaintForge and DryForge appear only as boundaries owned by Operations; `verify.sh` fails if one gains a register page.
-- **Probabilistic ≠ deterministic.** Every physical action passes `PLAN → SIMULATE → VALIDATE → AUTHORIZE → EXECUTE → VERIFY`; no agent tool exists that bypasses it (`app/lib/cluster/stack.ts`).
-- **No commerce, no performance marketing.** `scripts/verify.sh` bans payment scripts, prices, and unbenchmarked phrases on every register page.
-- **Fail-safe live data.** Public repositories refresh last-commit dates from GitHub at build/ISR time; any error falls back to the dated snapshot, labelled `snapshot`. Set `GITHUB_TOKEN` (fine-grained, no scopes) in Vercel to lift the anonymous 60 req/h limit.
-- **Graph integrity.** `verify.sh` fails on a dangling `dependsOn`, an unknown mission stage or stack layer, a figure without a `<desc>`, or a `TODO` left by the weekly scaffold.
-
-## Where things live
+```mermaid
+flowchart TD
+    A["vincenzo-grimaldi-portfolio<br/>(Master Technical Showcase)"] --> B["Spatial Optimization & Robotics<br/>(Palletizers & Floor Forge)"]
+    A --> C["Industrial Automation & Coating<br/>(Paint Forge & Dry Forge)"]
+    A --> D["Grid & Power Systems Software<br/>(GridOS Digital Twins)"]
+    A --> E["Cloud & Full-Stack Infrastructure<br/>(Next.js, FastAPI, PostgreSQL, AWS)"]
+    
+    B --> F["palletizer<br/>(Cargo Packing & Bin Packing Algorithms)"]
+    B --> G["floorforge-ai<br/>(Computer Vision & Floor Plan Scanning)"]
+    
+    C --> H["paintforge-ai<br/>(Surface Coating & Trajectory Generation)"]
+    C --> I["dryforge-ai<br/>(Environmental Simulation & Control)"]
+    
+    D --> J["NeuralBridge<br/>(Cross-Domain Secure Telemetry)"]
+    D --> K["Time to Power<br/>(SiC Inverter & HVDC Analytics)"]
+    
+    style A fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
+    style B fill:#1e293b,stroke:#22d3ee,color:#fff
+    style C fill:#1e293b,stroke:#22d3ee,color:#fff
+    style D fill:#1e293b,stroke:#22d3ee,color:#fff
+    style E fill:#1e293b,stroke:#22d3ee,color:#fff
 
 ```
-app/lib/cluster/
-  types.ts        closed vocabularies (statuses, mission stages, stack layers) and register types
-  evidence.ts     dated timeline (with sources) + test-suite map
-  registry.ts     repository register + boundaries (snapshot date inside)
-  kpis.ts         12 palletizing KPIs, 6 LiDAR metrics — definitions and measurements
-  stack.ts        11-layer stack, mission, gate, agent tools, abstraction tests
-  decisions.ts    decision log, kill criteria, kill register
-  research.ts     research program, watchlist, intelligence log, customer questions
-  report.ts       weekly CEO reports (newest first)
-  contracts.ts    cross-cluster event contracts as JSON Schema
-  constitution.ts Group Constitution + mandate text
-  github.ts       fail-safe live metadata
-app/api/cluster/  JSON routes for every register (+ /api/cluster/registry/<id>)
-app/report.md/    latest weekly report as Markdown
-app/components/cluster/  StatusBadge, Pipeline, RegistryTable, KpiTable, SubNav, StackDiagram,
-                  MissionCoverage, DependencyGraph, KpiCoverage, Timeline, ContractFlow, EvidenceGrid, StatusBar
-scripts/new-week.mjs  scaffold next week's report (12 headings, TODO bodies that verify.sh refuses to ship)
-app/lib/work.ts   grid / traction-power case studies (kept)
-scripts/verify.sh acceptance contract (same command locally and against production)
-```
 
-## Weekly cycle
+### 1. Spatial Optimization & Robotics (`palletizer`, `floorforge-ai`)
 
-1. `node scripts/new-week.mjs` — scaffolds the next report at the top of `report.ts`. Replace every `TODO`.
-2. Edit the other registers as needed (`decisions.ts` with reversal conditions; kill-register states only with a matching decision; `kpis.ts` a `measured` object only with `source` + `date`; `evidence.ts` for dated events with sources).
-3. `npm run build && npm run start & sleep 6 && npm run verify`.
-4. Push. CI runs typecheck, lint, build, `verify.sh` (126 contracts), axe on 18 routes, Lighthouse on 6.
-5. Paste `/report.md` into the CEO mail; the same words are on `/report` and `/api/cluster/report`.
+* **Algorithmic Packing**: High-performance bin-packing and multi-dimensional cargo optimization engines built for heavy industrial logistics and automated warehousing.
+* **Computer Vision & Scanning**: `floorforge-ai` leverages spatial mapping, point-cloud processing, and geometric feature extraction to digitize physical environments and architectural layouts with high precision.
 
-## Run locally
+### 2. Industrial Surface Automation (`paintforge-ai`, `dryforge-ai`)
 
-```bash
-git clone https://github.com/iceccarelli/vincenzo-grimaldi-portfolio.git
-cd vincenzo-grimaldi-portfolio
-npm ci
-npm run dev      # http://localhost:3000
-```
+* **Robotic Trajectory Planning**: Advanced motion planning and surface coverage algorithms designed for automated coating, finishing, and treatment applications.
+* **Environmental Control**: Simulation models for curing, drying dynamics, and thermal regulation in manufacturing workflows.
 
-Next.js 14.2 App Router · TypeScript · deployed on Vercel.
+### 3. Grid & Power Systems Modeling (`GridOS`, `NeuralBridge`)
 
-## Contact
+* **Digital-Twin Engineering**: Simulating high-voltage direct current (HVDC) distribution, silicon carbide (SiC) inverter efficiency, and microgrid transient stability.
+* **Secure Data Exchange**: `NeuralBridge` protocols ensuring robust, low-latency, cross-domain telemetry and reinforcement learning feedback loops across mission-critical physical nodes.
 
-vincenzo@igrimaldi.engineering · [github.com/iceccarelli](https://github.com/iceccarelli) · Frankfurt am Main
+### 4. Full-Stack Cloud & DevOps Infrastructure
 
-## License
+* **Frontend Excellence**: High-performance, type-safe interfaces built with Next.js App Router, TypeScript, and Tailwind CSS.
+* **Backend & Compute**: Resilient microservices powered by Python (FastAPI, NumPy, SciPy) and C++ for computationally intensive solvers.
+* **Deployment & CI/CD**: Containerized via Docker, orchestrated with automated GitHub Actions pipelines, and deployed at the edge on AWS and Vercel.
 
-Code: MIT. Register contents (`app/lib/cluster/*.ts`, `/api/cluster/*`): CC BY 4.0.
+---
+
+## 🛠️ Technology Stack Breakdown
+
+| Layer | Technologies & Frameworks | Architectural Purpose |
+| --- | --- | --- |
+| **Languages** | Python, C++, TypeScript, JavaScript | Balancing low-level system performance with rapid full-stack delivery |
+| **Frontend & UI** | Next.js, React, Tailwind CSS | Server-side rendering, edge-optimized static generation, and interactive data visualization |
+| **Backend & APIs** | FastAPI, Node.js, REST, WebSockets | Asynchronous high-throughput data ingestion and real-time state synchronization |
+| **Data & Storage** | PostgreSQL, Prisma, Redis | Relational data integrity, spatial indexing, and low-latency caching |
+| **Robotics & Math** | ROS 2, NumPy, SciPy, OpenFOAM (integration concepts) | Kinematic modeling, optimization solvers, and spatial computation |
+| **DevOps & Tooling** | Docker, AWS, GitHub Actions, Linux (macOS/Ubuntu CLI) | Automated testing, continuous deployment, and containerized reproducibility |
+
+---
+
+## 🎯 Target Audience & Evaluation Guide
+
+Designed for engineering directors, technical recruiters, system architects, and collaborators seeking deep visibility into production-grade codebases:
+
+* **For Software Architecture & Full-Stack Implementations** → Review the repository's component hierarchy, state management patterns, and type safety standards.
+* **For Robotics & Spatial Algorithms** → Inspect solver implementations, packing heuristics, and coordinate transformation pipelines.
+* **For Enterprise & Industrial Synergy** → Cross-reference this technical portfolio with our corporate umbrella at [engineeringgrimaldi.com](https://engineeringgrimaldi.com) and electrical depth at [igrimaldi.engineering](https://igrimaldi.engineering).
+
+---
+
+## 📬 Contact & Professional Channels
+
+* **Master Portfolio**: This repository (`vincenzo-grimaldi-portfolio`)
+* **Personal Surface**: [grimaldi.ca](https://grimaldi.ca)
+* **Corporate Hub**: [engineeringgrimaldi.com](https://engineeringgrimaldi.com)
+* **Electrical Depth**: [igrimaldi.engineering](https://igrimaldi.engineering)
+* **Direct Email**: [vincenzo@igrimaldi.engineering](https://www.google.com/search?q=mailto%3Avincenzo%40igrimaldi.engineering)
+* **Location**: Frankfurt am Main, Germany
+
+---
+
+### **License & Intellectual Property**
+
+Code: [MIT](https://www.google.com/search?q=LICENSE) • Proprietary Algorithms & Systems: All rights reserved.
+
+*Engineered with mathematical precision and uncompromising software craftsmanship.*

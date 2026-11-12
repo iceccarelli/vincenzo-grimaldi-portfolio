@@ -1,12 +1,7 @@
 /** @type {import('next').NextConfig} */
 
-// NOTE: next.config.ts requires Next >= 15. This project pins next@14.2.35,
-// so the config stays .mjs. Revisit on the Next 15 upgrade (P2).
-
 // Security headers are authoritative in vercel.json (platform edge).
-// They are mirrored here so `next start` (CI, self-host) serves identical
-// headers and the curl assertions in .github/workflows/ci.yml can run
-// without a Vercel deployment. KEEP BOTH IN SYNC.
+// Mirrored here so `next start` (CI, local verification) serves identical headers.
 const securityHeaders = [
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -32,19 +27,31 @@ const nextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
-  // Parked routes. Nothing commercial is served on this host; the old
-  // addresses resolve to the nearest document instead of a 404.
   async redirects() {
     return [
       { source: '/payments', destination: '/connect', permanent: true },
       { source: '/cluster', destination: '/', permanent: true },
       { source: '/cluster/:path*', destination: '/:path*', permanent: true },
-      { source: '/kill-list', destination: '/decisions#kill', permanent: true },
-      { source: '/roadmap', destination: '/research', permanent: true },
+      { source: '/palletizer', destination: '/machines', permanent: true },
+      { source: '/work/palletizer-os', destination: '/machines', permanent: true },
+      { source: '/registry/palletizer', destination: '/registry', permanent: true },
+      { source: '/registry/robot-lidar-fusion', destination: '/registry', permanent: true },
+      { source: '/registry/autonomous-inspection', destination: '/registry', permanent: true },
+      { source: '/registry/tamp-core', destination: '/registry', permanent: true },
+      { source: '/architecture', destination: '/digital-twins', permanent: true },
+      { source: '/constitution', destination: '/digital-twins', permanent: true },
+      { source: '/contracts', destination: '/digital-twins', permanent: true },
+      { source: '/decisions', destination: '/registry', permanent: true },
+      { source: '/kill-list', destination: '/registry', permanent: true },
+      { source: '/report', destination: '/articles', permanent: true },
+      { source: '/report.md', destination: '/llms.txt', permanent: true },
+      { source: '/research', destination: '/articles', permanent: true },
+      { source: '/roadmap', destination: '/articles', permanent: true },
       { source: '/capabilities', destination: '/work', permanent: true },
       { source: '/capabilities/:path*', destination: '/work', permanent: true },
-      { source: '/work/palletizer-os', destination: '/palletizer', permanent: true },
       { source: '/work/gridos', destination: '/work', permanent: true },
+      { source: '/api/cluster', destination: '/api/register', permanent: true },
+      { source: '/api/cluster/:path*', destination: '/api/register', permanent: true },
     ];
   },
 };

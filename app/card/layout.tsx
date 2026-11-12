@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: URL,
     type: 'profile',
-    images: [{ url: 'https://igrimaldi.engineering/vincenzo_grimaldi_headshot.jpg', width: 2048, height: 2048 }],
+    images: [{ url: 'https://igrimaldi.engineering/vincenzo_grimaldi_headshot.jpg', width: 1024, height: 1024 }],
   },
   twitter: {
     card: 'summary',

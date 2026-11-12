@@ -1,26 +1,16 @@
 import type { Locale } from './i18n';
 
-/**
- * copy.ts — every string on the public surfaces of this host, in the two
- * languages the header offers (EN, DE). English is the canonical text and
- * is what the server renders; German is adopted client-side after
- * hydration. The type forces both languages to carry the same keys.
- *
- * The register contents (repository names, statuses, KPI definitions,
- * decisions, reports) are technical records and stay in English in both
- * views; only the chrome around them is translated. Nothing is for sale
- * here and no number appears without a source.
- */
-
 export type Copy = {
   nav: {
-    cluster: string;
-    registry: string;
-    architecture: string;
-    decisions: string;
-    report: string;
+    domain: string;
+    overview: string;
+    grids: string;
+    machines: string;
+    twins: string;
+    articles: string;
     work: string;
     thesis: string;
+    registry: string;
     contact: string;
     menu: string;
     card: string;
@@ -29,41 +19,26 @@ export type Copy = {
     kicker: string;
     mandate: string;
     lead: string;
-    missionHeading: string;
-    boardHeading: string;
-    boardAsOf: string;
-    board: {
-      repositories: string;
-      customers: string;
-      deployments: string;
-      kpisMeasured: string;
-      benchmarks: string;
-      decisions: string;
-      killReview: string;
-    };
+    pillarsHeading: string;
+    pillarsIntro: string;
+    bottleneckHeading: string;
+    bottleneckIntro: string;
+    bottleneckBody: string;
+    bottleneckCta: string;
+    articlesHeading: string;
+    articlesIntro: string;
+    articlesAll: string;
     registryHeading: string;
     registryIntro: string;
     registryAll: string;
-    firstTargetHeading: string;
-    firstTargetIntro: string;
-    firstTargetAll: string;
-    gateHeading: string;
-    gateIntro: string;
-    gateAll: string;
-    decisionsHeading: string;
-    decisionsAll: string;
-    reportHeading: string;
-    nextExperiment: string;
-    decisionRequired: string;
-    reportAll: string;
-    boundaryHeading: string;
-    boundaryIntro: string;
+    visionHeading: string;
+    visionBody: string;
     operatorHeading: string;
     roleLine: string;
     roleDetail: string;
+    thesisNote: string;
     formHeading: string;
     formIntro: string;
-    thesisNote: string;
   };
   form: {
     name: string;
@@ -105,76 +80,83 @@ export type Copy = {
     intro: string;
     direct: string;
   };
-  footer: { rights: string; imprint: string; privacy: string };
+  card: {
+    kicker: string;
+    role: string;
+    tagline: string;
+    email: string;
+    website: string;
+    githubLabel: string;
+    networkLabel: string;
+    saveContact: string;
+    connect: string;
+    scanToShare: string;
+    backHome: string;
+  };
+  footer: {
+    colophonRole: string;
+    rights: string;
+    imprint: string;
+    privacy: string;
+  };
   consent: { text: string; accept: string; decline: string };
   notFound: { title: string; body: string; cta: string };
 };
 
 const en: Copy = {
   nav: {
-    cluster: 'Cluster',
-    registry: 'Registry',
-    architecture: 'Architecture',
-    decisions: 'Decisions',
-    report: 'Report',
+    domain: 'Power Systems & Machines',
+    overview: 'Overview',
+    grids: 'Grids & Traction',
+    machines: 'Machines & Devices',
+    twins: 'Digital Twins',
+    articles: 'Articles',
     work: 'Work',
-    thesis: 'Thesis',
+    thesis: 'Simulator',
+    registry: 'Register',
     contact: 'Contact',
     menu: 'Menu',
     card: 'Card',
   },
   home: {
-    kicker: 'Physical AI & Robotics · cluster control engine',
-    mandate: 'Prove whether physical autonomy can create a defensible second moat.',
+    kicker: 'High-voltage grids · traction power · electrical machines · physics-informed methods',
+    mandate: 'Electrical grids, machines, and physics-informed methods.',
     lead:
-      'One place that states what this cluster owns, what it measures, what it has decided and what it has killed — as pages and as JSON. Robot-agnostic palletizing software first; everything else is judged by whether it makes that cheaper to deploy.',
-    missionHeading: 'Mission',
-    boardHeading: 'Status board',
-    boardAsOf: 'as of',
-    board: {
-      repositories: 'Register entries',
-      customers: 'Customers',
-      deployments: 'Deployments',
-      kpisMeasured: 'KPIs measured',
-      benchmarks: 'Benchmarks published',
-      decisions: 'Decisions logged',
-      killReview: 'Under kill review',
-    },
-    registryHeading: 'Repository register',
+      'Independent engineering work on high-voltage substations, railway traction power, electromagnetic machines, power electronics, and physics-informed digital twins — documented through runnable models, public repositories, and technical articles.',
+    pillarsHeading: 'Technical pillars',
+    pillarsIntro:
+      'Four interconnected disciplines anchor this site: bulk and traction power networks, electrical machines and converters, physics-constrained digital twins, and runnable cyber-physical grid simulation.',
+    bottleneckHeading: 'Why this work matters — power capacity and physical limits',
+    bottleneckIntro:
+      'Compute expansion, industrial electrification, and rail modernization are gated by electrical infrastructure: transformer lead times, interconnection queues, short-circuit strength, and thermal-electrical hall envelopes.',
+    bottleneckBody:
+      'Credible capacity intelligence starts from AC power flow, protection coordination, converter stability, and thermal limits rather than purely statistical extrapolation. These physical foundations inform both the open engineering work documented here and the broader company ecosystem.',
+    bottleneckCta: 'Read the power-capacity analysis',
+    articlesHeading: 'Technical articles',
+    articlesIntro:
+      'Focused explainers on synchronous inertia at 50 Hz, IT/OT convergence in traction power infrastructure, and the electrical limits governing data-center interconnection.',
+    articlesAll: 'All technical articles',
+    registryHeading: 'Technical register',
     registryIntro:
-      'Six statuses, no seventh. Every row names a public artifact or says none. Last-commit dates are live from GitHub when reachable, otherwise the dated snapshot.',
-    registryAll: 'Full register with all fields',
-    firstTargetHeading: 'First target — palletizing',
-    firstTargetIntro:
-      'Twelve KPIs the mandate names. A dash means unmeasured; a target is never printed as a result. The simulator has to produce these before any hardware is touched.',
-    firstTargetAll: 'Palletizer register',
-    gateHeading: 'Safety gate',
-    gateIntro:
-      'Probabilistic intelligence proposes; deterministic safety refuses. No model, learned or language, reaches an actuator except through this gate, and no tool exists that bypasses it.',
-    gateAll: 'Target architecture',
-    decisionsHeading: 'Latest decisions',
-    decisionsAll: 'Decision log',
-    reportHeading: 'Weekly CEO report',
-    nextExperiment: 'Next experiment',
-    decisionRequired: 'Decision required',
-    reportAll: 'Full report',
-    boundaryHeading: 'Not in this cluster',
-    boundaryIntro:
-      'Applications that look physical and are not robotics products. They stay where they are until a robot executes a physical task under the gate.',
-    operatorHeading: 'Operator',
-    roleLine: 'ITk Fachspezialist, DB InfraGO AG.',
-    roleDetail: 'Traction HV digitisation. IT/OT. KRITIS-class governance.',
-    formHeading: 'Enquiry',
-    formIntro:
-      'System integrators, packaging companies, warehouses, inspection companies, utilities: one sentence about the task that costs you the most labour is enough to start. Replies come from the address in the footer.',
+      'Every entry distinguishes public runnable artifacts from unpublished research notes. Nothing is claimed without an inspectable model, repository, or explicit scope boundary.',
+    registryAll: 'Open full technical register',
+    visionHeading: 'Engineering horizon & ecosystem',
+    visionBody:
+      'This domain documents personal engineering depth, runnable academic models, and domain analyses. Commercial ventures and company hubs live separately at engineeringgrimaldi.com and grimaldi.ca.',
+    operatorHeading: 'Engineer & professional context',
+    roleLine: 'ITk Fachspezialist, DB InfraGO AG · M.Sc. RWTH Aachen.',
+    roleDetail: 'High-voltage railway traction digitisation, IT/OT architecture, and KRITIS-grade infrastructure governance.',
     thesisNote:
-      'Grid and traction-power work — the CIM–ThreMA thesis simulator and the public-dataset application — stays under Work and Thesis.',
+      'Runnable smart-grid ontology simulator and public-dataset infrastructure tools are documented under Work and Simulator.',
+    formHeading: 'Technical enquiry',
+    formIntro:
+      'Grid operators, rail infrastructure teams, machine designers, research groups, and capacity planners: state the technical constraint that must hold and I will reply directly.',
   },
   form: {
     name: 'Name',
     organisation: 'Organisation',
     constraint: 'Constraint',
-    constraintHint: 'The thing that must hold — a standard, a latency, an interface, a safety case.',
+    constraintHint: 'The physical or architectural constraint — voltage level, standard, grid model, interface, or stability boundary.',
     email: 'Email',
     send: 'Send',
     sending: 'Sending…',
@@ -183,9 +165,9 @@ const en: Copy = {
     fallback: 'The form is not wired on this deployment yet; your mail client will open instead.',
   },
   work: {
-    title: 'Work',
+    title: 'Work & public artifacts',
     intro:
-      'Each entry states what is public — a repository, a deployment, a document — and what is not. Nothing here is a product.',
+      'Each entry states what is publicly inspectable — a runnable deployment or open repository — alongside its exact validation boundary and limits. Nothing here is a commercial product.',
     proof: 'Public artifact',
     problem: 'Problem',
     approach: 'Approach',
@@ -195,31 +177,50 @@ const en: Copy = {
     openRepo: 'Repository',
     notesHeading: 'Research notes, not products',
     notesIntro:
-      'Private codebases that are referenced elsewhere but are not published. They are listed so that no claim is made for them.',
+      'Unpublished codebases and architectural studies referenced across the ecosystem, listed explicitly so no unverified operational claim is made for them.',
     back: '← Work',
   },
   simulator: {
     kicker: 'M.Sc. thesis · RWTH Aachen · 2025',
     title: 'CIM–ThreMA cross-domain ontology simulator',
     intro:
-      'Data modelling in a cross-domain ontology for cyber intelligence in smart grids, using reinforcement learning. The simulator is the thesis made runnable: the mapping catalogue, the IEEE 9-bus testbed and the scenario definitions ship in the deployment.',
+      'Data modelling in a cross-domain ontology for cyber intelligence in smart grids, using reinforcement learning. The simulator makes the thesis runnable: the CGMES mapping catalogue, the IEEE 9-bus cyber-physical testbed, and the scenario definitions ship in the deployment.',
     what: [
-      'CIM/CGMES topology linked to the ThreMA threat ontology',
-      'Five formal semantic mappings between the two models',
-      'IEEE 9-bus cyber-physical testbed, four documented scenarios',
-      'Q-learning agent as the security decision layer',
-      'Cross-domain signal-to-noise metric to score mapping quality',
+      'CIM/CGMES substation and network topology linked to the ThreMA threat ontology',
+      'Five formal semantic mappings preserving topology updates across security views',
+      'IEEE 9-bus cyber-physical testbed with four documented contingency scenarios',
+      'Q-learning decision layer evaluated over the coupled grid-threat graph',
+      'Cross-domain signal-to-noise metric scoring semantic mapping fidelity',
     ],
     open: 'Open the simulator',
-    readWriteUp: 'Read the write-up',
-    not: 'The simulator runs on a separate deployment. It is thesis work: a validated research artifact, not an operational tool.',
+    readWriteUp: 'Read the thesis write-up',
+    not: 'The simulator runs on a dedicated deployment. It is validated thesis research on a 9-bus testbed, not an operational SCADA tool.',
   },
   contact: {
     title: 'Contact',
-    intro: 'For advisory enquiries on safety-critical grid and traction systems. State the constraint; I will say whether I can help.',
+    intro:
+      'For technical exchange and advisory enquiries on high-voltage grids, railway traction power, electrical machines, and physics-informed modelling. State the governing constraint; I will tell you plainly whether I can help.',
     direct: 'Direct email always works:',
   },
-  footer: { rights: 'All rights reserved.', imprint: 'Impressum', privacy: 'Datenschutz' },
+  card: {
+    kicker: 'Frankfurt am Main · Electrical Engineering',
+    role: 'ITk Fachspezialist · DB InfraGO AG · M.Sc. RWTH Aachen',
+    tagline: 'Electrical grids, traction power, machines, and physics-informed digital twins.',
+    email: 'Email',
+    website: 'Technical site',
+    githubLabel: 'GitHub',
+    networkLabel: 'Domains',
+    saveContact: 'Save vCard',
+    connect: 'Write email',
+    scanToShare: 'Scan for card',
+    backHome: '← igrimaldi.engineering',
+  },
+  footer: {
+    colophonRole: 'Electrical grids, railway traction power, electrical machines & physics-informed modelling · Frankfurt am Main',
+    rights: 'All rights reserved.',
+    imprint: 'Impressum',
+    privacy: 'Datenschutz',
+  },
   consent: {
     text: 'This site uses cookieless Vercel Analytics to count visits. No personal profiles, no ads.',
     accept: 'Allow',
@@ -227,76 +228,65 @@ const en: Copy = {
   },
   notFound: {
     title: 'Page not found',
-    body: 'That URL does not exist. The register, the work list and the contact page do.',
+    body: 'That URL does not exist. The grid, machine, and digital-twin pillars, technical articles, register, and contact page do.',
     cta: 'Home',
   },
 };
 
 const de: Copy = {
   nav: {
-    cluster: 'Cluster',
-    registry: 'Register',
-    architecture: 'Architektur',
-    decisions: 'Entscheidungen',
-    report: 'Bericht',
+    domain: 'Energiesysteme & Maschinen',
+    overview: 'Übersicht',
+    grids: 'Netze & Bahnstrom',
+    machines: 'Maschinen & Geräte',
+    twins: 'Digitale Zwillinge',
+    articles: 'Fachartikel',
     work: 'Arbeiten',
-    thesis: 'Thesis',
+    thesis: 'Simulator',
+    registry: 'Register',
     contact: 'Kontakt',
     menu: 'Menü',
     card: 'Karte',
   },
   home: {
-    kicker: 'Physical AI & Robotik · Steuerungsinstrument des Clusters',
-    mandate: 'Nachweisen, ob physische Autonomie einen verteidigungsfähigen zweiten Burggraben schaffen kann.',
+    kicker: 'Hochspannungsnetze · Bahnstrom · Elektrische Maschinen · Physikinformierte Methoden',
+    mandate: 'Elektrische Netze, Maschinen und physikinformierte Methoden.',
     lead:
-      'Ein Ort, der festhält, was dieser Cluster besitzt, misst, entschieden und eingestellt hat — als Seiten und als JSON. Roboterunabhängige Palettiersoftware zuerst; alles andere wird daran gemessen, ob es deren Einsatz günstiger macht.',
-    missionHeading: 'Mission',
-    boardHeading: 'Statustafel',
-    boardAsOf: 'Stand',
-    board: {
-      repositories: 'Registereinträge',
-      customers: 'Kunden',
-      deployments: 'Inbetriebnahmen',
-      kpisMeasured: 'Gemessene KPIs',
-      benchmarks: 'Veröffentlichte Benchmarks',
-      decisions: 'Protokollierte Entscheidungen',
-      killReview: 'In Kill-Prüfung',
-    },
-    registryHeading: 'Repository-Register',
+      'Unabhängige Ingenieurarbeiten zu Hochspannungs-Umspannwerken, Bahnstromversorgung, elektrischen Maschinen, Leistungselektronik und physikinformierten digitalen Zwillingen — dokumentiert durch ausführbare Modelle, öffentliche Repositories und Fachbeiträge.',
+    pillarsHeading: 'Technische Säulen',
+    pillarsIntro:
+      'Vier eng verzahnte Fachgebiete bilden das Fundament dieser Seite: Übertragungs- und Bahnstromnetze, elektrische Maschinen und Stromrichter, physikbasierte digitale Zwillinge sowie ausführbare Netzsimulation.',
+    bottleneckHeading: 'Warum diese Arbeit zählt — Netzkapazität und physikalische Grenzen',
+    bottleneckIntro:
+      'Rechenzentren, industrielle Elektrifizierung und Bahninfrastruktur werden durch elektrische Engpässe begrenzt: Transformator-Lieferzeiten, Netzanschlusswarteschlangen, Kurzschlussleistung und thermisch-elektrische Hallengrenzen.',
+    bottleneckBody:
+      'Belastbare Kapazitätsaussagen entstehen aus Lastflussrechnung, Schutzkoordination, Stromrichterstabilität und thermischen Grenzkurven statt aus reiner Statistik. Diese physikalischen Grundlagen tragen sowohl die hier dokumentierten Arbeiten als auch das weitere Unternehmensökosystem.',
+    bottleneckCta: 'Analyse zur Leistungskapazität lesen',
+    articlesHeading: 'Technische Fachbeiträge',
+    articlesIntro:
+      'Vertiefende Analysen zu Momentanreserve bei 50 Hz, IT/OT-Konvergenz in der Bahnstromversorgung und den elektrischen Grenzen moderner KI-Rechenzentren.',
+    articlesAll: 'Alle Fachbeiträge',
+    registryHeading: 'Technisches Register',
     registryIntro:
-      'Sechs Status, kein siebter. Jede Zeile nennt ein öffentliches Artefakt oder „none“. Commit-Daten kommen live von GitHub, wenn erreichbar, sonst aus dem datierten Snapshot.',
-    registryAll: 'Vollständiges Register mit allen Feldern',
-    firstTargetHeading: 'Erstes Ziel — Palettieren',
-    firstTargetIntro:
-      'Zwölf KPIs, die das Mandat nennt. Ein Strich heißt ungemessen; ein Zielwert wird nie als Ergebnis gedruckt. Der Simulator muss diese Zahlen liefern, bevor Hardware angefasst wird.',
-    firstTargetAll: 'Palletizer-Register',
-    gateHeading: 'Sicherheitsschleuse',
-    gateIntro:
-      'Probabilistische Intelligenz schlägt vor; deterministische Sicherheit lehnt ab. Kein Modell — gelernt oder sprachlich — erreicht einen Aktor außer durch diese Schleuse, und es existiert kein Werkzeug, das sie umgeht.',
-    gateAll: 'Zielarchitektur',
-    decisionsHeading: 'Letzte Entscheidungen',
-    decisionsAll: 'Entscheidungsprotokoll',
-    reportHeading: 'Wöchentlicher CEO-Bericht',
-    nextExperiment: 'Nächstes Experiment',
-    decisionRequired: 'Entscheidung erforderlich',
-    reportAll: 'Vollständiger Bericht',
-    boundaryHeading: 'Nicht in diesem Cluster',
-    boundaryIntro:
-      'Anwendungen, die physisch wirken und keine Robotikprodukte sind. Sie bleiben, wo sie sind, bis ein Roboter eine physische Aufgabe unter der Schleuse ausführt.',
-    operatorHeading: 'Betreiber',
-    roleLine: 'ITk Fachspezialist, DB InfraGO AG.',
-    roleDetail: 'Digitalisierung von Bahnstrom-Hochspannungsanlagen. IT/OT. Governance auf KRITIS-Niveau.',
-    formHeading: 'Anfrage',
-    formIntro:
-      'Systemintegratoren, Verpacker, Lagerbetreiber, Inspektionsfirmen, Versorger: ein Satz über die Aufgabe, die Sie am meisten Arbeitszeit kostet, genügt. Antworten kommen von der Adresse im Fußbereich.',
+      'Jeder Eintrag trennt öffentlich prüfbare Artefakte strikt von unveröffentlichten Forschungsnotizen. Keine Aussage ohne einsehbares Modell, Repository oder klar benannte Systemgrenze.',
+    registryAll: 'Vollständiges Register öffnen',
+    visionHeading: 'Technischer Horizont & Ökosystem',
+    visionBody:
+      'Diese Domain dokumentiert persönliche Ingenieurtiefe, ausführbare Forschungsmodelle und Fachanalysen. Unternehmerische Aktivitäten sind separat unter engineeringgrimaldi.com und grimaldi.ca gebündelt.',
+    operatorHeading: 'Ingenieur & beruflicher Kontext',
+    roleLine: 'ITk Fachspezialist, DB InfraGO AG · M.Sc. RWTH Aachen.',
+    roleDetail: 'Digitalisierung von Bahnstrom-Hochspannungsanlagen, IT/OT-Architektur und Governance auf KRITIS-Niveau.',
     thesisNote:
-      'Netz- und Bahnstromarbeit — der CIM–ThreMA-Thesis-Simulator und die Anwendung auf öffentlichem Datensatz — bleibt unter Arbeiten und Thesis.',
+      'Der ausführbare CIM–ThreMA-Ontologiesimulator sowie Anwendungen auf öffentlichen Infrastrukturdaten sind unter Arbeiten und Simulator dokumentiert.',
+    formHeading: 'Technische Anfrage',
+    formIntro:
+      'Netzbetreiber, Bahninfrastruktur-Teams, Maschinenentwickler, Forschungsgruppen und Kapazitätsplaner: Nennen Sie die maßgebliche technische Randbedingung — ich antworte direkt.',
   },
   form: {
     name: 'Name',
     organisation: 'Organisation',
     constraint: 'Randbedingung',
-    constraintHint: 'Was gelten muss — eine Norm, eine Latenz, eine Schnittstelle, ein Sicherheitsnachweis.',
+    constraintHint: 'Was physikalisch oder architektonisch gelten muss — Spannungsebene, Norm, Netzmodell, Schnittstelle oder Stabilitätsgrenze.',
     email: 'E-Mail',
     send: 'Senden',
     sending: 'Wird gesendet…',
@@ -305,43 +295,62 @@ const de: Copy = {
     fallback: 'Das Formular ist auf dieser Umgebung noch nicht angebunden; stattdessen öffnet sich Ihr E-Mail-Programm.',
   },
   work: {
-    title: 'Arbeiten',
+    title: 'Arbeiten & öffentliche Artefakte',
     intro:
-      'Jeder Eintrag benennt, was öffentlich ist — Repository, Deployment, Dokument — und was nicht. Nichts hier ist ein Produkt.',
+      'Jeder Eintrag benennt, was öffentlich einsehbar ist — ein laufendes Deployment oder ein offenes Repository — samt Validierungsrahmen und Grenzen. Nichts hier ist ein kommerzielles Produkt.',
     proof: 'Öffentliches Artefakt',
-    problem: 'Problem',
-    approach: 'Ansatz',
+    problem: 'Problemstellung',
+    approach: 'Methodik',
     validation: 'Validierung',
     limits: 'Grenzen',
     openLive: 'Deployment öffnen',
     openRepo: 'Repository',
     notesHeading: 'Forschungsnotizen, keine Produkte',
     notesIntro:
-      'Private Codebasen, auf die andernorts verwiesen wird, die aber nicht veröffentlicht sind. Sie stehen hier, damit für sie nichts behauptet wird.',
+      'Unveröffentlichte Codebasen und Architekturstudien, die hier transparent eingeordnet werden, damit keine unbelegten Betriebsansprüche entstehen.',
     back: '← Arbeiten',
   },
   simulator: {
     kicker: 'Masterthesis · RWTH Aachen · 2025',
-    title: 'CIM–ThreMA-Simulator für eine domänenübergreifende Ontologie',
+    title: 'CIM–ThreMA-Simulator für eine domänenübergreifende Smart-Grid-Ontologie',
     intro:
-      'Datenmodellierung in einer domänenübergreifenden Ontologie für Cyber-Intelligenz in Smart Grids mittels Reinforcement Learning. Der Simulator ist die lauffähige Thesis: Mapping-Katalog, IEEE-9-Bus-Testbed und Szenariodefinitionen sind Teil des Deployments.',
+      'Datenmodellierung in einer domänenübergreifenden Ontologie für Cyber-Intelligenz in Smart Grids mittels Reinforcement Learning. Der Simulator macht die Thesis ausführbar: CGMES-Mapping-Katalog, IEEE-9-Bus-Testbed und Szenariodefinitionen sind direkt enthalten.',
     what: [
-      'CIM/CGMES-Topologie verknüpft mit der ThreMA-Bedrohungsontologie',
-      'Fünf formale semantische Abbildungen zwischen beiden Modellen',
-      'IEEE-9-Bus-Testbed, vier dokumentierte Szenarien',
-      'Q-Learning-Agent als Sicherheitsentscheidungsschicht',
-      'Domänenübergreifende Signal-Rausch-Metrik zur Bewertung der Abbildungen',
+      'CIM/CGMES-Netztopologie verknüpft mit der ThreMA-Bedrohungsontologie',
+      'Fünf formale semantische Abbildungen zwischen Netzbetriebs- und Sicherheitsmodell',
+      'Cyber-physisches IEEE-9-Bus-Testbed mit vier dokumentierten Ausfallszenarien',
+      'Q-Learning-Entscheidungsschicht auf dem gekoppelten Netz- und Bedrohungsgraphen',
+      'Domänenübergreifende Signal-Rausch-Metrik zur Bewertung der Abbildungsqualität',
     ],
     open: 'Simulator öffnen',
-    readWriteUp: 'Ausarbeitung lesen',
-    not: 'Der Simulator läuft auf einem separaten Deployment. Es ist Thesisarbeit: ein validiertes Forschungsartefakt, kein Betriebswerkzeug.',
+    readWriteUp: 'Thesis-Ausarbeitung lesen',
+    not: 'Der Simulator läuft auf einem separaten Deployment. Es handelt sich um ein validiertes Forschungsartefakt auf einem 9-Bus-Testnetz, nicht um ein produktives Leitstellensystem.',
   },
   contact: {
     title: 'Kontakt',
-    intro: 'Für Beratungsanfragen zu sicherheitskritischen Netz- und Bahnstromsystemen. Nennen Sie die Randbedingung; ich sage, ob ich helfen kann.',
-    direct: 'Direkte E-Mail funktioniert immer:',
+    intro:
+      'Für fachlichen Austausch und Anfragen zu Hochspannungsnetzen, Bahnstromsystemen, elektrischen Maschinen und physikinformierter Modellierung. Nennen Sie die technische Randbedingung; ich antworte klar, ob ich unterstützen kann.',
+    direct: 'Direkte E-Mail funktioniert jederzeit:',
   },
-  footer: { rights: 'Alle Rechte vorbehalten.', imprint: 'Impressum', privacy: 'Datenschutz' },
+  card: {
+    kicker: 'Frankfurt am Main · Elektrotechnik & Energiesysteme',
+    role: 'ITk Fachspezialist · DB InfraGO AG · M.Sc. RWTH Aachen',
+    tagline: 'Elektrische Netze, Bahnstrom, elektrische Maschinen und physikinformierte digitale Zwillinge.',
+    email: 'E-Mail',
+    website: 'Fachseite',
+    githubLabel: 'GitHub',
+    networkLabel: 'Domains',
+    saveContact: 'vCard speichern',
+    connect: 'E-Mail senden',
+    scanToShare: 'QR-Code für Kontaktkarte',
+    backHome: '← igrimaldi.engineering',
+  },
+  footer: {
+    colophonRole: 'Elektrische Netze, Bahnstrom, elektrische Maschinen & physikinformierte Modellierung · Frankfurt am Main',
+    rights: 'Alle Rechte vorbehalten.',
+    imprint: 'Impressum',
+    privacy: 'Datenschutz',
+  },
   consent: {
     text: 'Diese Seite nutzt cookieloses Vercel Analytics zur Besucherzählung. Keine Profile, keine Werbung.',
     accept: 'Erlauben',
@@ -349,14 +358,13 @@ const de: Copy = {
   },
   notFound: {
     title: 'Seite nicht gefunden',
-    body: 'Diese URL existiert nicht. Das Register, die Arbeitsliste und die Kontaktseite schon.',
+    body: 'Diese URL existiert nicht. Die Fachseiten zu Netzen, Maschinen, digitalen Zwillingen, Fachartikeln, Register und Kontakt stehen bereit.',
     cta: 'Startseite',
   },
 };
 
 export const copy: Record<'en' | 'de', Copy> = { en, de };
 
-/** Every locale the provider may still hold collapses to EN or DE here. */
 export function pick(locale: Locale): Copy {
   return locale === 'de' ? de : en;
 }

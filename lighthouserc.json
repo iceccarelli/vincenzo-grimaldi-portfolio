@@ -5,9 +5,10 @@
       "startServerReadyPattern": "Ready",
       "url": [
         "http://localhost:3000/",
-        "http://localhost:3000/registry",
-        "http://localhost:3000/palletizer",
-        "http://localhost:3000/decisions",
+        "http://localhost:3000/grids",
+        "http://localhost:3000/machines",
+        "http://localhost:3000/digital-twins",
+        "http://localhost:3000/articles",
         "http://localhost:3000/work",
         "http://localhost:3000/connect"
       ],

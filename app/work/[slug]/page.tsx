@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import DomainNav from '../../components/DomainNav';
+import Plate from '../../components/Plate';
 import { SoftwareAppJsonLd } from '../../components/JsonLd';
 import { caseStudies, getCaseStudy } from '../../lib/work';
 import { copy } from '../../lib/copy';
@@ -20,21 +23,17 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title: c.title,
     description: c.description,
-    alternates: { canonical: `/work/${c.slug}` },
+    alternates: { canonical: '/work/' + c.slug },
     openGraph: {
       title: c.title,
       description: c.description,
-      url: `${SITE_URL}/work/${c.slug}`,
+      url: SITE_URL + '/work/' + c.slug,
       type: 'article',
+      images: [{ url: SITE_URL + c.image, width: 1168, height: 784, alt: c.imageAlt }],
     },
   };
 }
 
-/**
- * /work/[slug] — a document page: problem, approach, validation, limits.
- * The "Limits" section is mandatory; an entry without stated limits is
- * not defendable and does not ship.
- */
 export default function CaseStudyPage({ params }: Props) {
   const w = getCaseStudy(params.slug);
   if (!w) notFound();
@@ -42,32 +41,48 @@ export default function CaseStudyPage({ params }: Props) {
 
   return (
     <main className="doc">
+      <DomainNav current="/work" />
+
       <article className="blk blk-first">
         <p className="kicker">
-          <a href="/work">{c.back}</a>
+          <Link href="/work">{c.back}</Link>
         </p>
         <h1 className="h1">{w.title}</h1>
         <p className="entry-kind">{w.kind}</p>
         <p className="lead">{w.description}</p>
 
+        <Plate
+          src={w.image}
+          alt={w.imageAlt}
+          code={w.imageCode}
+          priority
+        />
+
         <p className="path-line">
           {w.paths.map((p) => (
-            <code key={p} className="path">{p}</code>
+            <code key={p} className="path">
+              {p}
+            </code>
           ))}
         </p>
 
         <h2 className="blk-h">{c.problem}</h2>
         <p>{w.problem}</p>
+
         <h2 className="blk-h">{c.approach}</h2>
         <p>{w.approach}</p>
+
         <h2 className="blk-h">{c.validation}</h2>
         <p>{w.validation}</p>
+
         <h2 className="blk-h">{c.limits}</h2>
         <p>{w.limits}</p>
 
         <p className="tags">
           {w.stack.map((s) => (
-            <span key={s} className="tag">{s}</span>
+            <span key={s} className="tag">
+              {s}
+            </span>
           ))}
         </p>
 
@@ -88,7 +103,7 @@ export default function CaseStudyPage({ params }: Props) {
       <SoftwareAppJsonLd
         name={w.name}
         description={w.description}
-        url={`${SITE_URL}/work/${w.slug}`}
+        url={SITE_URL + '/work/' + w.slug}
         repo={w.repo}
         live={w.live}
       />

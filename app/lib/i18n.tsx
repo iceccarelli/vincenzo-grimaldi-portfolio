@@ -419,7 +419,7 @@ const en: Dictionary = {
   card: {
     kicker: 'Digital business card',
     role: 'ITk Fachspezialist, DB InfraGO AG · Frankfurt am Main',
-    tagline: 'Physical AI & Robotics — cluster control engine.',
+    tagline: 'Electrical grids, traction power, machines & physics-informed methods',
     email: 'Email',
     website: 'Website',
     githubLabel: 'Code',
@@ -590,7 +590,7 @@ const es: Dictionary = {
     'GridForge AI': 'Energía detrás del medidor para centros de datos de IA: generación en sitio, microrredes DC y almacenamiento híbrido que evitan las demoras de interconexión.',
     'ForgePower Semi': 'Módulos de potencia SiC y GaN a medida, convertidores de alta densidad y redes inteligentes de entrega de potencia para GPUs de IA y potencia a nivel de rack.',
     'ThermalForge': 'Infraestructura de refrigeración líquida y co-optimización térmica-eléctrica para racks de IA de alta densidad: placas frías directo-al-chip y CDUs avanzadas.',
-    'Palletizer OS':
+    'power-systems OS':
       'Base de software determinista y agnóstica al hardware para paletizado de fin de línea: control, seguridad, planificación multi-SKU y telemetría de flota, con optimizador en vivo.',
   },
   payments: {
@@ -684,7 +684,7 @@ const es: Dictionary = {
   card: {
     kicker: 'Tarjeta de presentación digital',
     role: 'Ingeniero de Sistemas Ciberfísicos Informados por la Física',
-    tagline: 'Physical AI & Robótica — instrumento de control del clúster.',
+    tagline: 'Electrical Engineering & Robótica — instrumento de control del clúster.',
     email: 'Correo',
     website: 'Sitio web',
     githubLabel: 'Código',
@@ -855,7 +855,7 @@ const de: Dictionary = {
     'GridForge AI': 'Behind-the-Meter-Strom für KI-Rechenzentren: Vor-Ort-Erzeugung, DC-Microgrids und Hybridspeicher, die Netzanschluss-Verzögerungen umgehen.',
     'ForgePower Semi': 'Maßgeschneiderte SiC- & GaN-Leistungsmodule, hochdichte Umrichter und intelligente Power-Delivery-Netzwerke für KI-GPUs und Rack-Level-Power.',
     'ThermalForge': 'Flüssigkühl-Infrastruktur und thermisch-elektrische Co-Optimierung für hochdichte KI-Racks: Direct-to-Chip-Kühlplatten und fortgeschrittene CDUs.',
-    'Palletizer OS':
+    'power-systems OS':
       'Hardware-agnostische, deterministische Software-Basis für End-of-Line-Palettierung: Regelung, Sicherheit, Misch-SKU-Planung und Flottentelemetrie, mit Live-Optimierer.',
   },
   payments: {
@@ -949,7 +949,7 @@ const de: Dictionary = {
   card: {
     kicker: 'Digitale Visitenkarte',
     role: 'ITk Fachspezialist, DB InfraGO AG · Frankfurt am Main',
-    tagline: 'Physical AI & Robotik — Steuerungsinstrument des Clusters.',
+    tagline: 'Elektrische Netze, Bahnstrom, Maschinen & physikinformierte Methoden',
     email: 'E-Mail',
     website: 'Website',
     githubLabel: 'Code',
@@ -1099,7 +1099,7 @@ const zh: Dictionary = {
     'GridForge AI': '为 AI 数据中心提供表后电力：现场发电、直流微电网与混合储能，绕开并网排队延误。',
     'ForgePower Semi': '定制与半定制 SiC/GaN 功率模块、高密度变换器，以及面向 AI GPU 与机架级供电的智能配电网络。',
     'ThermalForge': '面向高密度 AI 机架的液冷基础设施与热-电协同优化：芯片直触冷板与先进 CDU。',
-    'Palletizer OS': '硬件无关、确定性的码垛软件基座：控制、安全、混合 SKU 规划与机群遥测，附带在线优化器。',
+    'power-systems OS': '硬件无关、确定性的码垛软件基座：控制、安全、混合 SKU 规划与机群遥测，附带在线优化器。',
   },
   payments: {
     kicker: '合作与支付',
@@ -1191,7 +1191,7 @@ const zh: Dictionary = {
   card: {
     kicker: '数字名片',
     role: '物理信息网络物理系统工程师',
-    tagline: 'Physical AI 与机器人 — 集群控制引擎。',
+    tagline: 'Electrical Engineering 与机器人 — 集群控制引擎。',
     email: '邮箱',
     website: '网站',
     githubLabel: '代码',

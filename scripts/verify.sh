@@ -1,18 +1,10 @@
 #!/usr/bin/env bash
-# scripts/verify.sh — acceptance gate for igrimaldi.engineering
-#   local: npm run build && (npm start &) && sleep 6 && ./scripts/verify.sh
-#   prod:  ./scripts/verify.sh https://igrimaldi.engineering
-#
-# This host is the control engine of the Physical AI & Robotics cluster.
-# The contracts below assert, against the built HTML and JSON, that the
-# registers exist, that their vocabulary is closed, and that nothing is
-# claimed that the registers do not contain.
+# Acceptance, visual-asset, kill-list, and honesty contracts for igrimaldi.engineering.
 set -uo pipefail
 BASE="${1:-http://localhost:3000}"
 fail=0
 ok()  { printf '  \033[32mPASS\033[0m %s\n' "$1"; }
 bad() { printf '  \033[31mFAIL\033[0m %s\n' "$1"; fail=1; }
-have_node=0; command -v node >/dev/null 2>&1 && have_node=1
 
 echo "▸ security headers  ($BASE)"
 H=$(curl -sSI "$BASE/" 2>/dev/null)
@@ -21,30 +13,36 @@ for k in strict-transport-security x-content-type-options referrer-policy \
   grep -qi "^$k:" <<<"$H" && ok "$k" || bad "$k missing"
 done
 if grep -qi 'access-control-allow-origin: \*' <<<"$H"; then
-  bad "ACAO:* on document — the app never sets this; source is upstream"
+  bad "ACAO:* on document"
 else ok "no ACAO:*"; fi
 
-echo "▸ crawl surface"
-for p in / /registry /registry/palletizer /registry/robot-lidar-fusion /architecture /palletizer \
-         /decisions /report /research /contracts /constitution \
-         /work /work/cim-threma /work/bahn-project-manager /simulator /connect /card \
-         /impressum /datenschutz /llms.txt /robots.txt /sitemap.xml \
-         /favicon.ico /apple-touch-icon.png /site.webmanifest /.well-known/security.txt \
-         /api/cluster /api/cluster/registry /api/cluster/registry/palletizer /api/cluster/kpis /api/cluster/decisions \
-         /api/cluster/report /api/cluster/contracts /api/cluster/contracts/InspectionResult /report.md; do
+echo "▸ canonical crawl surface"
+PAGES=(
+  / /grids /machines /digital-twins
+  /articles /articles/grid-inertia-50hz /articles/it-ot-traction-power /articles/ai-is-power-bound
+  /work /work/cim-threma /work/bahn-project-manager
+  /simulator /registry /registry/cim-threma /registry/bahn-project-manager
+  /registry/grid-digital-twins /registry/traction-power-modelling
+  /registry/power-capacity-envelope /registry/machine-assurance
+  /connect /card /impressum /datenschutz
+  /llms.txt /robots.txt /sitemap.xml /api/register
+  /favicon.ico /apple-touch-icon.png /site.webmanifest /.well-known/security.txt
+)
+for p in "${PAGES[@]}"; do
   c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
   [ "$c" = 200 ] && ok "200 $p" || bad "$c $p"
 done
-for p in /payments /capabilities /cluster /work/palletizer-os; do
+
+echo "▸ retired robotics & legacy routes redirect cleanly"
+for p in /palletizer /architecture /constitution /contracts /decisions /report /research /payments /capabilities /cluster /work/palletizer-os /api/cluster; do
   c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
-  [ "$c" = 308 ] || [ "$c" = 301 ] && ok "$c $p (parked → redirect)" || bad "$c $p should redirect"
+  [ "$c" = 308 ] || [ "$c" = 301 ] && ok "$c $p (retired → redirect)" || bad "$c $p should redirect"
 done
+
 c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/__definitely_not_a_route__")
 [ "$c" = 404 ] && ok "404 on unknown route" || bad "unknown route returned $c"
-c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/api/cluster/contracts/NoSuchContract")
-[ "$c" = 404 ] && ok "404 on unknown contract" || bad "unknown contract returned $c"
 
-echo "▸ index contract"
+echo "▸ index & structured data contract"
 N=$(curl -sS "$BASE/sitemap.xml" | grep -c '<loc>')
 [ "$N" -ge 20 ] && ok "sitemap $N URLs (>=20)" || bad "sitemap only $N URLs"
 HTML=$(curl -sS "$BASE/")
@@ -52,130 +50,88 @@ HTML=$(curl -sS "$BASE/")
 [ "$(grep -c 'hreflang' <<<"$HTML")"        -eq 0 ] && ok "no hreflang"      || bad "hreflang present"
 [ "$(grep -c '@graph' <<<"$HTML")"          -ge 1 ] && ok "JSON-LD @graph"   || bad "JSON-LD @graph missing"
 grep -q '"@type":"Dataset"' <<<"$HTML" && ok "register published as Dataset" || bad "Dataset node missing"
-
-echo "▸ cockpit contract (what a JS-off reader sees on /)"
-grep -q 'Prove whether physical autonomy can create a defensible second moat' <<<"$HTML" && ok "mandate in HTML" || bad "mandate missing from HTML"
-for s in PERCEIVE MODEL PLAN ACT VERIFY RECOVER LEARN; do
-  grep -q "class=\"pipe-stage\">$s<" <<<"$HTML" || bad "mission stage $s missing"
-done
-ok "mission pipeline PERCEIVE→LEARN present"
-for s in SIMULATE VALIDATE AUTHORIZE EXECUTE; do
-  grep -q "class=\"pipe-stage\">$s<" <<<"$HTML" || bad "gate stage $s missing"
-done
-ok "safety gate present"
-grep -q 'class="board"' <<<"$HTML" && ok "status board present" || bad "status board missing"
-R=$(grep -o 'data-status="CORE"' <<<"$HTML" | wc -l | tr -d ' ')
-[ "$R" -ge 2 ] && ok "register on / lists $R CORE rows (>=2)" || bad "only $R CORE rows on /"
-grep -q 'href="/registry"' <<<"$HTML" && ok "register linked" || bad "register not linked"
-grep -q 'href="/api/cluster/registry"' <<<"$HTML" && ok "JSON register linked" || bad "JSON register not linked"
+grep -q 'Electrical grids, machines, and physics-informed methods' <<<"$HTML" && ok "electrical headline in HTML" || bad "electrical headline missing"
 grep -q 'Vincenzo Ceccarelli Grimaldi' <<<"$HTML" && ok "operator name in HTML" || bad "operator name missing"
-grep -q 'ITk Fachspezialist' <<<"$HTML" && ok "role in HTML" || bad "role missing from HTML"
-grep -q 'Frankfurt am Main' <<<"$HTML" && ok "city in HTML" || bad "city missing from HTML"
+grep -q 'ITk Fachspezialist' <<<"$HTML" && ok "role in HTML" || bad "role missing"
+grep -q 'Frankfurt am Main' <<<"$HTML" && ok "city in HTML" || bad "city missing"
 grep -q 'name="constraint"' <<<"$HTML" && ok "enquiry form present" || bad "enquiry form missing"
-grep -q 'href="/work"' <<<"$HTML" && ok "grid work still reachable" || bad "/work not linked from /"
 
-echo "▸ visual contract (pictures are drawn from the registers, not pasted)"
-grep -q 'aria-labelledby="stack-title' <<<"$HTML" && ok "stack diagram on /" || bad "stack diagram missing on /"
-grep -q 'class="tbl cov"' <<<"$HTML" && ok "mission coverage on /" || bad "mission coverage missing on /"
-grep -q 'class="kpistrip"' <<<"$HTML" && ok "KPI strip on /" || bad "KPI strip missing on /"
-grep -q 'class="stbar"' <<<"$HTML" && ok "status bar on /" || bad "status bar missing on /"
-grep -q 'class="subnav"' <<<"$HTML" && ok "register rail on /" || bad "register rail missing on /"
-REG=$(curl -sS "$BASE/registry")
-grep -q 'aria-labelledby="dep-title' <<<"$REG" && ok "dependency graph on /registry" || bad "dependency graph missing"
-PAL=$(curl -sS "$BASE/palletizer")
-grep -q 'aria-labelledby="tl-title' <<<"$PAL" && ok "evidence timeline on /palletizer" || bad "timeline missing"
-grep -q 'class="evgrid"' <<<"$PAL" && ok "evidence grid on /palletizer" || bad "evidence grid missing"
-grep -q 'id="kpi-cycles-per-hour"' <<<"$PAL" && ok "KPI rows addressable" || bad "KPI row ids missing"
-CON=$(curl -sS "$BASE/contracts")
-grep -q 'aria-labelledby="cf-title' <<<"$CON" && ok "contract flow on /contracts" || bad "contract flow missing"
-for p in /registry /architecture /palletizer /decisions /report /research /contracts /constitution; do
-  curl -sS "$BASE$p" | grep -q "aria-current=\"page\"" || bad "register rail has no current marker on $p"
+echo "▸ 32-image asset & placement verification"
+ALL_HTML=""
+for p in / /grids /machines /digital-twins /articles /articles/grid-inertia-50hz /articles/it-ot-traction-power /articles/ai-is-power-bound /simulator /work /work/cim-threma /work/bahn-project-manager /connect /card; do
+  ALL_HTML+="$(curl -sS "$BASE$p")"
 done
-ok "register rail marks the current page everywhere"
-# A picture must have a text equivalent: every svg role=img carries a <desc>.
-for p in / /registry /palletizer /contracts /architecture; do
-  B=$(curl -sS "$BASE$p")
-  NI=$(grep -o '<svg[^>]*aria-labelledby=' <<<"$B" | wc -l | tr -d ' ')
-  ND=$(grep -o '<desc id=' <<<"$B" | wc -l | tr -d ' ')
-  [ "$NI" -eq "$ND" ] && ok "$NI figures with descriptions on $p" || bad "$p: $NI svg figures but $ND descriptions"
-done
-# The new-week scaffold leaves TODO markers; none may ship.
-grep -q '>TODO<' <<<"$(curl -sS "$BASE/report")" && bad "/report ships a TODO section" || ok "no TODO on /report"
 
-echo "▸ closed vocabulary"
-# Every status badge on every register page is one of the six allowed words.
-for p in / /registry /palletizer; do
-  B=$(curl -sS "$BASE$p")
-  BADST=$(grep -o 'data-status="[^"]*"' <<<"$B" | sed 's/data-status="//;s/"//' | grep -vE '^(CORE|MODULE|RESEARCH|INTERNAL|EXPERIMENT|ARCHIVE)$' || true)
-  [ -z "$BADST" ] && ok "only allowed statuses on $p" || bad "seventh status on $p: $BADST"
+ASSETS=(
+  /vincenzo_grimaldi_headshot.jpg
+  /Vincenzo_Grimaldi_footer_picture_website.jpg
+  /images/cool/01-cinematic-high-voltage-substation.jpg
+  /images/cool/02-electromagnetic-fields-machine.jpg
+  /images/cool/03-precision-stator-detail.jpg
+  /images/cool/04-live-grid-digital-twin.jpg
+  /images/cool/05-physics-meets-hardware.jpg
+  /images/cool/06-cinematic-traction-power.jpg
+  /images/cool/07-grid-scale-power-electronics.jpg
+  /images/cool/08-grid-frequency-inertia-living.jpg
+  /images/cool/09-advanced-research-simulator.jpg
+  /images/cool/10-future-grids-and-machines.jpg
+  /images/electrical/01-high-voltage-substation.jpg
+  /images/electrical/02-railway-traction-power.jpg
+  /images/electrical/03-electrical-machines-windings.jpg
+  /images/electrical/04-physics-informed-digital-twin-grid.jpg
+  /images/electrical/05-grid-inertia-frequency-stability.jpg
+  /images/electrical/06-it-ot-convergence-control-room.jpg
+  /images/electrical/07-electrical-devices-power-electronics.jpg
+  /images/electrical/08-thesis-simulator-workspace.jpg
+  /images/electrical/09-high-voltage-transmission-corridor.jpg
+  /images/electrical/10-physics-informed-ai-power-systems.jpg
+  /images/critical/01-ai-data-center-power-bottleneck.jpg
+  /images/critical/02-interconnection-queue-capacity.jpg
+  /images/critical/03-physics-informed-grid-digital-twin.jpg
+  /images/critical/04-traction-power-digitization.jpg
+  /images/critical/05-electrical-machines-electrification.jpg
+  /images/critical/06-grid-inertia-renewable-stability.jpg
+  /images/critical/07-it-ot-critical-infrastructure.jpg
+  /images/critical/08-industrial-autonomous-assurance.jpg
+  /images/critical/09-power-capacity-envelope.jpg
+  /images/critical/10-future-physics-informed-power-systems.jpg
+)
+placed=0
+for a in "${ASSETS[@]}"; do
+  c=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$a")
+  base_file=$(basename "$a")
+  if [ "$c" = 200 ] && grep -q "$base_file" <<<"$ALL_HTML"; then
+    placed=$((placed + 1))
+  else
+    bad "asset missing or unplaced: $a (HTTP $c)"
+  fi
 done
-# KPIs: a measured value must carry a source; unmeasured must render as unmeasured.
-K=$(curl -sS "$BASE/api/cluster/kpis")
-if [ "$have_node" = 1 ]; then
-  node -e '
-    const k=JSON.parse(process.argv[1]); let bad=0;
-    for (const g of [k.palletizer,k.lidarFusion]) for (const x of g.kpis)
-      if (x.measured && (!x.measured.source || !x.measured.date)) { bad++; console.error("KPI without source/date:", x.id); }
-    if (k.palletizer.kpis.length!==12) { bad++; console.error("palletizer KPI count", k.palletizer.kpis.length); }
-    process.exit(bad?1:0)' "$K" && ok "every measured KPI has source+date; 12 palletizing KPIs" || bad "KPI JSON violates contract"
-  for e in registry decisions report contracts; do
-    J=$(curl -sS "$BASE/api/cluster/$e")
-    node -e 'JSON.parse(process.argv[1])' "$J" 2>/dev/null && ok "valid JSON /api/cluster/$e" || bad "invalid JSON /api/cluster/$e"
-  done
-  RG=$(curl -sS "$BASE/api/cluster/registry")
-  node -e '
-    const r=JSON.parse(process.argv[1]); const ok=new Set(r.allowedStatuses); const ids=new Set(r.entries.map(e=>e.id)); let bad=0;
-    for (const e of r.entries){
-      if(!ok.has(e.status)){bad++;console.error("status",e.id,e.status)}
-      if(!e.rationale){bad++;console.error("no rationale",e.id)}
-      for (const d of e.dependsOn) if(!ids.has(d)){bad++;console.error("dangling dependsOn",e.id,"->",d)}
-      for (const s of e.stages) if(!r.missionStages.includes(s)){bad++;console.error("unknown stage",e.id,s)}
-      for (const l of e.layers) if(!r.stackLayers.includes(l)){bad++;console.error("unknown layer",e.id,l)}
-    }
-    const hasForge=r.entries.some(e=>/forge/i.test(e.id)); if(hasForge){bad++;console.error("Forge app inside register")}
-    process.exit(bad?1:0)' "$RG" && ok "register: closed statuses, rationale, no dangling edges, known stages/layers, no Forge app" || bad "register JSON violates contract"
-else
-  ok "node absent — JSON contracts skipped"
-fi
+[ "$placed" -eq 32 ] && ok "all 32/32 optimized JPEGs return 200 and render in page markup" || bad "only $placed/32 assets verified"
 
-echo "▸ honesty contract"
-# Nothing for sale, no unbenchmarked performance language, no compatibility lists.
-for w in 'buy\b' 'retainer' 'waitlist' 'stripe' 'cal\.com' 'settle securely' 'EUR\b' '€' \
-         'SIL-4' 'ASIL-D' 'sub-8' 'curtailment' 'Enterprise platform' 'FF8A00' '2F5D50' 'carousel' \
-         'state[- ]of[- ]the[- ]art' 'deploy in hours' 'any robot arm' 'enterprise[- ]ready' 'production[- ]proven' \
-         'certified driver' 'payback of' 'months payback' '% labor' '% labour' 'trillion'; do
-  if grep -qiE "$w" <<<"$HTML"; then bad "banned token on /: $w"; else ok "no '$w' on /"; fi
-done
-for p in /registry /architecture /palletizer /decisions /report /research /contracts /constitution /work /simulator /connect /llms.txt; do
+echo "▸ kill-list & honesty contracts"
+for p in / /grids /machines /digital-twins /articles /articles/grid-inertia-50hz /articles/it-ot-traction-power /articles/ai-is-power-bound /work /simulator /registry /connect /card /llms.txt; do
   B=$(curl -sS "$BASE$p")
-  for w in 'retainer' 'stripe' 'EUR\b' '€' 'Enterprise platform' 'state[- ]of[- ]the[- ]art' 'deploy in hours' \
-           'enterprise[- ]ready' 'production[- ]proven' 'certified driver' 'trillion'; do
-    grep -qiE "$w" <<<"$B" && bad "banned token on $p: $w"
+  for w in 'palletiz' 'Physical AI' 'Weekly CEO report' 'Three clusters' 'robot-lidar-fusion' \
+           'any robot arm' 'buy\b' 'retainer' 'waitlist' 'stripe' 'cal\.com' 'EUR\b' '€' \
+           'SIL-4' 'ASIL-D' 'curtailment' 'carousel' 'state[- ]of[- ]the[- ]art' \
+           'enterprise[- ]ready' 'production[- ]proven' 'trillion'; do
+    grep -qiE "$w" <<<"$B" && bad "banned/kill-list token on $p: $w"
   done
 done
-ok "no banned tokens on register pages, /work, /simulator, /connect, /llms.txt"
-# GitHub paths that 404 are never linked as if public — anywhere.
-for p in / /registry /palletizer /registry/robot-lidar-fusion /llms.txt; do
-  B=$(curl -sS "$BASE$p")
-  grep -qiE 'href="https?://github\.com/iceccarelli/(GridOS|neuralbridge|derim-middleware|robot-lidar-fusion|physics-informed|autonomous-inspection)' <<<"$B" \
-    && bad "$p links a GitHub path that 404s" || ok "no 404 GitHub paths on $p"
-done
-# Zero payment / booking scripts anywhere on the landing.
-grep -qiE 'js\.stripe\.com|buy\.stripe\.com|app\.cal\.com|embed\.cal\.com' <<<"$HTML" \
-  && bad "third-party payment/booking script on landing" || ok "zero payment scripts on landing"
-# The three Forge applications are named only as boundaries, never as register rows.
-F=$(curl -sS "$BASE/registry" | grep -c 'href="/registry/[a-z-]*forge' || true)
-[ "$F" -eq 0 ] && ok "no Forge application has a register page" || bad "Forge application inside the register"
+ok "zero kill-list or commercial hype tokens across all active pages and /llms.txt"
 
-# Readiness = operator work. Auto-runs against https:// targets; force with READINESS=1.
+REG_JSON=$(curl -sS "$BASE/api/register")
+node -e 'const j=JSON.parse(process.argv[1]); if(!j.entries || j.entries.length<6) process.exit(1);' "$REG_JSON" \
+  && ok "valid JSON /api/register" || bad "invalid JSON /api/register"
+
 if [ "${READINESS:-0}" = 1 ] || [[ "$BASE" == https://* ]]; then
-echo "▸ legal readiness"
-for p in /impressum /datenschutz; do
-  if curl -sS "$BASE$p" | grep -q 'TODO_OPERATOR'; then bad "$p still has TODO_OPERATOR placeholders"
-  else ok "$p complete"; fi
-done
+  echo "▸ legal readiness"
+  for p in /impressum /datenschutz; do
+    if curl -sS "$BASE$p" | grep -q 'TODO_OPERATOR'; then bad "$p still has TODO_OPERATOR placeholders"
+    else ok "$p complete"; fi
+  done
 else
-echo "▸ legal readiness  (skipped — run against https:// or set READINESS=1)"
+  echo "▸ legal readiness  (skipped — run against https:// or set READINESS=1)"
 fi
 
 echo

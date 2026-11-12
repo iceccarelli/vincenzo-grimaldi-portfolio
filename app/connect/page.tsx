@@ -1,45 +1,43 @@
-import type { Metadata } from 'next';
+'use client';
+
+import Image from 'next/image';
 import ContactForm from '../components/ContactForm';
-import { EMAIL } from '../lib/site';
-import { copy } from '../lib/copy';
+import DomainNav from '../components/DomainNav';
+import { useLanguage } from '../lib/i18n';
+import { pick } from '../lib/copy';
+import { CITY, EMAIL, FOOTER_PORTRAIT, SITE_NAME } from '../lib/site';
 
-export const metadata: Metadata = {
-  title: 'Contact',
-  description:
-    'Advisory enquiries on safety-critical grid and traction systems. Name, organisation, constraint, email. No booking widget, no price.',
-  alternates: { canonical: '/connect' },
-};
-
-export const revalidate = 3600;
-
-type Props = { searchParams?: { sent?: string } };
-
-/**
- * /connect — the contact page. Same four-field form as the homepage.
- * `?sent=` carries the result of a JavaScript-free submission back from
- * /api/contact so the page can say what happened.
- */
-export default function ConnectPage({ searchParams }: Props) {
-  const c = copy.en;
-  const sent = searchParams?.sent;
+export default function ConnectPage() {
+  const { locale } = useLanguage();
+  const c = pick(locale);
 
   return (
     <main className="doc">
+      <DomainNav current="/connect" />
+
       <section className="blk blk-first" id="connect">
         <h1 className="h1">{c.contact.title}</h1>
+        <div className="id connect-id">
+          <div className="id-portrait">
+            <Image
+              src={FOOTER_PORTRAIT}
+              alt="Vincenzo Ceccarelli Grimaldi"
+              width={88}
+              height={88}
+            />
+          </div>
+          <div className="id-text">
+            <p className="name name-sm">{SITE_NAME}</p>
+            <p className="city">{CITY}</p>
+            <p className="fine">{c.home.roleLine}</p>
+          </div>
+        </div>
         <p className="lead">{c.contact.intro}</p>
-        <p>
-          {c.contact.direct} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        <ContactForm />
+        <p className="fine underlined-links">
+          {c.contact.direct}{' '}
+          <a href={'mailto:' + EMAIL}>{EMAIL}</a>
         </p>
-
-        {sent === 'ok' && <p className="form-ok" role="status">{c.form.sent}</p>}
-        {sent === 'error' && <p className="form-err" role="alert">{c.form.error}</p>}
-        {sent === 'unconfigured' && (
-          <p className="form-err" role="alert">
-            {c.form.error}
-          </p>
-        )}
-        {sent !== 'ok' && <ContactForm />}
       </section>
     </main>
   );

@@ -18,7 +18,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-
       - run: npm ci
       - name: Typecheck
         run: npm run typecheck
@@ -26,7 +25,6 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build
-
       - name: Start production server
         run: |
           npm run start > /tmp/server.log 2>&1 &
@@ -36,17 +34,8 @@ jobs:
             sleep 1
           done
           echo "server never became ready:"; cat /tmp/server.log; exit 1
-
-      # scripts/verify.sh is the SINGLE source of truth for the acceptance
-      # contract — the same command runs locally and against production.
-      # On localhost it asserts code contracts only; readiness (legal fields)
-      # is asserted separately against the live https origin.
       - name: Acceptance contract
         run: npm run verify
-
-      # Use the runner image's own ChromeDriver, which is version-matched to
-      # its bundled Chrome. npm's chromedriver package tracks Chrome stable and
-      # drifts ahead of the image (152 vs 151), which is what broke PR #3.
       - name: Accessibility (axe)
         run: |
           DRIVER="${CHROMEWEBDRIVER:-/usr/local/share/chromedriver-linux64}/chromedriver"
@@ -57,15 +46,15 @@ jobs:
           "$DRIVER" --version
           npx --yes @axe-core/cli@4 --exit --chromedriver-path "$DRIVER" \
             http://localhost:3000/ \
+            http://localhost:3000/grids \
+            http://localhost:3000/machines \
+            http://localhost:3000/digital-twins \
+            http://localhost:3000/articles \
+            http://localhost:3000/articles/grid-inertia-50hz \
+            http://localhost:3000/articles/it-ot-traction-power \
+            http://localhost:3000/articles/ai-is-power-bound \
             http://localhost:3000/registry \
-            http://localhost:3000/registry/palletizer \
-            http://localhost:3000/architecture \
-            http://localhost:3000/palletizer \
-            http://localhost:3000/decisions \
-            http://localhost:3000/report \
-            http://localhost:3000/research \
-            http://localhost:3000/contracts \
-            http://localhost:3000/constitution \
+            http://localhost:3000/registry/cim-threma \
             http://localhost:3000/work \
             http://localhost:3000/work/cim-threma \
             http://localhost:3000/work/bahn-project-manager \
@@ -74,7 +63,6 @@ jobs:
             http://localhost:3000/card \
             http://localhost:3000/impressum \
             http://localhost:3000/datenschutz
-
       - name: Stop server
         if: always()
         run: kill "$(cat /tmp/server.pid)" 2>/dev/null || true

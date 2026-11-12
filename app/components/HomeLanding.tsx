@@ -1,207 +1,190 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import ContactForm from './ContactForm';
-import Pipeline from './cluster/Pipeline';
-import RegistryTable from './cluster/RegistryTable';
-import StatusBadge from './cluster/StatusBadge';
-import SubNav from './cluster/SubNav';
-import MissionCoverage from './cluster/MissionCoverage';
-import KpiCoverage from './cluster/KpiCoverage';
-import StackDiagram from './cluster/StackDiagram';
-import StatusBar from './cluster/StatusBar';
+import DomainNav from './DomainNav';
+import Plate from './Plate';
 import { useLanguage } from '../lib/i18n';
 import { pick } from '../lib/copy';
 import { CITY, SITE_NAME } from '../lib/site';
-import { owned, boundaries, REGISTRY_SNAPSHOT_DATE } from '../lib/cluster/registry';
-import { palletizerKpis, lidarKpis, countMeasured } from '../lib/cluster/kpis';
-import { mission, gate, agentTools } from '../lib/cluster/stack';
-import { decisions, killRegister } from '../lib/cluster/decisions';
-import { latestReport } from '../lib/cluster/report';
-import { firstPrinciple, finalRules } from '../lib/cluster/constitution';
-import type { LiveMeta } from '../lib/cluster/github';
+import { articles, pillarCards } from '../lib/electrical';
+import { registerEntries } from '../lib/register';
 
-/**
- * HomeLanding — the cockpit, read top to bottom.
- *
- *   1. Mandate                6. Safety gate + agent permissions
- *   2. Mission pipeline       7. Latest decisions
- *   3. Status board           8. Weekly report: next experiment, decision required
- *   4. Repository register    9. Boundaries (what is not ours)
- *   5. First target KPIs     10. Operator + enquiry
- *
- * The server renders English; the client adopts DE for the chrome after
- * hydration. Register contents are records and stay in English.
- */
-export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }) {
+export default function HomeLanding() {
   const { locale } = useLanguage();
   const c = pick(locale);
 
-  const core = owned.filter((r) => r.status === 'CORE');
-  const measured = countMeasured(palletizerKpis) + countMeasured(lidarKpis);
-  const totalKpis = palletizerKpis.length + lidarKpis.length;
-  const review = killRegister.filter((k) => k.state === 'REVIEW').length;
-  const liveCount = Object.values(meta).filter((m) => m.source === 'live').length;
-  const asOf = liveCount > 0 ? Object.values(meta).find((m) => m.source === 'live')?.asOf : REGISTRY_SNAPSHOT_DATE;
-  const section = (h: string) => latestReport.sections.find((s) => s.heading === h)?.body ?? '';
-
-  const board: { label: string; value: string; href: string }[] = [
-    { label: c.home.board.repositories, value: `${owned.length} · ${core.length} CORE`, href: '/registry' },
-    { label: c.home.board.customers, value: '0', href: '/research#customers' },
-    { label: c.home.board.deployments, value: '0', href: '/palletizer' },
-    { label: c.home.board.kpisMeasured, value: `${measured} / ${totalKpis}`, href: '/palletizer' },
-    { label: c.home.board.benchmarks, value: '0', href: '/research' },
-    { label: c.home.board.decisions, value: String(decisions.length), href: '/decisions' },
-    { label: c.home.board.killReview, value: String(review), href: '/decisions#kill' },
-  ];
-
   return (
     <main className="doc doc-wide">
-      <SubNav current="/" />
+      <DomainNav current="/" />
+
       <section className="blk blk-first" aria-labelledby="mandate">
         <p className="kicker">{c.home.kicker}</p>
-        <h1 id="mandate" className="h1 mandate">{c.home.mandate}</h1>
+        <h1 id="mandate" className="h1 mandate">
+          {c.home.mandate}
+        </h1>
         <p className="lead">{c.home.lead}</p>
+        <Plate
+          src="/images/cool/01-cinematic-high-voltage-substation.jpg"
+          alt="Cinematic high-voltage substation at night"
+          code="FIG. 01 · HIGH-VOLTAGE INFRASTRUCTURE"
+          caption="High-voltage substation busbars, instrument transformers, and transmission interfaces."
+          priority
+        />
       </section>
 
-      <section className="blk" aria-labelledby="mission">
-        <h2 id="mission" className="blk-h">{c.home.missionHeading}</h2>
-        <Pipeline stages={mission} label="Mission" />
-        <MissionCoverage compact />
-        <p className="fine">{firstPrinciple.lead}</p>
-        <ul className="inline-list">
-          {firstPrinciple.conditions.map((x) => (
-            <li key={x}>{x}</li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="blk" aria-labelledby="board">
-        <h2 id="board" className="blk-h">
-          {c.home.boardHeading} <span className="muted h-note">{c.home.boardAsOf} <time dateTime={asOf}>{asOf}</time></span>
+      <section className="blk" aria-labelledby="pillars">
+        <h2 id="pillars" className="blk-h">
+          {c.home.pillarsHeading}
         </h2>
-        <dl className="board">
-          {board.map((b) => (
-            <div key={b.label} className="board-cell">
-              <dt>{b.label}</dt>
-              <dd>
-                <a href={b.href}>{b.value}</a>
-              </dd>
-            </div>
+        <p className="blk-intro">{c.home.pillarsIntro}</p>
+        <div className="pillar-grid">
+          {pillarCards.map((p) => (
+            <article key={p.slug} className="pillar-card">
+              <Link href={p.href} className="pillar-media">
+                <Plate
+                  src={p.image}
+                  alt={p.alt}
+                  code={p.code}
+                  sizes="(max-width: 680px) 100vw, 410px"
+                  compact
+                />
+              </Link>
+              <h3 className="pillar-title">
+                <Link href={p.href}>{locale === 'de' ? p.titleDe : p.title}</Link>
+              </h3>
+              <p className="pillar-summary">
+                {locale === 'de' ? p.summaryDe : p.summary}
+              </p>
+            </article>
           ))}
-        </dl>
-      </section>
-
-      <section className="blk" aria-labelledby="registry">
-        <h2 id="registry" className="blk-h">{c.home.registryHeading}</h2>
-        <p className="blk-intro">{c.home.registryIntro}</p>
-        <StatusBar />
-        <RegistryTable entries={owned} meta={meta} compact />
-        <p className="blk-more">
-          <a href="/registry">{c.home.registryAll} →</a> · <a href="/api/cluster/registry">JSON</a>
-        </p>
-      </section>
-
-      <section className="blk" aria-labelledby="first">
-        <h2 id="first" className="blk-h">{c.home.firstTargetHeading}</h2>
-        <p className="blk-intro">{c.home.firstTargetIntro}</p>
-        <KpiCoverage kpis={palletizerKpis} href="/palletizer" title="Palletizing KPIs" />
-        <p className="blk-more">
-          <a href="/palletizer">{c.home.firstTargetAll} →</a> · <a href="/api/cluster/kpis">JSON</a>
-        </p>
-      </section>
-
-      <section className="blk" aria-labelledby="gate">
-        <h2 id="gate" className="blk-h">{c.home.gateHeading}</h2>
-        <p className="blk-intro">{c.home.gateIntro}</p>
-        <Pipeline stages={gate} label="Safety gate" deterministicFrom={1} />
-        <StackDiagram compact />
-        <div className="two-col">
-          <div>
-            <h3 className="sub-h">Agents may</h3>
-            <ul className="plain mono-list">
-              {agentTools.filter((t) => t.may).map((t) => (
-                <li key={t.name}>
-                  <code className="path">{t.name}</code>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="sub-h">Agents may not</h3>
-            <ul className="plain mono-list">
-              {agentTools.filter((t) => !t.may).map((t) => (
-                <li key={t.name}>
-                  <code className="path path-no">{t.name}</code>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
-        <p className="blk-more">
-          <a href="/architecture">{c.home.gateAll} →</a>
+      </section>
+
+      <section className="blk" aria-labelledby="bottleneck">
+        <h2 id="bottleneck" className="blk-h">
+          {c.home.bottleneckHeading}
+        </h2>
+        <p className="blk-intro">{c.home.bottleneckIntro}</p>
+        <div className="plate-pair">
+          <Plate
+            src="/images/critical/01-ai-data-center-power-bottleneck.jpg"
+            alt="AI data center power bottleneck with binding electrical constraints"
+            code="FIG. 02 · TIME-TO-POWER CONSTRAINT"
+            caption="Bulk substation interconnection and transformer capacity gating high-density compute."
+            sizes="(max-width: 680px) 100vw, 410px"
+            compact
+          />
+          <Plate
+            src="/images/critical/09-power-capacity-envelope.jpg"
+            alt="Power capacity envelope showing electrical and thermal limits of data center halls"
+            code="FIG. 03 · CAPACITY ENVELOPE"
+            caption="Coupled electrical ampacity, transformer thermal hot-spot, and cooling operating envelope."
+            sizes="(max-width: 680px) 100vw, 410px"
+            compact
+          />
+        </div>
+        <p>{c.home.bottleneckBody}</p>
+        <p className="blk-more underlined-links">
+          <Link href="/articles/ai-is-power-bound">{c.home.bottleneckCta} →</Link>
         </p>
       </section>
 
-      <section className="blk" aria-labelledby="decisions">
-        <h2 id="decisions" className="blk-h">{c.home.decisionsHeading}</h2>
+      <section className="blk" aria-labelledby="articles">
+        <h2 id="articles" className="blk-h">
+          {c.home.articlesHeading}
+        </h2>
+        <p className="blk-intro">{c.home.articlesIntro}</p>
         <ol className="dec-list">
-          {decisions.slice(-3).reverse().map((d) => (
-            <li key={d.id}>
-              <a href={`/decisions#${d.id}`}>
-                <code className="path">{d.id}</code> <span className="dec-title">{d.title}</span>
-              </a>
-              <time className="muted" dateTime={d.date}>{d.date}</time>
+          {articles.map((a) => (
+            <li key={a.slug}>
+              <Link href={'/articles/' + a.slug}>
+                <code className="path">{a.readingTime}</code>{' '}
+                <span className="dec-title">{a.title}</span>
+              </Link>
+              <time className="muted" dateTime={a.date}>
+                {a.date}
+              </time>
             </li>
           ))}
         </ol>
-        <p className="blk-more">
-          <a href="/decisions">{c.home.decisionsAll} →</a>
+        <p className="blk-more underlined-links">
+          <Link href="/articles">{c.home.articlesAll} →</Link>
         </p>
       </section>
 
-      <section className="blk" aria-labelledby="report">
-        <h2 id="report" className="blk-h">
-          {c.home.reportHeading} <span className="muted h-note">{latestReport.week}</span>
+      <section className="blk" aria-labelledby="registry">
+        <h2 id="registry" className="blk-h">
+          {c.home.registryHeading}
         </h2>
-        <div className="two-col">
-          <div>
-            <h3 className="sub-h">{c.home.nextExperiment}</h3>
-            <p>{section('Next experiment')}</p>
-          </div>
-          <div>
-            <h3 className="sub-h">{c.home.decisionRequired}</h3>
-            <p>{section('Decision required')}</p>
-          </div>
+        <p className="blk-intro">{c.home.registryIntro}</p>
+        <div className="tbl-wrap">
+          <table className="tbl reg reg-compact">
+            <thead>
+              <tr>
+                <th scope="col">Artifact / Study</th>
+                <th scope="col">Pillar</th>
+                <th scope="col">Class</th>
+                <th scope="col">Summary</th>
+              </tr>
+            </thead>
+            <tbody>
+              {registerEntries.map((r) => (
+                <tr key={r.id}>
+                  <th scope="row">
+                    <Link href={'/registry/' + r.id}>{r.name}</Link>
+                  </th>
+                  <td data-label="Pillar">{r.pillar}</td>
+                  <td data-label="Class">
+                    <code className="path">{r.status}</code>
+                  </td>
+                  <td data-label="Summary">{r.summary}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <p className="blk-more">
-          <a href="/report">{c.home.reportAll} →</a> · <a href="/api/cluster/report">JSON</a>
+        <p className="blk-more underlined-links">
+          <Link href="/registry">{c.home.registryAll} →</Link> ·{' '}
+          <a href="/api/register">JSON</a>
         </p>
       </section>
 
-      <section className="blk" aria-labelledby="boundary">
-        <h2 id="boundary" className="blk-h">{c.home.boundaryHeading}</h2>
-        <p className="blk-intro">{c.home.boundaryIntro}</p>
-        <ul className="notes">
-          {boundaries.map((b) => (
-            <li key={b.name}>
-              <span className="notes-name">{b.name}</span> <StatusBadge status="INTERNAL" />{' '}
-              <span className="muted">{b.owner}</span> — {b.rule}
-            </li>
-          ))}
-        </ul>
-        <ul className="inline-list rules">
-          {finalRules.map((r) => (
-            <li key={r}>{r}</li>
-          ))}
-        </ul>
+      <section className="blk" aria-labelledby="vision">
+        <h2 id="vision" className="blk-h">
+          {c.home.visionHeading}
+        </h2>
+        <Plate
+          src="/images/cool/10-future-grids-and-machines.jpg"
+          alt="Future-looking electrical grids and machines"
+          code="FIG. 04 · GRIDS, MACHINES & DIGITAL TWINS"
+          caption="Long-horizon convergence of high-voltage infrastructure, advanced electrical machines, and physics-constrained intelligence."
+        />
+        <p className="underlined-links">
+          {c.home.visionBody}{' '}
+          <a href="https://engineeringgrimaldi.com" rel="noopener noreferrer">
+            engineeringgrimaldi.com ↗
+          </a>{' '}
+          ·{' '}
+          <a href="https://grimaldi.ca" rel="noopener noreferrer">
+            grimaldi.ca ↗
+          </a>
+        </p>
       </section>
 
       <section className="blk id-blk" aria-labelledby="operator">
-        <h2 id="operator" className="blk-h">{c.home.operatorHeading}</h2>
+        <h2 id="operator" className="blk-h">
+          {c.home.operatorHeading}
+        </h2>
         <div className="id">
           <div className="id-portrait">
-            <Image src="/vincenzo_grimaldi_headshot.jpg" alt="" width={96} height={96} />
+            <Image
+              src="/vincenzo_grimaldi_headshot.jpg"
+              alt="Vincenzo Ceccarelli Grimaldi"
+              width={96}
+              height={96}
+            />
           </div>
           <div className="id-text">
             <p className="name name-sm">{SITE_NAME}</p>
@@ -209,13 +192,18 @@ export default function HomeLanding({ meta }: { meta: Record<string, LiveMeta> }
             <p className="role">
               <strong>{c.home.roleLine}</strong> {c.home.roleDetail}
             </p>
-            <p className="fine">{c.home.thesisNote} <a href="/work">/work</a> · <a href="/simulator">/simulator</a></p>
+            <p className="fine underlined-links">
+              {c.home.thesisNote} <Link href="/work">/work</Link> ·{' '}
+              <Link href="/simulator">/simulator</Link>
+            </p>
           </div>
         </div>
       </section>
 
       <section className="blk" id="connect" aria-labelledby="enquiry">
-        <h2 id="enquiry" className="blk-h">{c.home.formHeading}</h2>
+        <h2 id="enquiry" className="blk-h">
+          {c.home.formHeading}
+        </h2>
         <p className="blk-intro">{c.home.formIntro}</p>
         <ContactForm compact />
       </section>

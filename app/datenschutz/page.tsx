@@ -8,15 +8,6 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-/**
- * /datenschutz — DSGVO privacy notice. Structure matches what the site
- * ACTUALLY does: Vercel hosting + server logs, opt-in Vercel Analytics,
- * a first-party enquiry form relayed via Resend. No booking widget, no
- * payment provider, no other third party.
- *
- * OPERATOR ACTION REQUIRED: fill TODO_OPERATOR address; have the text
- * reviewed — this is a working skeleton, not legal advice.
- */
 export default function DatenschutzPage() {
   return (
     <main className="doc">
@@ -27,7 +18,7 @@ export default function DatenschutzPage() {
         <p>
           {LEGAL_NAME}
           <br />
-          TODO_OPERATOR_STRASSE_HAUSNUMMER, TODO_OPERATOR_PLZ Frankfurt am Main, Deutschland
+          Pfeilstraße 6, 52066 Aachen, Deutschland
           <br />
           E-Mail: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
         </p>
@@ -70,12 +61,11 @@ export default function DatenschutzPage() {
           (Art. 20) und Widerspruch (Art. 21 DSGVO) sowie das Recht, eine
           erteilte Einwilligung jederzeit mit Wirkung für die Zukunft zu
           widerrufen. Beschwerden richten Sie an eine
-          Datenschutzaufsichtsbehörde, z.&nbsp;B. den Hessischen Beauftragten
-          für Datenschutz und Informationsfreiheit.
+          Datenschutzaufsichtsbehörde, z.&nbsp;B. die Landesbeauftragte für Datenschutz und Informationsfreiheit NRW (LDI NRW).
         </p>
 
         <p>
-          <em>Stand: TODO_OPERATOR_DATUM</em>
+          <em>Stand: November 2026</em>
         </p>
       </section>
     </main>

@@ -8,13 +8,6 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-/**
- * /impressum — § 5 DDG Anbieterkennzeichnung.
- *
- * OPERATOR ACTION REQUIRED before go-live: replace every TODO_OPERATOR
- * value. A commercial site without a complete, ladungsfähige Anschrift
- * (street address — a P.O. box is NOT sufficient) is abmahnfähig.
- */
 export default function ImpressumPage() {
   return (
     <main className="doc">
@@ -24,12 +17,10 @@ export default function ImpressumPage() {
         <h2>Angaben gemäß § 5 DDG</h2>
         <p>
           {LEGAL_NAME}
-          <br />
-          {/* TODO_OPERATOR: ladungsfähige Anschrift (Straße + Hausnummer) */}
-          TODO_OPERATOR_STRASSE_HAUSNUMMER
-          <br />
-          {/* TODO_OPERATOR: PLZ + Ort */}
-          TODO_OPERATOR_PLZ Frankfurt am Main
+          
+          Pfeilstraße 6
+          
+          52066 Aachen
           <br />
           Deutschland
         </p>
@@ -37,20 +28,7 @@ export default function ImpressumPage() {
         <h2>Kontakt</h2>
         <p>
           E-Mail: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-          <br />
-          {/* TODO_OPERATOR: Telefonnummer ist für schnelle elektronische
-              Kontaktaufnahme empfohlen (EuGH: nicht zwingend, wenn ein
-              zweiter schneller Kanal existiert). */}
-        </p>
-
-        <h2>Umsatzsteuer</h2>
-        <p>
-          {/* TODO_OPERATOR: genau EINE der beiden Zeilen behalten. */}
-          Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: TODO_OPERATOR_UST_IDNR
-          <br />
-          <em>— oder —</em>
-          <br />
-          Kleinunternehmer gemäß § 19 UStG; es wird keine Umsatzsteuer ausgewiesen.
+          
         </p>
 
         <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
@@ -66,14 +44,7 @@ export default function ImpressumPage() {
 
         <h2>Streitbeilegung</h2>
         <p>
-          Die Europäische Kommission stellt eine Plattform zur
-          Online-Streitbeilegung (OS) bereit:{' '}
-          <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">
-            https://ec.europa.eu/consumers/odr/
-          </a>
-          . Ich bin nicht bereit und nicht verpflichtet, an
-          Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
-          teilzunehmen.
+          Zur Teilnahme an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle bin ich weder bereit noch verpflichtet (§ 36 VSBG).
         </p>
       </section>
     </main>
